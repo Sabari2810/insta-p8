@@ -387,8 +387,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                                 : "border-white/10 hover:border-white/25 bg-[#0e0e0e]"
                             }`}
                           >
-                            {reel.image_url ? (
-                              <img src={reel.image_url} alt="" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+                            {reel.media_url ? (
+                              <img src={reel.media_url} alt="" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
                             ) : (
                               <div className="w-full h-full bg-neutral-900 flex items-center justify-center">
                                 <Film className="w-6 h-6 text-neutral-600" />
