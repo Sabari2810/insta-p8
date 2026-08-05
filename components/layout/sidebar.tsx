@@ -32,9 +32,7 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
     <aside className={cn("flex flex-col bg-[#0a0a09]", className)} {...props}>
       {/* Brand */}
       <div className="px-5 pt-6 pb-5 flex items-center gap-2.5">
-        <div className="w-7 h-7 bg-[#ffe14d] text-black rounded-md flex items-center justify-center shrink-0">
-          <Zap className="w-3.5 h-3.5" strokeWidth={2.5} />
-        </div>
+        <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full shrink-0" />
         <span className="font-mono-ui text-sm font-bold tracking-tight text-white">Sovex</span>
       </div>
 

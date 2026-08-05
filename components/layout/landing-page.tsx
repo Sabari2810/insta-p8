@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import {
-  Zap, MessageCircle, Sparkles, ArrowUpRight,
+  MessageCircle, Sparkles, ArrowUpRight,
   Send, AtSign, Inbox, Lock, Terminal,
   Loader2,
 } from "lucide-react"
@@ -52,9 +52,7 @@ export function LandingPage() {
       {/* Nav */}
       <nav className="relative z-50 flex items-center justify-between px-5 md:px-10 h-16 border-b border-white/[0.08]">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 bg-[#ffe14d] text-black flex items-center justify-center rounded-[6px]">
-            <Zap className="w-3.5 h-3.5" strokeWidth={2.5} />
-          </div>
+          <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full" />
           <span className="font-mono-ui text-sm font-bold tracking-tight">Sovex</span>
           <span className="hidden sm:inline-block font-mono-ui text-[10px] text-neutral-500 border border-white/10 rounded-full px-2 py-0.5">open source</span>
         </div>
