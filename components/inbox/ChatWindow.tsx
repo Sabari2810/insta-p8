@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Send, Loader2, MoreVertical, Phone, Video, Zap, ChevronLeft, Plus, X } from "lucide-react"
+import { Send, Loader2, Zap, ChevronLeft, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/db"
@@ -162,16 +162,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                     <div className="w-8 h-8 rounded-full bg-white/10 border border-white/15 shrink-0" />
                     <div className="min-w-0">
                         <h3 className="font-bold text-white text-sm truncate">@{recipientName}</h3>
-                        <span className="hidden md:flex items-center gap-1.5 text-[10px] text-green-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                            Online via Instagram
-                        </span>
                     </div>
-                </div>
-                <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hidden md:flex"><Phone className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hidden md:flex"><Video className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white"><MoreVertical className="w-4 h-4" /></Button>
                 </div>
             </div>
 

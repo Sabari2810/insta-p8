@@ -16,6 +16,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
     const [conversations, setConversations] = useState<Conversation[]>([])
     const [loading, setLoading] = useState(true)
     const [activeTag, setActiveTag] = useState<string | null>(null)
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         if (!userId) return
@@ -43,9 +44,9 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
         return Array.from(set).sort()
     }, [conversations])
 
-    const visibleConversations = activeTag
-        ? conversations.filter((c) => (c.tags || []).includes(activeTag))
-        : conversations
+    const visibleConversations = conversations
+        .filter((c) => !activeTag || (c.tags || []).includes(activeTag))
+        .filter((c) => !search.trim() || c.recipient_username.toLowerCase().includes(search.trim().toLowerCase()))
 
     if (loading) {
         return (
@@ -62,8 +63,10 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-[#ffe14d]/50 placeholder:text-muted-foreground/50 transition-all"
-                        placeholder="Search messages..."
+                        placeholder="Search by username..."
                     />
                 </div>
                 {allTags.length > 0 && (
@@ -96,7 +99,11 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
                 {visibleConversations.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground text-sm">
-                        {activeTag ? `No conversations tagged "${activeTag}".` : "No conversations yet."}
+                        {conversations.length === 0
+                            ? "No conversations yet."
+                            : search.trim()
+                              ? `No conversations matching "${search.trim()}".`
+                              : `No conversations tagged "${activeTag}".`}
                     </div>
                 ) : (
                     visibleConversations.map((conv) => (
