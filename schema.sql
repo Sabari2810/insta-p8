@@ -192,7 +192,7 @@ VALUES ('reels', 'reels', true)
 ON CONFLICT (id) DO UPDATE SET public = true;
 
 -- NOTE: RLS is enabled by default on storage.objects in Supabase.
--- Running ALTER TABLE storage.objects causes permission errors (must be owner of table objects) 
+-- Running ALTER TABLE storage.objects causes permission errors (must be owner of table objects)
 -- on newer Supabase instances. Therefore, we do not run it here.
 -- ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
 
@@ -201,37 +201,30 @@ DROP POLICY IF EXISTS "Public Uploads" ON storage.objects;
 DROP POLICY IF EXISTS "Public Viewing" ON storage.objects;
 DROP POLICY IF EXISTS "Public Deletion" ON storage.objects;
 
--- Create policies for storage
-CREATE POLICY "Public Uploads" 
-ON storage.objects FOR INSERT 
-TO public 
-WITH CHECK (bucket_id = 'reels');
-
-CREATE POLICY "Public Viewing" 
-ON storage.objects FOR SELECT 
-TO public 
-USING (bucket_id = 'reels');
-
-CREATE POLICY "Public Deletion" 
-ON storage.objects FOR DELETE 
-TO public 
+-- The app never uploads/deletes storage objects from the browser — only the server, using the
+-- service-role key, which bypasses RLS/policies entirely. So the anon key (public by design,
+-- shipped in the client bundle) gets no write access at all. Read stays public since served
+-- reel media needs a plain fetchable URL (e.g. for Instagram's publish API).
+CREATE POLICY "Public Viewing"
+ON storage.objects FOR SELECT
+TO public
 USING (bucket_id = 'reels');
 
 -- =========================================================================
--- SECURITY NOTE: Row Level Security (RLS) for public schema tables
--- Enable RLS to protect tables from unauthorized public access.
--- If you want to restrict public access to the client-facing APIs,
--- uncomment the commands below and create suitable RLS policies.
--- 
--- ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.webhook_events ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.automations ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.media_cache ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.ice_breakers ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.content_pool ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.scheduler_config ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.reels_posts ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE public.dm_queue ENABLE ROW LEVEL SECURITY;
+-- Row Level Security (RLS) for public schema tables
+-- The app only ever queries these tables server-side with the service-role key, which always
+-- bypasses RLS — so enabling RLS here with zero policies is pure defense-in-depth: it makes sure
+-- the anon/authenticated keys (public by design) can never read or write these tables directly,
+-- even if a future code change accidentally introduces a client-side Supabase call.
 -- =========================================================================
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.webhook_events ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.automations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.media_cache ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.ice_breakers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.content_pool ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.scheduler_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reels_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.dm_queue ENABLE ROW LEVEL SECURITY;

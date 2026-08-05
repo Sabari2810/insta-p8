@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { getSession } from "@/lib/session"
+import { decryptSecret } from "@/lib/crypto"
 
 export async function POST(request: NextRequest) {
     try {
@@ -28,6 +29,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
+        const accessToken = decryptSecret(user.access_token)
+
         // 2. Prepare Payload for Instagram API
         const apiBody: any = { recipient: { id: recipientId } }
 
@@ -39,7 +42,7 @@ export async function POST(request: NextRequest) {
 
         // 3. Send to Instagram
         const res = await fetch(
-            `https://graph.instagram.com/v24.0/me/messages?access_token=${user.access_token}`,
+            `https://graph.instagram.com/v24.0/me/messages?access_token=${accessToken}`,
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

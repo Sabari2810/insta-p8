@@ -13,6 +13,7 @@ import {
   verifyIdOwnership,
   sleep,
 } from "@/lib/instagram-api"
+import { decryptSecret } from "@/lib/crypto"
 
 const WEBHOOK_VERIFY_TOKEN = process.env.INSTAGRAM_WEBHOOK_VERIFY_TOKEN
 // Meta signs every webhook POST with HMAC-SHA256 of the raw body. Depending on app setup the
@@ -168,6 +169,7 @@ export async function POST(request: NextRequest) {
         .select("*")
         .or(`business_account_id.eq.${webhookId},page_id.eq.${webhookId}`)
         .single()
+      if (user) user.access_token = decryptSecret(user.access_token)
 
       if (!user) {
         const candidateIds = new Set<string>()
@@ -190,6 +192,7 @@ export async function POST(request: NextRequest) {
             .single()
           if (fallbackUser) {
             await supabase.from("users").update({ page_id: webhookId }).eq("id", fallbackUser.id)
+            fallbackUser.access_token = decryptSecret(fallbackUser.access_token)
             user = fallbackUser
             break
           }
@@ -201,8 +204,10 @@ export async function POST(request: NextRequest) {
         if (allUsers) {
           for (const candidate of allUsers) {
             if (!candidate.access_token) continue
-            if (await verifyIdOwnership(candidate.access_token, webhookId)) {
+            const candidateToken = decryptSecret(candidate.access_token)
+            if (await verifyIdOwnership(candidateToken, webhookId)) {
               await supabase.from("users").update({ page_id: webhookId }).eq("id", candidate.id)
+              candidate.access_token = candidateToken
               user = candidate
               break
             }

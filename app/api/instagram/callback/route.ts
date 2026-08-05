@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { setSessionCookie } from "@/lib/session"
+import { encryptSecret } from "@/lib/crypto"
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -103,7 +104,7 @@ export async function POST(request: NextRequest) {
 
     const updates: any = {
       username,
-      access_token: accessToken,
+      access_token: encryptSecret(accessToken),
       token_expires_at: new Date(Date.now() + expiresIn * 1000).toISOString(),
       updated_at: new Date().toISOString(),
       business_account_id: businessAccountId,

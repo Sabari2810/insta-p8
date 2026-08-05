@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { getSession } from "@/lib/session"
+import { decryptSecret } from "@/lib/crypto"
 
 export async function GET(request: NextRequest) {
     try {
@@ -62,8 +63,9 @@ export async function POST(request: NextRequest) {
 
         // 2. Sync to Instagram
         const { data: user } = await supabase.from("users").select("access_token, page_id").eq("id", userId).single()
+        const accessToken = user?.access_token ? decryptSecret(user.access_token) : null
 
-        if (user && user.access_token && user.page_id) {
+        if (user && accessToken && user.page_id) {
             // Construct IG Payload
             const ice_breakers = inserted.map((ib: any) => ({
                 question: ib.question,
@@ -85,7 +87,7 @@ export async function POST(request: NextRequest) {
             // We need to know which response to send. 
 
             const response = await fetch(
-                `https://graph.instagram.com/v21.0/me/messenger_profile?access_token=${user.access_token}`,
+                `https://graph.instagram.com/v21.0/me/messenger_profile?access_token=${accessToken}`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },

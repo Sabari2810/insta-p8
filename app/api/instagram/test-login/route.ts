@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { setSessionCookie } from "@/lib/session"
+import { encryptSecret } from "@/lib/crypto"
 
 /**
  * POST /api/instagram/test-login
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
         {
           id: TEST_USER_ID,
           username: TEST_USERNAME,
-          access_token: "TEST_TOKEN_NOT_REAL",
+          access_token: encryptSecret("TEST_TOKEN_NOT_REAL"),
           token_expires_at: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
           business_account_id: TEST_USER_ID,
           page_id: TEST_USER_ID,

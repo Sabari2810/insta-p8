@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { getSession } from "@/lib/session"
+import { decryptSecret } from "@/lib/crypto"
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,11 +21,12 @@ export async function GET(request: NextRequest) {
     if (!user?.access_token) {
       return NextResponse.json({ error: "Instagram not connected" }, { status: 401 })
     }
+    const accessToken = decryptSecret(user.access_token)
 
     // 2. Fetch Media (Smart Method: /me/media)
     // Ye 'instagram.com' use karega jo aapke token ke saath compatible hai.
     // Hum '/me' use kar rahe hain taaki ID mismatch ka lafda hi na ho.
-    const url = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=24&access_token=${user.access_token}`
+    const url = `https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=24&access_token=${accessToken}`
 
     const res = await fetch(url, { cache: 'no-store' })
     const data = await res.json()
