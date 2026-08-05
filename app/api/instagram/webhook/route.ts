@@ -67,6 +67,20 @@ function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
+// Analytics counter — best-effort, never allowed to block a send. Skips synthetic matches
+// (e.g. ice breakers) that don't correspond to a real automations row.
+async function incrementTriggerCount(supabase: any, automation: any) {
+  if (!automation?.id) return
+  try {
+    await supabase
+      .from("automations")
+      .update({ trigger_count: (automation.trigger_count || 0) + 1 })
+      .eq("id", automation.id)
+  } catch (e) {
+    console.error("[webhook] Failed to increment trigger_count", e)
+  }
+}
+
 function keywordMatches(triggerValue: string, text: string): boolean {
   return triggerValue
     .split(",")
@@ -276,6 +290,7 @@ export async function POST(request: NextRequest) {
           if (parentId && content.include_replies !== true) continue
 
           console.log(`[webhook] ✅ Comment match: "${match.name}"`)
+          await incrementTriggerCount(supabase, match)
 
           // reply_mode: 'both' (default) | 'dm_only' | 'public_only'
           const replyMode = content.reply_mode || "both"
@@ -352,6 +367,7 @@ export async function POST(request: NextRequest) {
 
           if (match) {
             console.log(`[webhook] ✨ Story match: "${match.name}"`)
+            await incrementTriggerCount(supabase, match)
             const content = parseContent(match.response_content)
             await sendAutomationResponse(user.access_token, { id: senderId }, content)
           }
@@ -472,6 +488,7 @@ export async function POST(request: NextRequest) {
           if (!match) continue
 
           console.log(`[webhook] ✅ DM match: "${match.name}"`)
+          await incrementTriggerCount(supabase, match)
           const content = parseContent(match.response_content)
 
           // Mark message as seen for human-like flow

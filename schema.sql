@@ -76,9 +76,13 @@ CREATE TABLE IF NOT EXISTS public.automations (
   trigger_source TEXT NOT NULL DEFAULT 'comment' CHECK (trigger_source IN ('comment', 'dm', 'story')),
   follow_up_steps JSONB,
   is_active BOOLEAN DEFAULT TRUE,
+  trigger_count INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Safe to re-run against an existing database that predates trigger_count.
+ALTER TABLE public.automations ADD COLUMN IF NOT EXISTS trigger_count INTEGER NOT NULL DEFAULT 0;
 
 -- ==========================================
 -- 6. Table: public.media_cache
