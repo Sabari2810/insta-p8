@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2 } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, MessageSquare, Snowflake, BarChart3 } from "lucide-react"
 
 interface DashboardStats {
     metrics: {
@@ -127,18 +128,26 @@ export default function DashboardPage() {
                 <Card className="p-6 bg-[#0b0b0a] border-white/10">
                     <h3 className="font-serif-display text-2xl text-white mb-5">Quick actions</h3>
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="h-24 rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center hover:bg-white/5 cursor-pointer transition-colors group">
-                            <Zap className="w-6 h-6 text-muted-foreground group-hover:text-[#ffe14d] mb-2" />
-                            <span className="text-xs font-medium text-muted-foreground">New Rule</span>
-                        </div>
-                        <div className="h-24 rounded-xl border border-dashed border-white/20 flex flex-col items-center justify-center hover:bg-white/5 cursor-pointer transition-colors group">
-                            <Users className="w-6 h-6 text-muted-foreground group-hover:text-[#ffe14d] mb-2" />
-                            <span className="text-xs font-medium text-muted-foreground">View Audience</span>
-                        </div>
+                        <QuickAction href="/dashboard/automations?new=1" icon={<Zap className="w-6 h-6" />} label="New Rule" />
+                        <QuickAction href="/dashboard/inbox" icon={<MessageSquare className="w-6 h-6" />} label="View Inbox" />
+                        <QuickAction href="/dashboard/ice-breakers" icon={<Snowflake className="w-6 h-6" />} label="Ice Breakers" />
+                        <QuickAction href="/dashboard/analytics" icon={<BarChart3 className="w-6 h-6" />} label="Analytics" />
                     </div>
                 </Card>
             </div>
         </div>
+    )
+}
+
+function QuickAction({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
+    return (
+        <Link
+            href={href}
+            className="h-24 rounded-xl border border-white/10 flex flex-col items-center justify-center hover:bg-white/5 hover:border-white/20 transition-colors group"
+        >
+            <span className="text-muted-foreground group-hover:text-[#ffe14d] mb-2 transition-colors">{icon}</span>
+            <span className="text-xs font-medium text-muted-foreground group-hover:text-white transition-colors">{label}</span>
+        </Link>
     )
 }
 
