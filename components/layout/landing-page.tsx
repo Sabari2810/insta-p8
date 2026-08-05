@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
   Zap, MessageCircle, Sparkles, ArrowUpRight, Github, Star,
-  Send, AtSign, Brain, Inbox, Lock, Terminal,
+  Send, AtSign, Inbox, Lock, Terminal,
   Loader2,
 } from "lucide-react"
 
@@ -111,7 +111,7 @@ export function LandingPage() {
 
           <div className="fade-up mt-10 flex flex-col md:flex-row md:items-end gap-8 md:gap-16" style={{ animationDelay: "160ms" }}>
             <p className="text-neutral-400 text-base md:text-lg max-w-md leading-relaxed">
-              Comment-to-DM funnels, keyword triggers, story reactions, AI replies, a live inbox,
+              Comment-to-DM funnels, keyword triggers, story reactions, a live inbox,
               and Reels scheduling. The open-source ManyChat alternative — your data stays in your own Supabase.
             </p>
             <div className="flex flex-wrap items-center gap-3">
@@ -147,7 +147,7 @@ export function LandingPage() {
           <div className="marquee-track flex whitespace-nowrap font-mono-ui text-xs uppercase tracking-[0.2em] text-neutral-600 gap-8 w-max">
             {Array.from({ length: 2 }).map((_, copy) => (
               <div key={copy} className="flex gap-8">
-                {["comment → DM", "keyword triggers", "story reactions", "AI auto-reply", "live inbox", "ice breakers", "follow gate", "quick replies", "media attachments", "public + private replies"].map((t) => (
+                {["comment → DM", "keyword triggers", "story reactions", "live inbox", "ice breakers", "follow gate", "quick replies", "media attachments", "public + private replies"].map((t) => (
                   <span key={t} className="flex items-center gap-8">
                     {t} <span className="text-[#ffe14d]">✦</span>
                   </span>
@@ -171,8 +171,6 @@ export function LandingPage() {
               desc="Auto-respond to DMs with text, media, or rich cards with buttons. Quick-reply chips guide people through your funnel." />
             <Feature icon={<AtSign className="w-4 h-4" />} title="Story triggers"
               desc="React to story mentions, emoji reactions, and story replies. Filter by emoji or keyword." />
-            <Feature icon={<Brain className="w-4 h-4" />} title="AI auto-reply"
-              desc="Feed it your account context — niche, products, tone — and let AI handle unmatched DMs like a human." />
             <Feature icon={<Inbox className="w-4 h-4" />} title="Live inbox"
               desc="Every conversation in one dashboard. Jump in manually anytime, fire quick responses from your saved automations." />
             <Feature icon={<Lock className="w-4 h-4" />} title="Follow gate"
