@@ -91,7 +91,10 @@ async function sendAutomationResponse(
   content: any,
   opts: { skipTyping?: boolean } = {},
 ) {
-  const delaySeconds = Number(content.delay_seconds) || 0
+  const delaySeconds =
+    content.delay_seconds === "random"
+      ? Math.floor(Math.random() * (10 - 3 + 1)) + 3 // random 3-10s each send
+      : Number(content.delay_seconds) || 0
   const useTyping = content.typing_indicator === true && recipient.id && !opts.skipTyping
 
   if (useTyping) await sendSenderAction(token, recipient.id!, "typing_on")

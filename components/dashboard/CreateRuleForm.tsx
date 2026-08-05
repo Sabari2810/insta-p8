@@ -61,7 +61,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
   /* ---------- EXTRAS ---------- */
   const [name, setName] = useState("")
   const [checkFollow, setCheckFollow] = useState(false)
-  const [delaySeconds, setDelaySeconds] = useState(0)
+  const [delaySeconds, setDelaySeconds] = useState<string>("random")
   const [typingIndicator, setTypingIndicator] = useState(false)
 
   const [saving, setSaving] = useState(false)
@@ -114,7 +114,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     setPublicReplies(content.public_replies || [])
     setIncludeReplies(content.include_replies === true)
     setCheckFollow(content.check_follow === true)
-    setDelaySeconds(Number(content.delay_seconds) || 0)
+    const loadedDelay = content.delay_seconds
+    setDelaySeconds(
+      loadedDelay === "random" || [3, 5, 10, 30].includes(Number(loadedDelay)) ? String(loadedDelay) : "random",
+    )
     setTypingIndicator(content.typing_indicator === true)
     
     if (editRule.specific_media_id) {
@@ -194,7 +197,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     const isReplyAll = triggerSource === "comment" && triggers.length === 0
 
     const content: any = { check_follow: checkFollow }
-    if (delaySeconds > 0) content.delay_seconds = delaySeconds
+    content.delay_seconds = delaySeconds === "random" ? "random" : Number(delaySeconds)
     if (typingIndicator) content.typing_indicator = true
     if (triggerSource === "comment") {
       content.reply_mode = replyMode
@@ -689,10 +692,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                   </div>
                   <select
                     value={delaySeconds}
-                    onChange={(e) => setDelaySeconds(Number(e.target.value))}
+                    onChange={(e) => setDelaySeconds(e.target.value)}
                     className="bg-black border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none hover:border-white/20 transition-all cursor-pointer"
                   >
-                    <option value={0}>Send Immediately</option>
+                    <option value="random">Random (3–10s)</option>
                     <option value={3}>3s delay</option>
                     <option value={5}>5s delay</option>
                     <option value={10}>10s delay</option>

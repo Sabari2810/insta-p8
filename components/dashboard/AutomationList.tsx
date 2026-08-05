@@ -243,7 +243,12 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
                 <Megaphone className="w-2.5 h-2.5 mr-0.5" /> Public only
               </Badge>
             )}
-            {content.delay_seconds > 0 && (
+            {content.delay_seconds === "random" && (
+              <Badge variant="secondary" className="bg-white/5 text-neutral-400 border border-white/10 text-[10px] px-1.5 py-0">
+                <Timer className="w-2.5 h-2.5 mr-0.5" /> 3–10s
+              </Badge>
+            )}
+            {typeof content.delay_seconds === "number" && content.delay_seconds > 0 && (
               <Badge variant="secondary" className="bg-white/5 text-neutral-400 border border-white/10 text-[10px] px-1.5 py-0">
                 <Timer className="w-2.5 h-2.5 mr-0.5" /> {content.delay_seconds}s
               </Badge>
