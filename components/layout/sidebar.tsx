@@ -35,7 +35,7 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
         <div className="w-7 h-7 bg-[#ffe14d] text-black rounded-md flex items-center justify-center shrink-0">
           <Zap className="w-3.5 h-3.5" strokeWidth={2.5} />
         </div>
-        <span className="font-mono-ui text-sm font-bold tracking-tight text-white">insta-p8</span>
+        <span className="font-mono-ui text-sm font-bold tracking-tight text-white">Sovex</span>
       </div>
 
       <div className="mx-5 h-px bg-white/[0.06]" />

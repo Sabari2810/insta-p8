@@ -1,491 +1,145 @@
-<p align="center">
-  <img src="https://img.shields.io/github/stars/ayuuxh2/insta-p8?style=for-the-badge&color=facc15" alt="GitHub stars" />
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js" />
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/Supabase-Postgres-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
-  <img src="https://img.shields.io/badge/Instagram-Automation-E4405F?style=for-the-badge&logo=instagram" alt="Instagram automation" />
-  <a href="https://www.producthunt.com/products/instaauto?launch=instaauto"><img src="https://img.shields.io/badge/Featured%20on-Product%20Hunt-DA552F?style=for-the-badge&logo=producthunt&logoColor=white" alt="Product Hunt" /></a>
-  <a href="https://discord.gg/7J9E7bNvX"><img src="https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
-  <a href="https://t.me/instagramautomationp8"><img src="https://img.shields.io/badge/Telegram-Join-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram Group" /></a>
-</p>
+# Sovex
 
-<h1 align="center">⚡ InstaAuto</h1>
+Instagram DM/comment/story automation — internal reference for setup, architecture, and per-client deployment. This is not a public-facing README; it's documentation for working in this repo.
 
-<p align="center">
-  <strong>Free open-source ManyChat alternative — Instagram DM automation, comment-to-DM funnels, story replies, AI auto-replies, and a live inbox.</strong>
-</p>
+## Stack
 
-<p align="center">
-  A self-hosted, AI-ready, developer-friendly alternative to paid Instagram automation tools like ManyChat, Chatfuel, and SendPulse.
-  <br />
-  No monthly SaaS fees. No vendor lock-in. Your data stays in your Supabase.
-</p>
+Next.js 16 (App Router, Turbopack) · React 19 · Supabase (Postgres + Storage) · Instagram Graph API (`graph.instagram.com`, "Instagram API with Instagram Login") · Tailwind v4 · Recharts
 
-<p align="center">
-  <a href="#-step-by-step-video-setup-guide"><strong>🎬 Video Guide</strong></a> ·
-  <a href="#-live-web-app--testing-access"><strong>Join Web Testers</strong></a> ·
-  <a href="#-quick-start-self-host"><strong>Self Host</strong></a> ·
-  <a href="#-features"><strong>Features</strong></a> ·
-  <a href="#-environment-variables"><strong>Env Setup</strong></a> ·
-  <a href="#-deploy-to-vercel"><strong>Deploy</strong></a> ·
-  <a href="#-faq"><strong>FAQ</strong></a> ·
-  <a href="https://www.producthunt.com/products/instaauto?launch=instaauto"><strong>Product Hunt</strong></a> ·
-  <a href="https://discord.gg/7J9E7bNvX"><strong>Discord</strong></a> ·
-  <a href="https://t.me/instagramautomationp8"><strong>Telegram</strong></a>
-</p>
+## Delivery model
 
----
+One codebase (this repo), maintained centrally. Each client runs their own independent stack on top of it: their own Supabase project, their own Vercel project, their own Meta app. Nothing is shared between clients today — deliberately single-tenant per deployment while the product is being built out. Multi-tenancy (one shared app serving many clients) is a planned later phase; see the note at the bottom.
 
-## 🎬 Step-by-Step Video Setup Guide
+Because each client's Meta app stays in Development mode, only Instagram accounts added as **testers** in that specific app can complete OAuth login. Onboarding a new client always starts with adding their Instagram account as a tester — nothing else works until that's done.
 
-Get your self-hosted Instagram automation platform live in under 18 minutes! Follow this step-by-step video tutorial to fork, configure, and deploy the application.
+## New client setup — step by step
 
-<p align="center">
-  <a href="https://youtu.be/kIMQe__d37I" target="_blank">
-    <img src="https://img.youtube.com/vi/kIMQe__d37I/0.jpg" alt="InstaAuto Setup Tutorial Video" width="600" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
-  </a>
-</p>
+### 1. Supabase project
 
-<p align="center">
-  👉 <strong><a href="https://youtu.be/kIMQe__d37I" target="_blank">Click here to watch the full step-by-step tutorial on YouTube</a></strong>
-</p>
+- Create a new project at [supabase.com](https://supabase.com).
+- Open the SQL editor, paste in [`schema.sql`](schema.sql), run it. It's written idempotently (`CREATE TABLE IF NOT EXISTS`, `ADD COLUMN IF NOT EXISTS`, `DROP POLICY IF EXISTS`) — safe to re-run in full any time the schema changes, including against a project that already has data.
+- From Project Settings → API, copy the project URL, the `anon` public key, and the `service_role` key. You'll need all three.
 
----
+### 2. Meta app + Instagram product
 
-## 🚀 What is InstaAuto?
+- Go to [developers.facebook.com/apps](https://developers.facebook.com/apps/) → Create App.
+- Add the **Instagram** product → "API setup with Instagram business login" (not Instagram Basic Display, not Facebook Login — those are different products with different token formats).
+- Under Instagram → Roles → Roles, add the client's Instagram account as a **tester**. They'll need to accept the invite from their Instagram app before login will work.
+- Note the *Instagram app ID and secret* shown on that Instagram product page specifically — not the parent Meta app's ID/secret from Settings → Basic. These are different values and mixing them up is the most common setup mistake.
+- Under Instagram → Business login settings, add the OAuth redirect URI (see step 3 for the exact value).
+- Scopes used by the app: `instagram_business_basic`, `instagram_business_manage_messages`, `instagram_business_manage_comments`.
 
-**InstaAuto** is an open-source Instagram automation platform built for creators, indie hackers, agencies, brands, and developers who want to automate Instagram workflows without paying recurring fees for closed SaaS tools.
+### 3. Environment variables
 
-Use it to build:
+Set these in the Vercel project (Project Settings → Environment Variables) and, for local testing, in `.env.local`. Full descriptions also live in `.env.example`.
 
-- **Instagram DM automation**
-- **Instagram comment auto-replies**
-- **Instagram story automation**
-- **AI Instagram auto-replies**
-- **Keyword-triggered message funnels**
-- **Live Instagram inbox dashboard**
-- **Instagram Ice Breakers**
-- **Self-hosted ManyChat alternative**
-- **Open-source Instagram chatbot**
+```env
+# Supabase (from step 1)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-If you are searching for a **free ManyChat alternative**, **open-source Instagram DM bot**, **self-hosted Instagram automation tool**, **Instagram AI chatbot**, or **Instagram comment-to-DM automation**, this project is built for that exact use case.
+# App secrets — generate each with: openssl rand -hex 32
+SESSION_SECRET=
+ENCRYPTION_KEY=
+CRON_SECRET=
 
----
-
-## 🌐 Live Web App & Testing Access
-
-You have two ways to use InstaAuto:
-
-### Option 1: Join the released web app as a tester
-
-If you do not want to deploy anything yourself, you can request access to the hosted web app and join as a tester.
-
-- **Best for:** creators, small businesses, marketers, beta testers
-- **What you need:** an Instagram Business or Creator account
-- **How it works:** request access, connect Instagram, create automations, test DMs/comments/stories
-
-> The hosted app may require manual approval because Instagram platform permissions and tester roles are controlled through Meta.
-
-### Option 2: Self-host it
-
-If you are a developer or agency, self-host InstaAuto on your own Vercel + Supabase account.
-
-- **Best for:** developers, agencies, privacy-focused teams, power users
-- **You control:** database, tokens, deployment, AI gateway, webhook URL
-- **Cost:** can run on free tiers for small usage
-
----
-
-## � Live Showcase
-
-Try a real Instagram automation demo before self-hosting.
-
-- **Instagram profile:** [@ayuuxh2](https://www.instagram.com/ayuuxh2/)
-- **DM keyword demo:** send `hello` in DMs → bot replies with a welcome message
-- **Comment-to-DM demo:** comment `link` on the demo post → bot public-replies and DMs you the link
-- **Comment-to-DM demo post:** [instagram.com/p/DWb3vuZDxm6](https://www.instagram.com/p/DWb3vuZDxm6/)
-- **Story reply demo:** reply `info` to an active story → bot DMs you back
-
-This showcase helps contributors and testers verify that the open-source Instagram DM automation, comment-to-DM funnels, and story-reply workflow are working in production.
-
-> Please use the demo responsibly. Do not spam the showcase profile or post.
-
----
-
-## �💡 Why not just use ManyChat?
-
-ManyChat is great, but it is closed-source and paid. InstaAuto is for people who want ownership and flexibility.
-
-| Feature | ManyChat | InstaAuto |
-|---|---:|---:|
-| Open source | ❌ | ✅ |
-| Self-hosted | ❌ | ✅ |
-| Monthly SaaS fee | ✅ | ❌ |
-| Own your database | ❌ | ✅ |
-| Custom API routes | Limited | ✅ |
-| AI-native replies | Paid/add-on style | ✅ |
-| Developer extensibility | Limited | ✅ |
-| Supabase/Postgres backend | ❌ | ✅ |
-| Vercel deployable | ❌ | ✅ |
-| Full source code access | ❌ | ✅ |
-
-**Positioning:** InstaAuto is not a drop-in clone. It is an open-source, self-hosted automation base for builders who want to customize Instagram automation deeply.
-
----
-
-## ✨ Features
-
-### 💬 Instagram DM Automation
-
-- Keyword-based DM auto-replies
-- Multi-keyword matching
-- Postback/button payload handling
-- Auto-save incoming DMs to inbox
-- Auto-save outgoing bot replies
-- Live conversation dashboard
-- Manual reply from inbox
-- Rich response cards with buttons
-- Follow-gated locked content flows
-
-### 💭 Instagram Comment Automation
-
-- Auto-reply to Instagram post comments
-- Send private DM after a comment trigger
-- Specific-post automations
-- Global keyword automations
-- Reply-all mode for selected posts
-- Public comment reply like “Check your DMs”
-- Comment-to-DM funnels for lead magnets, links, offers, downloads, coupons, courses, and products
-
-### 📖 Instagram Story Automation
-
-- Story mention automation
-- Story reply automation
-- Story reaction automation
-- Emoji reaction triggers
-- Specific story matching support
-- Automatic DM responses for story engagement
-
-### 🤖 AI Instagram Auto-Replies
-
-- AI fallback when no keyword automation matches
-- Custom AI personality context per account
-- Reads recent conversation history
-- Matches language and tone: English, Hindi, Hinglish, casual, formal
-- Short human-like replies
-- Typing indicators
-- Random delay before response for more natural behavior
-- Proxy-based AI gateway support via `/api/groq/chat`
-
-### 🧊 Instagram Ice Breakers
-
-- Add up to 4 Instagram Ice Breakers
-- Save question + auto-response
-- Sync Ice Breakers to Instagram Messenger profile
-- Handle Ice Breaker postback responses in webhook
-
-### 📥 Built-in Inbox
-
-- Conversation list
-- Message history
-- Manual DM replies
-- Store incoming and outgoing Instagram messages
-- Useful for creators who want automation plus manual support
-
-### 📊 Dashboard
-
-- Automation count
-- Active triggers
-- Audience reached
-- Messages sent
-- Recent activity
-- Quick view of account automation health
-
----
-
-## 🧱 Tech Stack
-
-- **Framework:** Next.js 16 App Router
-- **Frontend:** React 19, TypeScript
-- **Styling:** Tailwind CSS, shadcn/ui-style components
-- **Icons:** Lucide React
-- **Database:** Supabase Postgres
-- **Storage:** Supabase Storage
-- **Deployment:** Vercel
-- **Analytics:** Vercel Analytics
-- **Instagram API:** Instagram API with Instagram Login, Graph API v24.0
-- **AI Gateway:** Groq/OpenAI-compatible proxy pattern
-
----
-
-## 🏗️ Architecture
-
-```txt
-Instagram User
-     ↓
-Instagram Webhook
-     ↓
-Next.js API Routes
-     ↓
-Automation Matcher
-     ↓
-Supabase Database
-     ↓
-Instagram Graph API Reply
+# Instagram / Meta app (from step 2)
+NEXT_PUBLIC_INSTAGRAM_APP_ID=
+INSTAGRAM_APP_ID=
+INSTAGRAM_APP_SECRET=
+NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI=https://<client-domain>/api/instagram/callback
+INSTAGRAM_WEBHOOK_VERIFY_TOKEN=
 ```
 
-Important modules:
+See [Environment variables](#environment-variables) below for what each one does — several of these (`SESSION_SECRET`, `ENCRYPTION_KEY`) are required in production; the app will refuse to start critical flows without them rather than falling back to something insecure.
 
-```txt
-app/api/instagram/callback       OAuth login + token exchange
-app/api/instagram/webhook        DM/comment/story webhook brain
-app/api/automations              Automation CRUD
-app/api/ice-breakers             Ice Breaker management + sync
-app/api/inbox                    Conversations, messages, manual send
-app/api/groq                     AI auto-reply settings + chat proxy
-components/dashboard             Dashboard and automations UI
-components/inbox                 Live inbox UI
-lib/supabase-server.ts           Supabase server client
-```
+### 4. Deploy to Vercel
 
----
+- Create a new Vercel project from this repo (or redeploy the existing one to a new project — either way, one Vercel project per client).
+- Add all env vars from step 3.
+- `vercel.json` wires up the daily token-refresh cron automatically on deploy — no extra setup needed beyond `CRON_SECRET` being set.
+- Deploy.
 
-## ⚡ Quick Start: Self Host
+### 5. Webhook subscription
 
-### 1. Clone the repo
+- In the Meta app's Instagram → Webhooks settings, subscribe to `messages` and `comments` (and any other fields you need).
+- Callback URL: `https://<client-domain>/api/instagram/webhook`
+- Verify token: same value as `INSTAGRAM_WEBHOOK_VERIFY_TOKEN`.
+- Once connected, the deployed app's own **Settings** page shows this exact callback URL (with a copy button) and a live status dot for whether the verify token is actually configured — check there first if the subscription fails.
 
-```bash
-git clone https://github.com/ayuuxh2/insta-p8.git
-cd insta-p8
-```
+### 6. Connect the account
 
-### 2. Install dependencies
+- Client visits the deployed app and clicks "Connect Instagram" — standard OAuth flow, redirects to Instagram, comes back logged in.
+- First login creates their `users` row and starts the 60-day token clock (auto-refreshed well before expiry — see Architecture below).
+
+### 7. Pre-launch checklist
+
+- [ ] Log in with the client's Instagram Business/Creator account
+- [ ] Create a DM keyword automation, send a test DM from a different Instagram account, confirm the reply
+- [ ] Create a comment automation on a real post, comment the trigger word, confirm both the public reply and the private DM
+- [ ] Add ice breakers, confirm they show up in the actual Instagram DM composer (they sync to the Messenger profile on save)
+- [ ] Open the live inbox, confirm the test conversation shows up, try a manual reply and a tag
+- [ ] Check Settings — connection status should read "Active," webhook verify token should show as configured
+
+## Environment variables
+
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Supabase project connection. The app only ever queries the DB server-side with the service-role key — the anon key is unused by app code today. |
+| `SESSION_SECRET` | Signs the session cookie (`lib/session.ts`). Required in production — the app refuses to sign anyone in without it rather than falling back to a weak default. |
+| `ENCRYPTION_KEY` | Encrypts Instagram access tokens at rest (`lib/crypto.ts`, AES-256-GCM). Also required in production. Rotating this key makes previously-stored tokens unreadable — connected accounts would need to reconnect. |
+| `CRON_SECRET` | Protects `/api/cron/refresh-tokens`. Vercel sends this automatically as a Bearer token when it triggers the scheduled job. |
+| `NEXT_PUBLIC_INSTAGRAM_APP_ID`, `INSTAGRAM_APP_ID`, `INSTAGRAM_APP_SECRET` | The Instagram product's app ID/secret (not the parent Meta app's). |
+| `META_APP_SECRET` | Optional fallback — only needed if webhook signature validation 401s because Meta signed the delivery with the parent app secret instead. |
+| `NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI` | Must exactly match an OAuth redirect URI configured in the Instagram product's business login settings — character-for-character, including scheme and trailing slash. |
+| `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` | Any random string, entered identically in both the env var and Meta's webhook subscription form. |
+| `DISABLE_WEBHOOK_SIGNATURE_CHECK` | **Debug only.** Set to `"true"` to bypass HMAC signature verification on incoming webhooks when troubleshooting 401s. If this is ever left `true` on a real deployment, anyone can POST forged webhook events and get the client's Instagram account to send arbitrary DMs. Never set this on a client's production env. |
+
+## Architecture
+
+- **`app/api/instagram/webhook/route.ts`** — the core event handler. Verifies Meta's HMAC signature, resolves the incoming webhook ID to a user row (direct match → fallback ID match → self-healing token-verify loop), matches comment/DM/story events against that user's automations, and sends the configured response. Also increments each automation's `trigger_count` for analytics.
+- **`lib/session.ts`** — HMAC-signed, httpOnly session cookie. Every data-fetching API route requires a valid session and scopes queries/mutations to `session.userId` — never trusts a client-supplied user ID.
+- **`lib/crypto.ts`** — AES-256-GCM encryption for access tokens stored in the `users` table. Backward-compatible with legacy plaintext (detects the encryption prefix; passes through unchanged if absent).
+- **`lib/instagram-api.ts`** — thin wrapper around Instagram Graph API calls (send DM, reply to comment, refresh token, etc.), all taking an access token as a parameter rather than touching the DB directly.
+- **`app/api/cron/refresh-tokens/route.ts`** — daily Vercel Cron job (`vercel.json`) that proactively refreshes any token expiring within 10 days, so a client's automations shouldn't ever silently die from an expired token. `components/dashboard/ConnectionBanner.tsx` is the UI fallback for when that doesn't catch it in time.
+- **`schema.sql`** — full schema, written idempotently so it can be re-run against a live project after changes. A few tables (`content_pool`, `reels_posts`, `scheduler_config`, `dm_queue`, `webhook_events`) are defined but currently unused — leftover from a removed content-scheduling feature. Safe to ignore; not wired to any code path.
+
+## Features
+
+- Comment-to-DM funnels — keyword or reply-all triggers, optionally scoped to a specific post
+- DM keyword automation — text, media, or button-card responses, with quick replies
+- Story triggers — mention, reaction, or reply, optionally scoped to a specific story
+- Follow gate — locks a response behind following the account first
+- Ice breakers (Instagram's native DM entry-point questions)
+- Live inbox — manual reply, automation quick-fire, and contact tagging/segmentation (filter conversations by tag)
+- Human-like sending — randomized 3–10s delay, typing indicator, read receipts
+- Analytics — messages sent/received trend, audience growth, top automations by trigger count, active automations by channel
+- Settings — connected account status, webhook config/debug info, disconnect
+- Automatic token refresh + expiry warning banner
+
+## What's deliberately not built
+
+- **Bulk/broadcast messaging.** Instagram's 24-hour messaging window policy restricts free-form messages to contacts who've messaged you recently; a naive "message everyone" feature risks the client's account getting flagged. Tags/segmentation exist as the groundwork for doing this safely later (message only contacts tagged X who are still in-window) — not built yet.
+- **AI auto-reply.** Was present in an earlier version, backend was stripped, frontend was left dangling (calling a 404 route) until it was removed. Could be rebuilt for real (LLM provider + API key + per-message cost) if wanted.
+
+## Local development
 
 ```bash
 npm install
-```
-
-You can also use Bun or pnpm if that is your preferred package manager.
-
-### 3. Create a Supabase project
-
-- Create a new project on Supabase
-- Copy your project URL
-- Copy anon key
-- Copy service role key
-- Run the SQL schema from `db` and migration scripts from `scripts/` and `migrations/`
-
-### 4. Create a Meta / Instagram app
-
-You need an Instagram Business or Creator account and a Meta Developer app configured for Instagram Login and webhooks.
-
-Required Instagram scopes used by the app:
-
-```txt
-instagram_business_basic
-instagram_business_manage_messages
-instagram_business_manage_comments
-```
-
-### 5. Configure environment variables
-
-Create `.env.local`:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-
-NEXT_PUBLIC_INSTAGRAM_APP_ID=your_instagram_app_id
-INSTAGRAM_APP_ID=your_instagram_app_id
-INSTAGRAM_APP_SECRET=your_instagram_app_secret
-NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI=http://localhost:3000/api/instagram/callback
-INSTAGRAM_WEBHOOK_VERIFY_TOKEN=choose_a_strong_verify_token
-
-GATEWAY_SECRET=your_ai_gateway_secret
-API_SECRET_KEY=your_internal_hook_secret
-```
-
-### 6. Run locally
-
-```bash
 npm run dev
 ```
 
-Open:
+Three lockfiles exist in the repo (`package-lock.json`, `bun.lock`, `pnpm-lock.yaml`) — use `npm`; the others are stale and should eventually be removed.
 
-```txt
-http://localhost:3000
-```
+In development, a "Dev Login" button on the landing page bypasses Instagram OAuth entirely (`app/api/instagram/test-login`) — gated behind `NODE_ENV !== "production"`, unavailable in any real deployment.
 
----
+## Things that bite
 
-## 🔐 Environment Variables
+- Webhooks must be reachable from the public internet — Meta can't call `localhost`. Test webhook flows against a real deployment, not local dev.
+- The client's account must be an Instagram **Business or Creator** account, not personal — Business Login won't work otherwise.
+- Respect Instagram's platform terms and anti-spam policies. Automated replies must be triggered by a genuine user action (comment, DM, story interaction) — no scraping, no unsolicited mass messaging.
 
-| Variable | Required | Description |
-|---|---:|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Supabase anon/public key |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Supabase service role key for API routes |
-| `NEXT_PUBLIC_INSTAGRAM_APP_ID` | ✅ | Public Instagram app/client ID |
-| `INSTAGRAM_APP_ID` | ✅ | Server-side Instagram app ID |
-| `INSTAGRAM_APP_SECRET` | ✅ | Instagram app secret for token exchange |
-| `NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI` | ✅ | OAuth redirect URI |
-| `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` | ✅ | Webhook verification token |
-| `GATEWAY_SECRET` | Optional | Secret used for AI gateway/proxy calls |
-| `API_SECRET_KEY` | Optional | Internal API secret for publishing hooks |
+## Roadmap note
 
-**Security note:** never expose `SUPABASE_SERVICE_ROLE_KEY`, `INSTAGRAM_APP_SECRET`, user access tokens, or `API_SECRET_KEY` in client-side code.
-
----
-
-## ▲ Deploy to Vercel
-
-1. Fork this repository
-2. Import it into Vercel
-3. Add all environment variables
-4. Set the production redirect URI in Meta Developer Console
-5. Set your webhook callback URL:
-
-```txt
-https://your-domain.com/api/instagram/webhook
-```
-
-6. Deploy
-7. Connect your Instagram Business/Creator account
-8. Create your first automation
-
----
-
-## 🧪 Testing Checklist
-
-Before going live, test these flows:
-
-- Login with Instagram Business/Creator account
-- Create a DM keyword automation
-- Send a test DM from another Instagram account
-- Create a comment keyword automation
-- Comment on a selected post
-- Confirm public comment reply + private DM
-- Add Ice Breakers and verify they sync
-- Toggle AI auto-reply and send an unmatched DM
-- Test inbox manual reply
-
----
-
-## ❓ FAQ
-
-### Is there a free alternative to ManyChat for Instagram?
-
-Yes — InstaAuto is a free, open-source ManyChat alternative. You self-host it on Vercel and Supabase free tiers, connect your Instagram Business or Creator account through the official Instagram API, and get DM keyword automation, comment-to-DM funnels, story-reply automation, and a live inbox without any monthly fee.
-
-### How do I automate Instagram DMs for free?
-
-Deploy InstaAuto (about 18 minutes with the [video guide](https://youtu.be/kIMQe__d37I)), connect your Instagram professional account, and create a keyword rule — for example, auto-reply to every DM containing "price". Replies can be text, images, quick-reply chips, or button cards.
-
-### How does comment-to-DM automation work?
-
-When someone comments a trigger word (like "link") on your post, Instagram sends a webhook to your deployment. InstaAuto posts a public reply ("Check your DMs!") and sends the commenter a private DM with your link or lead magnet — the same funnel ManyChat charges for.
-
-### Is this allowed by Instagram?
-
-Yes — InstaAuto uses the official Instagram API with Instagram Login and its approved permissions. Every reply is triggered by a user-initiated message or comment, within Instagram's messaging window rules. It does not scrape, mass-DM, or bypass rate limits.
-
-### Do I need a server?
-
-No dedicated server — it runs on Vercel serverless functions with a Supabase Postgres database. Both have free tiers that comfortably handle a creator account.
-
-### ManyChat vs Chatfuel vs InstaAuto?
-
-ManyChat and Chatfuel are excellent hosted products with polished UIs and paid plans. InstaAuto trades the polish for ownership: full source code, your own database, unlimited customization, and $0/month.
-
----
-
-## 📈 SEO Use Cases
-
-InstaAuto can be used as:
-
-- Free ManyChat alternative
-- Open-source ManyChat alternative
-- Free Chatfuel alternative for Instagram
-- Instagram DM automation tool
-- Instagram comment automation tool
-- Instagram chatbot platform
-- Instagram AI auto-reply bot
-- Instagram lead generation bot
-- Comment-to-DM automation tool
-- Instagram story automation software
-- Self-hosted social media automation
-- Instagram marketing automation dashboard
-- Creator automation CRM
-- Instagram inbox automation
-- Open-source Instagram API starter
-
----
-
-## ⚠️ Important Notes
-
-- Instagram APIs require correct Meta app permissions and review for production use.
-- Some features may require your Instagram account to be Business or Creator type.
-- Webhooks must be reachable from the public internet.
-- Hosted tester access may require approval depending on Meta app tester roles.
-- Respect Instagram Platform Terms and anti-spam policies.
-- Do not use automation to spam, deceive, scrape, or abuse users.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] One-click Vercel deploy button
-- [ ] Docker setup
-- [ ] Better onboarding wizard
-- [ ] Automation templates
-- [ ] Multi-account workspace support
-- [ ] AI model selector
-- [ ] Better analytics charts
-- [ ] Webhook event debugger
-- [ ] Export/import automations
-- [x] Public demo video
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-Join our **[Discord community](https://discord.gg/7J9E7bNvX)** for discussions, support, and updates!
-
-Join our **[Telegram group](https://t.me/instagramautomationp8)** for quick help, updates, and community chat!
-
-Good first issues:
-
-- Improve setup docs
-- Add Docker support
-- Add more automation templates
-- Improve dashboard analytics
-- Add tests for API routes
-- Improve webhook logging
-- Add provider-agnostic AI configuration
-
----
-
-## ❤️ Sponsors
-
-A huge thank you to our amazing sponsors for supporting this project!
-
-- [@Divypratap93](https://github.com/Divypratap93) — $10 🇬🇧
-
----
-
-
-## ⭐ Support
-
-If this project helps you avoid paying for expensive Instagram automation tools, please star the repo.
-
-Stars help more developers discover open-source Instagram automation, self-hosted creator tools, and AI-powered social media workflows.
-
----
-
-## 📄 License
-
-MIT License. Use it, fork it, self-host it, customize it, and build on top of it.
+Single-tenant per client is the current, deliberate phase. Multi-tenant (one shared app, many clients, self-serve onboarding) is planned for later — the main prerequisite is getting a Meta app through App Review to go Live, which removes the tester-gated onboarding bottleneck described above. Doing multi-tenant work before that review is done would still leave onboarding manual per client either way.
