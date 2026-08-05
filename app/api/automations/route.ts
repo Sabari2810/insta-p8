@@ -1,10 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
+import { getSession } from "@/lib/session"
 
 export async function GET(request: NextRequest) {
   try {
-    const userId = request.nextUrl.searchParams.get("userId")
-    if (!userId) return NextResponse.json({ error: "Missing userId" }, { status: 400 })
+    const session = getSession(request)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const supabase = await getSupabaseServerClient()
 
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from("automations")
       .select("*")
-      .eq("user_id", userId)
+      .eq("user_id", session.userId)
       .order("created_at", { ascending: false })
 
     if (error) throw error
@@ -26,9 +27,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, name, trigger_source, trigger_type, trigger_value, content, specific_media_id } = await request.json()
+    const session = getSession(request)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    if (!userId || !name || !trigger_value || !content || !trigger_source) {
+    const { name, trigger_source, trigger_type, trigger_value, content, specific_media_id } = await request.json()
+
+    if (!name || !trigger_value || !content || !trigger_source) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 })
     }
 
@@ -48,7 +52,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("automations")
       .insert({
-        user_id: userId,
+        user_id: session.userId,
         name,
         trigger_source,
         trigger_type: trigger_type || "keyword",
@@ -71,10 +75,13 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const session = getSession(request)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
     const id = request.nextUrl.searchParams.get("id")
     if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 })
     const supabase = await getSupabaseServerClient()
-    const { error } = await supabase.from("automations").delete().eq("id", id)
+    const { error } = await supabase.from("automations").delete().eq("id", id).eq("user_id", session.userId)
     if (error) throw error
     return NextResponse.json({ success: true })
   } catch (error) {
@@ -85,6 +92,9 @@ export async function DELETE(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const session = getSession(request)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
     const { id, name, trigger_source, trigger_type, trigger_value, content, specific_media_id } = await request.json()
 
     if (!id || !name || !trigger_value || !content) {
@@ -115,6 +125,7 @@ export async function PUT(request: NextRequest) {
       .from("automations")
       .update(updateData)
       .eq("id", id)
+      .eq("user_id", session.userId)
       .select()
       .single()
 
@@ -128,6 +139,9 @@ export async function PUT(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    const session = getSession(request)
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
     const { id, is_active, action } = await request.json()
     if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 })
 
@@ -138,6 +152,7 @@ export async function PATCH(request: NextRequest) {
         .from("automations")
         .select("*")
         .eq("id", id)
+        .eq("user_id", session.userId)
         .single()
       if (fetchError || !original) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
@@ -159,6 +174,7 @@ export async function PATCH(request: NextRequest) {
       .from("automations")
       .update({ is_active })
       .eq("id", id)
+      .eq("user_id", session.userId)
       .select()
       .single()
 
