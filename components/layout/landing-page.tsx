@@ -23,15 +23,22 @@ export function LandingPage() {
   }, [])
 
   const handleLogin = () => {
-    // Instagram Business Login (Instagram API with Instagram Login). client_id must be the
-    // Instagram app ID from the Instagram product page, not the parent Meta app ID.
-    window.location.href = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=${process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID}&redirect_uri=${process.env.NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments`
+    // Server route generates a CSRF state token and redirects to Instagram's authorize screen.
+    window.location.href = "/api/instagram/login"
   }
 
-  const handleTestLogin = () => {
-    localStorage.setItem("ig_user_id", "9999999999")
-    localStorage.setItem("ig_username", "test_creator")
-    router.push("/dashboard")
+  const handleTestLogin = async () => {
+    try {
+      const res = await fetch("/api/instagram/test-login", { method: "POST" })
+      const data = await res.json()
+      if (data.success) {
+        localStorage.setItem("ig_user_id", data.userId)
+        localStorage.setItem("ig_username", data.username)
+        router.push("/dashboard")
+      }
+    } catch (err) {
+      console.error("Dev login failed:", err)
+    }
   }
 
   return (

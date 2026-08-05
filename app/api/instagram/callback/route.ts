@@ -1,12 +1,32 @@
+import crypto from "crypto"
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { setSessionCookie } from "@/lib/session"
 import { encryptSecret } from "@/lib/crypto"
 
+const OAUTH_STATE_COOKIE = "ig_oauth_state"
+
+function clearOAuthStateCookie(response: NextResponse) {
+  response.cookies.set(OAUTH_STATE_COOKIE, "", {
+    path: "/",
+    maxAge: 0,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  })
+}
+
+function timingSafeEqualStr(a: string, b: string): boolean {
+  const bufA = Buffer.from(a)
+  const bufB = Buffer.from(b)
+  return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB)
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const code = searchParams.get("code")
   const error = searchParams.get("error")
+  const state = searchParams.get("state")
 
   if (error) {
     const redirectUrl = new URL("/", request.url)
@@ -17,6 +37,7 @@ export async function GET(request: NextRequest) {
   if (code) {
     const redirectUrl = new URL("/", request.url)
     redirectUrl.searchParams.set("code", code)
+    if (state) redirectUrl.searchParams.set("state", state)
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -26,8 +47,18 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { code } = body
+    const { code, state } = body
     if (!code) return NextResponse.json({ error: "No code" }, { status: 400 })
+
+    const expectedState = request.cookies.get(OAUTH_STATE_COOKIE)?.value
+    if (!expectedState || !state || !timingSafeEqualStr(state, expectedState)) {
+      const response = NextResponse.json(
+        { error: "Login attempt expired or invalid. Please try connecting again." },
+        { status: 400 },
+      )
+      clearOAuthStateCookie(response)
+      return response
+    }
 
     // 1. Env Vars
     const clientId = process.env.INSTAGRAM_APP_ID
@@ -121,6 +152,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({ success: true, username, userId: loginUserId, profilePic })
     setSessionCookie(response, { userId: loginUserId, username }, expiresIn)
+    clearOAuthStateCookie(response)
     return response
 
   } catch (error: any) {

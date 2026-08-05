@@ -14,6 +14,7 @@ export function useInstagramSession() {
 
     useEffect(() => {
         const code = searchParams.get("code")
+        const state = searchParams.get("state")
 
         const handleSession = async () => {
             // CASE A: New Login from Instagram
@@ -21,7 +22,7 @@ export function useInstagramSession() {
                 try {
                     const res = await fetch("/api/instagram/callback", {
                         method: "POST",
-                        body: JSON.stringify({ code }),
+                        body: JSON.stringify({ code, state }),
                     })
                     const data = await res.json()
 
