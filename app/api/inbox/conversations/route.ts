@@ -1,10 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
+import { getSession } from "@/lib/session"
 
 export async function GET(request: NextRequest) {
     try {
-        const userId = request.nextUrl.searchParams.get("userId")
-        if (!userId) return NextResponse.json({ error: "Missing userId" }, { status: 400 })
+        const session = getSession(request)
+        if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        const userId = session.userId
 
         const supabase = await getSupabaseServerClient()
 
