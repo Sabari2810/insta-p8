@@ -149,3 +149,23 @@ export async function verifyIdOwnership(token: string, id: string): Promise<bool
 export function sleep(ms: number) {
   return new Promise((r) => setTimeout(r, Math.min(ms, 8000)))
 }
+
+/**
+ * Refreshes a long-lived Instagram token for another ~60 days. Only works on a token that is
+ * still valid (not yet expired) and at least 24h old — an already-expired token can't be
+ * refreshed this way and needs a full re-auth instead.
+ */
+export async function refreshLongLivedToken(
+  token: string,
+): Promise<{ access_token: string; expires_in: number } | null> {
+  try {
+    const res = await fetch(
+      `https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${encodeURIComponent(token)}`,
+    )
+    const json = await res.json()
+    if (!res.ok || json.error || !json.access_token) return null
+    return { access_token: json.access_token, expires_in: json.expires_in || 5184000 }
+  } catch {
+    return null
+  }
+}

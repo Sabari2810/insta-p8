@@ -2,6 +2,7 @@
 
 import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
+import { ConnectionBanner } from "@/components/dashboard/ConnectionBanner"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Loader2 } from "lucide-react"
 
@@ -41,6 +42,7 @@ export default function DashboardLayout({
                 </header>
 
                 <main className="flex-1 relative overflow-auto">
+                    <ConnectionBanner />
                     {children}
                 </main>
             </div>
