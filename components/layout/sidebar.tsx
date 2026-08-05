@@ -4,7 +4,7 @@ import type React from "react"
 import { cn } from "@/lib/utils"
 import {
   Zap, LayoutDashboard, LogOut, Settings, BarChart3,
-  MessageSquare, Snowflake, Send,
+  MessageSquare, Snowflake,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -81,16 +81,6 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
           <Settings className="w-4 h-4 shrink-0" strokeWidth={1.8} />
           <span>Settings</span>
         </Link>
-
-        <a
-          href="https://t.me/instagramautomationp8"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-[13px] text-neutral-500 hover:text-[#2AABEE] hover:bg-white/[0.03] transition-colors"
-        >
-          <Send className="w-4 h-4 shrink-0" strokeWidth={1.8} />
-          <span>Get help</span>
-        </a>
       </nav>
 
       {/* Account */}
