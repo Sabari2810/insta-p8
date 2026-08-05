@@ -27,6 +27,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# video files (test/generated)
-*.mp4
-/washed_videos/

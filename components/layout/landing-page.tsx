@@ -1,26 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import {
-  Zap, MessageCircle, Sparkles, ArrowUpRight, Github, Star,
+  Zap, MessageCircle, Sparkles, ArrowUpRight,
   Send, AtSign, Inbox, Lock, Terminal,
   Loader2,
 } from "lucide-react"
 
 const TELEGRAM_URL = "https://t.me/instagramautomationp8"
-const GITHUB_URL = "https://github.com/ayuuxh2/insta-p8"
 
 export function LandingPage() {
-  const [stars, setStars] = useState<number | null>(null)
   const router = useRouter()
-
-  useEffect(() => {
-    fetch("https://api.github.com/repos/ayuuxh2/insta-p8")
-      .then(r => r.json())
-      .then(d => { if (typeof d.stargazers_count === "number") setStars(d.stargazers_count) })
-      .catch(() => {})
-  }, [])
 
   const handleLogin = () => {
     // Server route generates a CSRF state token and redirects to Instagram's authorize screen.
@@ -69,14 +59,6 @@ export function LandingPage() {
           <span className="hidden sm:inline-block font-mono-ui text-[10px] text-neutral-500 border border-white/10 rounded-full px-2 py-0.5">open source</span>
         </div>
         <div className="flex items-center gap-2">
-          <a
-            href={GITHUB_URL} target="_blank" rel="noreferrer"
-            className="flex items-center gap-1.5 font-mono-ui text-xs text-neutral-400 hover:text-white border border-white/10 hover:border-white/30 rounded-full px-3.5 py-1.5 transition-colors"
-          >
-            <Github className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Star</span>
-            {stars !== null && <span className="text-[#ffe14d]">{stars}</span>}
-          </a>
           {process.env.NODE_ENV === "development" && (
             <button
               onClick={handleTestLogin}
@@ -188,8 +170,7 @@ export function LandingPage() {
             <div>
               <h3 className="font-serif-display text-3xl md:text-4xl mb-2">Built in the open.</h3>
               <p className="text-neutral-500 text-sm max-w-md">
-                Stars, sponsors, and testers keep this project alive. Questions, bugs, feature requests —
-                the Telegram chat is where it all happens.
+                Questions, bugs, feature requests — the Telegram chat is where it all happens.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
@@ -198,12 +179,6 @@ export function LandingPage() {
                 className="flex items-center gap-2 bg-[#2AABEE] text-white font-mono-ui text-xs font-bold px-5 py-3 rounded-full hover:brightness-110 transition-all"
               >
                 <Send className="w-3.5 h-3.5" /> Join Telegram
-              </a>
-              <a
-                href={GITHUB_URL} target="_blank" rel="noreferrer"
-                className="flex items-center gap-2 border border-white/15 text-neutral-300 font-mono-ui text-xs font-bold px-5 py-3 rounded-full hover:border-white/40 transition-colors"
-              >
-                <Star className="w-3.5 h-3.5 text-[#ffe14d]" /> Star on GitHub
               </a>
             </div>
           </div>
@@ -216,7 +191,6 @@ export function LandingPage() {
           Sovex — open-source Instagram automation. MIT licensed.
         </span>
         <div className="flex items-center gap-5 font-mono-ui text-[11px] text-neutral-500">
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="hover:text-white transition-colors">GitHub</a>
           <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="hover:text-[#2AABEE] transition-colors">Telegram support</a>
         </div>
       </footer>
