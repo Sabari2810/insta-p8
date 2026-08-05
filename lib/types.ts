@@ -71,4 +71,6 @@ export interface Automation {
   specific_media_id?: string | null
   media_selection?: MediaSelection | null
   selected_reel_id?: string | null
+  trigger_count?: number
+  unlock_count?: number
 }

@@ -67,7 +67,7 @@ function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
-// Analytics counter — best-effort, never allowed to block a send. Skips synthetic matches
+// Analytics counters — best-effort, never allowed to block a send. Skip synthetic matches
 // (e.g. ice breakers) that don't correspond to a real automations row.
 async function incrementTriggerCount(supabase: any, automation: any) {
   if (!automation?.id) return
@@ -78,6 +78,20 @@ async function incrementTriggerCount(supabase: any, automation: any) {
       .eq("id", automation.id)
   } catch (e) {
     console.error("[webhook] Failed to increment trigger_count", e)
+  }
+}
+
+// Fires only when a follow-gate's "I followed!" button completes the unlock — a distinct event
+// from the gate being shown, so this must never share a counter with incrementTriggerCount.
+async function incrementUnlockCount(supabase: any, automation: any) {
+  if (!automation?.id) return
+  try {
+    await supabase
+      .from("automations")
+      .update({ unlock_count: (automation.unlock_count || 0) + 1 })
+      .eq("id", automation.id)
+  } catch (e) {
+    console.error("[webhook] Failed to increment unlock_count", e)
   }
 }
 
@@ -487,8 +501,16 @@ export async function POST(request: NextRequest) {
 
           if (!match) continue
 
+          // A follow-gate unlock is a completion of an earlier trigger, not a new one — must not
+          // share a counter with the initial gate-show, or the two get conflated into one number.
+          const isUnlockEvent = triggerType === "postback" && triggerValue.startsWith("UNLOCK_CONTENT_")
+
           console.log(`[webhook] ✅ DM match: "${match.name}"`)
-          await incrementTriggerCount(supabase, match)
+          if (isUnlockEvent) {
+            await incrementUnlockCount(supabase, match)
+          } else {
+            await incrementTriggerCount(supabase, match)
+          }
           const content = parseContent(match.response_content)
 
           // Mark message as seen for human-like flow
@@ -497,7 +519,6 @@ export async function POST(request: NextRequest) {
           }
 
           // Follow gate
-          const isUnlockEvent = triggerType === "postback" && triggerValue.startsWith("UNLOCK_CONTENT_")
           let result
           let replyTextLog = responsePreviewText(content)
 

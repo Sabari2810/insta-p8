@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       .gte("created_at", startDate.toISOString()),
     supabase
       .from("automations")
-      .select("id, name, trigger_source, trigger_count, is_active")
+      .select("id, name, trigger_source, trigger_count, unlock_count, is_active")
       .eq("user_id", userId),
   ])
 
@@ -67,7 +67,13 @@ export async function GET(request: NextRequest) {
     .filter((a) => (a.trigger_count || 0) > 0)
     .sort((a, b) => (b.trigger_count || 0) - (a.trigger_count || 0))
     .slice(0, 5)
-    .map((a) => ({ id: a.id, name: a.name, triggerSource: a.trigger_source, triggerCount: a.trigger_count }))
+    .map((a) => ({
+      id: a.id,
+      name: a.name,
+      triggerSource: a.trigger_source,
+      triggerCount: a.trigger_count,
+      unlockCount: a.unlock_count || 0,
+    }))
 
   const activeAutomations = automations.filter((a) => a.is_active)
   const automationsBySource = {

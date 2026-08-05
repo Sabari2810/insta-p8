@@ -81,12 +81,14 @@ CREATE TABLE IF NOT EXISTS public.automations (
   follow_up_steps JSONB,
   is_active BOOLEAN DEFAULT TRUE,
   trigger_count INTEGER NOT NULL DEFAULT 0,
+  unlock_count INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- Safe to re-run against an existing database that predates trigger_count.
+-- Safe to re-run against an existing database that predates trigger_count/unlock_count.
 ALTER TABLE public.automations ADD COLUMN IF NOT EXISTS trigger_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE public.automations ADD COLUMN IF NOT EXISTS unlock_count INTEGER NOT NULL DEFAULT 0;
 
 -- ==========================================
 -- 6. Table: public.media_cache

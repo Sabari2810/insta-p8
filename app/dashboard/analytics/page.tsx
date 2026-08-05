@@ -8,7 +8,7 @@ import { Loader2, MessageCircle, Send, Sparkles, TrendingUp, Trophy } from "luci
 
 interface AnalyticsData {
     timeSeries: { date: string; sent: number; received: number; newConversations: number }[]
-    topAutomations: { id: string; name: string; triggerSource: string; triggerCount: number }[]
+    topAutomations: { id: string; name: string; triggerSource: string; triggerCount: number; unlockCount: number }[]
     automationsBySource: { comment: number; dm: number; story: number }
 }
 
@@ -193,7 +193,11 @@ export default function AnalyticsPage() {
                                                         <span className="text-neutral-600 font-mono-ui text-xs mr-2">#{i + 1}</span>
                                                         {a.name}
                                                     </span>
-                                                    <span className="text-xs font-mono-ui text-neutral-500 shrink-0">{a.triggerCount}×</span>
+                                                    <span className="text-xs font-mono-ui text-neutral-500 shrink-0">
+                                                        {a.unlockCount > 0
+                                                            ? `${a.triggerCount} shown · ${a.unlockCount} unlocked (${Math.round((a.unlockCount / a.triggerCount) * 100)}%)`
+                                                            : `${a.triggerCount}×`}
+                                                    </span>
                                                 </div>
                                                 <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
                                                     <div className="h-full rounded-full bg-[#ffe14d]" style={{ width: `${pct}%` }} />
