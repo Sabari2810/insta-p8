@@ -60,6 +60,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
   /* ---------- EXTRAS ---------- */
   const [name, setName] = useState("")
+  const [nameEdited, setNameEdited] = useState(false)
   const [checkFollow, setCheckFollow] = useState(false)
   const [delaySeconds, setDelaySeconds] = useState<string>("random")
   const [typingIndicator, setTypingIndicator] = useState(false)
@@ -128,13 +129,15 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     }
   }, [editRule])
 
-  /* Auto name */
+  /* Auto name — suggests a name from the trigger until the user actually types in the field.
+     Must key off whether the user has edited it, not whether it's currently empty, or clearing
+     the field to type a custom name would immediately get overwritten by this effect. */
   useEffect(() => {
-    if (name || isEditing) return
+    if (nameEdited || isEditing) return
     const isReplyAll = triggerSource === "comment" && triggers.length === 0
     if (isReplyAll) setName("Reply to every comment")
     else if (triggers.length > 0) setName(`Reply to "${triggers[0]}"`)
-  }, [triggers, name, isEditing, triggerSource])
+  }, [triggers, nameEdited, isEditing, triggerSource])
 
   /* ---------- helpers ---------- */
   const addButton = () => {
@@ -672,7 +675,11 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
               <div className="space-y-2">
                 <FieldLabel>Automation identifier name</FieldLabel>
-                <TextField value={name} onChange={setName} placeholder='e.g. "Free Ebook Download Trigger"' />
+                <TextField
+                  value={name}
+                  onChange={(v) => { setName(v); setNameEdited(true) }}
+                  placeholder='e.g. "Free Ebook Download Trigger"'
+                />
               </div>
 
               <div className="space-y-4">
