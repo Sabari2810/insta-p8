@@ -7,6 +7,7 @@ export interface Conversation {
     created_at: string
     updated_at: string
     tags: string[]
+    profile_pic_url: string | null
 }
 
 export interface Message {

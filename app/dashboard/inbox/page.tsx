@@ -13,13 +13,15 @@ export default function InboxPage() {
     const [selectedRecipientName, setSelectedRecipientName] = useState<string | null>(null)
     const [selectedRecipientId, setSelectedRecipientId] = useState<string | null>(null)
     const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [selectedProfilePic, setSelectedProfilePic] = useState<string | null>(null)
     const [refreshKey, setRefreshKey] = useState(0)
 
-    const handleSelect = (id: string, name: string, recipientId: string, tags: string[]) => {
+    const handleSelect = (id: string, name: string, recipientId: string, tags: string[], profilePicUrl: string | null) => {
         setSelectedConversationId(id)
         setSelectedRecipientName(name)
         setSelectedRecipientId(recipientId)
         setSelectedTags(tags)
+        setSelectedProfilePic(profilePicUrl)
     }
 
     const handleTagsChanged = (tags: string[]) => {
@@ -65,6 +67,7 @@ export default function InboxPage() {
                     recipientId={selectedRecipientId || undefined}
                     userId={userId}
                     tags={selectedTags}
+                    profilePicUrl={selectedProfilePic}
                     onTagsChanged={handleTagsChanged}
                     onBack={() => setSelectedConversationId(null)}
                 />

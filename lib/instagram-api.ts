@@ -126,9 +126,16 @@ export async function replyToComment(token: string, commentId: string, message: 
   return post(`${commentId}/replies`, token, { message })
 }
 
-export async function fetchProfile(token: string, igUserId: string): Promise<{ username?: string; name?: string } | null> {
+// Note: profile_pic is a signed URL that Meta says expires "in a few days" — never store it
+// indefinitely, refresh it periodically (see webhook route).
+export async function fetchProfile(
+  token: string,
+  igUserId: string,
+): Promise<{ username?: string; name?: string; profile_pic?: string } | null> {
   try {
-    const res = await fetch(`${GRAPH}/${igUserId}?fields=username,name&access_token=${encodeURIComponent(token)}`)
+    const res = await fetch(
+      `${GRAPH}/${igUserId}?fields=username,name,profile_pic&access_token=${encodeURIComponent(token)}`,
+    )
     const json = await res.json()
     if (json.error) return null
     return json

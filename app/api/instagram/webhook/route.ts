@@ -421,7 +421,7 @@ export async function POST(request: NextRequest) {
           try {
             const { data: existing } = await supabase
               .from("conversations")
-              .select("id")
+              .select("id, profile_pic_updated_at")
               .eq("user_id", user.id)
               .eq("recipient_id", senderId)
               .single()
@@ -438,16 +438,30 @@ export async function POST(request: NextRequest) {
                   recipient_id: senderId,
                   recipient_username: realUsername,
                   last_message_at: new Date().toISOString(),
+                  profile_pic_url: profile?.profile_pic || null,
+                  profile_pic_updated_at: profile?.profile_pic ? new Date().toISOString() : null,
                 })
                 .select("id")
                 .single()
               conv = newConv
             } else {
               conv = existing
-              await supabase
-                .from("conversations")
-                .update({ last_message_at: new Date().toISOString() })
-                .eq("id", existing.id)
+              const updates: any = { last_message_at: new Date().toISOString() }
+
+              // Instagram's profile_pic URL expires after a few days — refresh it periodically
+              // rather than fetching on every single message.
+              const picAge = existing.profile_pic_updated_at
+                ? Date.now() - new Date(existing.profile_pic_updated_at).getTime()
+                : Infinity
+              if (picAge > 24 * 60 * 60 * 1000) {
+                const profile = await fetchProfile(user.access_token, senderId)
+                if (profile?.profile_pic) {
+                  updates.profile_pic_url = profile.profile_pic
+                  updates.profile_pic_updated_at = new Date().toISOString()
+                }
+              }
+
+              await supabase.from("conversations").update(updates).eq("id", existing.id)
             }
 
             if (conv) {

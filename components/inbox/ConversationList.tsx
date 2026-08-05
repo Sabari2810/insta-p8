@@ -1,15 +1,16 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Search, Loader2, UserCircle } from "lucide-react"
+import { Search, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Avatar } from "@/components/inbox/Avatar"
 import type { Conversation } from "@/types/db"
 
 interface ConversationListProps {
     userId: string
     selectedId: string | null
     refreshKey: number
-    onSelect: (id: string, username: string, recipientId: string, tags: string[]) => void
+    onSelect: (id: string, username: string, recipientId: string, tags: string[], profilePicUrl: string | null) => void
 }
 
 export function ConversationList({ userId, selectedId, refreshKey, onSelect }: ConversationListProps) {
@@ -109,7 +110,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
                     visibleConversations.map((conv) => (
                         <div
                             key={conv.id}
-                            onClick={() => onSelect(conv.id, conv.recipient_username, conv.recipient_id.toString(), conv.tags || [])}
+                            onClick={() => onSelect(conv.id, conv.recipient_username, conv.recipient_id.toString(), conv.tags || [], conv.profile_pic_url)}
                             className={cn(
                                 "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
@@ -117,9 +118,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
                                     : "hover:bg-white/5 hover:border-white/5"
                             )}
                         >
-                            <div className="w-12 h-12 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0">
-                                <UserCircle className="w-6 h-6 text-white/50" />
-                            </div>
+                            <Avatar src={conv.profile_pic_url} size={48} />
                             <div className="flex-1 min-w-0 text-left">
                                 <div className="flex items-center justify-between mb-0.5">
                                     <span className={cn(

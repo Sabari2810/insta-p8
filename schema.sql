@@ -32,11 +32,15 @@ CREATE TABLE IF NOT EXISTS public.conversations (
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   tags TEXT[] NOT NULL DEFAULT '{}',
+  profile_pic_url TEXT,
+  profile_pic_updated_at TIMESTAMPTZ,
   UNIQUE (user_id, recipient_id)
 );
 
--- Safe to re-run against an existing database that predates tags.
+-- Safe to re-run against an existing database that predates tags/profile_pic_url.
 ALTER TABLE public.conversations ADD COLUMN IF NOT EXISTS tags TEXT[] NOT NULL DEFAULT '{}';
+ALTER TABLE public.conversations ADD COLUMN IF NOT EXISTS profile_pic_url TEXT;
+ALTER TABLE public.conversations ADD COLUMN IF NOT EXISTS profile_pic_updated_at TIMESTAMPTZ;
 
 -- ==========================================
 -- 3. Table: public.messages

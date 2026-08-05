@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react"
 import { Send, Loader2, Zap, ChevronLeft, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { Avatar } from "@/components/inbox/Avatar"
 import type { Message } from "@/types/db"
 
 interface ChatWindowProps {
@@ -12,11 +13,12 @@ interface ChatWindowProps {
     recipientName: string | null
     userId: string
     tags?: string[]
+    profilePicUrl?: string | null
     onTagsChanged?: (tags: string[]) => void
     onBack?: () => void
 }
 
-export function ChatWindow({ conversationId, recipientId, recipientName, userId, tags = [], onTagsChanged, onBack }: ChatWindowProps) {
+export function ChatWindow({ conversationId, recipientId, recipientName, userId, tags = [], profilePicUrl, onTagsChanged, onBack }: ChatWindowProps) {
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
     const [inputText, setInputText] = useState("")
@@ -159,7 +161,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                             <ChevronLeft className="w-6 h-6" />
                         </Button>
                     )}
-                    <div className="w-8 h-8 rounded-full bg-white/10 border border-white/15 shrink-0" />
+                    <Avatar src={profilePicUrl} size={32} />
                     <div className="min-w-0">
                         <h3 className="font-bold text-white text-sm truncate">@{recipientName}</h3>
                     </div>
