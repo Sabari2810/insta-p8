@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Search, Loader2, UserCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { Conversation } from "@/types/db"
@@ -8,12 +8,14 @@ import type { Conversation } from "@/types/db"
 interface ConversationListProps {
     userId: string
     selectedId: string | null
-    onSelect: (id: string, username: string, recipientId: string) => void
+    refreshKey: number
+    onSelect: (id: string, username: string, recipientId: string, tags: string[]) => void
 }
 
-export function ConversationList({ userId, selectedId, onSelect }: ConversationListProps) {
+export function ConversationList({ userId, selectedId, refreshKey, onSelect }: ConversationListProps) {
     const [conversations, setConversations] = useState<Conversation[]>([])
     const [loading, setLoading] = useState(true)
+    const [activeTag, setActiveTag] = useState<string | null>(null)
 
     useEffect(() => {
         if (!userId) return
@@ -33,7 +35,17 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
         }
 
         fetchConversations()
-    }, [userId])
+    }, [userId, refreshKey])
+
+    const allTags = useMemo(() => {
+        const set = new Set<string>()
+        conversations.forEach((c) => (c.tags || []).forEach((t) => set.add(t)))
+        return Array.from(set).sort()
+    }, [conversations])
+
+    const visibleConversations = activeTag
+        ? conversations.filter((c) => (c.tags || []).includes(activeTag))
+        : conversations
 
     if (loading) {
         return (
@@ -45,8 +57,8 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
 
     return (
         <div className="flex flex-col h-full border-r border-white/5 bg-black/20 w-full md:w-[350px]">
-            <div className="p-4 border-b border-white/5">
-                <h2 className="text-lg font-bold text-white mb-4">Inbox</h2>
+            <div className="p-4 border-b border-white/5 space-y-3">
+                <h2 className="text-lg font-bold text-white">Inbox</h2>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
@@ -54,18 +66,43 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                         placeholder="Search messages..."
                     />
                 </div>
+                {allTags.length > 0 && (
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                        <button
+                            onClick={() => setActiveTag(null)}
+                            className={cn(
+                                "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
+                                !activeTag ? "bg-[#ffe14d] text-black border-[#ffe14d]" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
+                            )}
+                        >
+                            All
+                        </button>
+                        {allTags.map((tag) => (
+                            <button
+                                key={tag}
+                                onClick={() => setActiveTag(tag === activeTag ? null : tag)}
+                                className={cn(
+                                    "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
+                                    activeTag === tag ? "bg-[#ffe14d] text-black border-[#ffe14d]" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
+                                )}
+                            >
+                                {tag}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-2 space-y-1">
-                {conversations.length === 0 ? (
+                {visibleConversations.length === 0 ? (
                     <div className="text-center py-10 text-muted-foreground text-sm">
-                        No conversations yet.
+                        {activeTag ? `No conversations tagged "${activeTag}".` : "No conversations yet."}
                     </div>
                 ) : (
-                    conversations.map((conv) => (
+                    visibleConversations.map((conv) => (
                         <div
                             key={conv.id}
-                            onClick={() => onSelect(conv.id, conv.recipient_username, conv.recipient_id.toString())}
+                            onClick={() => onSelect(conv.id, conv.recipient_username, conv.recipient_id.toString(), conv.tags || [])}
                             className={cn(
                                 "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
@@ -88,9 +125,19 @@ export function ConversationList({ userId, selectedId, onSelect }: ConversationL
                                         {new Date(conv.last_message_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                                     </span>
                                 </div>
-                                <p className="text-xs text-muted-foreground truncate">
-                                    Open to view conversation
-                                </p>
+                                {conv.tags?.length > 0 ? (
+                                    <div className="flex items-center gap-1 flex-wrap">
+                                        {conv.tags.map((tag) => (
+                                            <span key={tag} className="text-[9px] uppercase tracking-wider text-neutral-500 bg-white/5 rounded-full px-1.5 py-0.5">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-muted-foreground truncate">
+                                        Open to view conversation
+                                    </p>
+                                )}
                             </div>
                         </div>
                     ))

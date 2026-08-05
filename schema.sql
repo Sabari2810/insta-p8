@@ -31,8 +31,12 @@ CREATE TABLE IF NOT EXISTS public.conversations (
   last_message_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  tags TEXT[] NOT NULL DEFAULT '{}',
   UNIQUE (user_id, recipient_id)
 );
+
+-- Safe to re-run against an existing database that predates tags.
+ALTER TABLE public.conversations ADD COLUMN IF NOT EXISTS tags TEXT[] NOT NULL DEFAULT '{}';
 
 -- ==========================================
 -- 3. Table: public.messages

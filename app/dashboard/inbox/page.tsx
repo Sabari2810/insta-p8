@@ -12,11 +12,19 @@ export default function InboxPage() {
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
     const [selectedRecipientName, setSelectedRecipientName] = useState<string | null>(null)
     const [selectedRecipientId, setSelectedRecipientId] = useState<string | null>(null)
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
+    const [refreshKey, setRefreshKey] = useState(0)
 
-    const handleSelect = (id: string, name: string, recipientId: string) => {
+    const handleSelect = (id: string, name: string, recipientId: string, tags: string[]) => {
         setSelectedConversationId(id)
         setSelectedRecipientName(name)
         setSelectedRecipientId(recipientId)
+        setSelectedTags(tags)
+    }
+
+    const handleTagsChanged = (tags: string[]) => {
+        setSelectedTags(tags)
+        setRefreshKey((k) => k + 1)
     }
 
     if (isLoading) {
@@ -41,6 +49,7 @@ export default function InboxPage() {
                 <ConversationList
                     userId={userId}
                     selectedId={selectedConversationId}
+                    refreshKey={refreshKey}
                     onSelect={handleSelect}
                 />
             </div>
@@ -55,6 +64,8 @@ export default function InboxPage() {
                     recipientName={selectedRecipientName}
                     recipientId={selectedRecipientId || undefined}
                     userId={userId}
+                    tags={selectedTags}
+                    onTagsChanged={handleTagsChanged}
                     onBack={() => setSelectedConversationId(null)}
                 />
             </div>

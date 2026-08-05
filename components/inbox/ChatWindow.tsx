@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Send, Loader2, MoreVertical, Phone, Video, Zap, ChevronLeft } from "lucide-react"
+import { Send, Loader2, MoreVertical, Phone, Video, Zap, ChevronLeft, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Message } from "@/types/db"
@@ -11,16 +11,20 @@ interface ChatWindowProps {
     recipientId?: string
     recipientName: string | null
     userId: string
+    tags?: string[]
+    onTagsChanged?: (tags: string[]) => void
     onBack?: () => void
 }
 
-export function ChatWindow({ conversationId, recipientId, recipientName, userId, onBack }: ChatWindowProps) {
+export function ChatWindow({ conversationId, recipientId, recipientName, userId, tags = [], onTagsChanged, onBack }: ChatWindowProps) {
     const [messages, setMessages] = useState<Message[]>([])
     const [loading, setLoading] = useState(false)
     const [inputText, setInputText] = useState("")
     const [sending, setSending] = useState(false)
     const [isAutomationOpen, setIsAutomationOpen] = useState(false)
     const [automations, setAutomations] = useState<any[]>([])
+    const [tagInput, setTagInput] = useState("")
+    const [savingTags, setSavingTags] = useState(false)
     const bottomRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -95,6 +99,40 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
         }
     }
 
+    const saveTags = async (nextTags: string[]) => {
+        if (!conversationId) return
+        setSavingTags(true)
+        try {
+            const res = await fetch("/api/inbox/conversations", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ conversationId, tags: nextTags }),
+            })
+            if (res.ok) {
+                const data = await res.json()
+                onTagsChanged?.(data.tags || nextTags)
+            }
+        } catch (e) {
+            console.error("Failed to save tags", e)
+        } finally {
+            setSavingTags(false)
+        }
+    }
+
+    const handleAddTag = () => {
+        const value = tagInput.trim()
+        if (!value || tags.includes(value)) {
+            setTagInput("")
+            return
+        }
+        setTagInput("")
+        saveTags([...tags, value])
+    }
+
+    const handleRemoveTag = (tag: string) => {
+        saveTags(tags.filter((t) => t !== tag))
+    }
+
     if (!conversationId) {
         return (
             <div className="flex-1 flex items-center justify-center flex-col gap-4 text-center bg-black/40 h-full">
@@ -134,6 +172,41 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                     <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hidden md:flex"><Phone className="w-4 h-4" /></Button>
                     <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hidden md:flex"><Video className="w-4 h-4" /></Button>
                     <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white"><MoreVertical className="w-4 h-4" /></Button>
+                </div>
+            </div>
+
+            {/* Tags */}
+            <div className="flex items-center gap-1.5 flex-wrap px-4 md:px-6 py-2.5 border-b border-white/5 bg-black/10 shrink-0">
+                {tags.map((tag) => (
+                    <span
+                        key={tag}
+                        className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-neutral-300 bg-white/5 border border-white/10 rounded-full pl-2.5 pr-1.5 py-1"
+                    >
+                        {tag}
+                        <button
+                            onClick={() => handleRemoveTag(tag)}
+                            disabled={savingTags}
+                            className="text-neutral-500 hover:text-white disabled:opacity-50"
+                        >
+                            <X className="w-3 h-3" />
+                        </button>
+                    </span>
+                ))}
+                <div className="flex items-center gap-1 bg-white/[0.03] border border-white/10 rounded-full pl-2 pr-1 py-1">
+                    <Plus className="w-3 h-3 text-neutral-600" />
+                    <input
+                        value={tagInput}
+                        onChange={(e) => setTagInput(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault()
+                                handleAddTag()
+                            }
+                        }}
+                        placeholder="Add tag"
+                        disabled={savingTags}
+                        className="w-16 bg-transparent text-[10px] uppercase tracking-wider text-white placeholder:text-neutral-600 focus:outline-none disabled:opacity-50"
+                    />
                 </div>
             </div>
 
