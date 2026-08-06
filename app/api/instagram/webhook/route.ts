@@ -455,7 +455,11 @@ export async function POST(request: NextRequest) {
             continue
           }
 
-          const displayContent = triggerValue || (attachmentType ? `[${attachmentType}]` : "[message]")
+          // Prefer the human-readable label over the raw trigger value — quick replies and
+          // postback buttons carry a separate machine payload (e.g. "QR_SEND_DETAILS") that's
+          // only meant for automation matching, never for display in the conversation.
+          const humanText = event.message?.text || event.postback?.title || null
+          const displayContent = humanText || (attachmentType ? `[${attachmentType}]` : "[message]")
           console.log(`[webhook] 📩 DM from ${senderId}: "${displayContent}"`)
 
           // ---------- Persist conversation + incoming message ----------
