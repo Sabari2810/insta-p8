@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { ConversationList } from "@/components/inbox/ConversationList"
 import { ChatWindow } from "@/components/inbox/ChatWindow"
@@ -9,6 +10,8 @@ import { cn } from "@/lib/utils"
 
 export default function InboxPage() {
     const { userId, isLoading } = useInstagramSession()
+    const searchParams = useSearchParams()
+    const deepLinkConversationId = searchParams.get("conversation")
     const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
     const [selectedRecipientName, setSelectedRecipientName] = useState<string | null>(null)
     const [selectedRecipientId, setSelectedRecipientId] = useState<string | null>(null)
@@ -53,6 +56,7 @@ export default function InboxPage() {
                     selectedId={selectedConversationId}
                     refreshKey={refreshKey}
                     onSelect={handleSelect}
+                    initialConversationId={deepLinkConversationId}
                 />
             </div>
 

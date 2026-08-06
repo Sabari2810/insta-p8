@@ -36,10 +36,10 @@ export async function GET(request: NextRequest) {
             .eq("user_id", userId)
             .eq("is_from_instagram", false)
 
-        // 5. Recent Activity (Last 5 messages sent by bot)
+        // 5. Recent Activity (last 5 outbound messages, from any source)
         const { data: recentMessages } = await supabase
             .from("messages")
-            .select("id, content, created_at, sender_username, conversation_id, recipient:conversations(recipient_username)")
+            .select("id, content, created_at, conversation_id, attachment_type, source, recipient:conversations(recipient_username)")
             .eq("user_id", userId)
             .eq("is_from_instagram", false)
             .order("created_at", { ascending: false })

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Search, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/inbox/Avatar"
@@ -11,13 +11,15 @@ interface ConversationListProps {
     selectedId: string | null
     refreshKey: number
     onSelect: (id: string, username: string, recipientId: string, tags: string[], profilePicUrl: string | null) => void
+    initialConversationId?: string | null
 }
 
-export function ConversationList({ userId, selectedId, refreshKey, onSelect }: ConversationListProps) {
+export function ConversationList({ userId, selectedId, refreshKey, onSelect, initialConversationId }: ConversationListProps) {
     const [conversations, setConversations] = useState<Conversation[]>([])
     const [loading, setLoading] = useState(true)
     const [activeTag, setActiveTag] = useState<string | null>(null)
     const [search, setSearch] = useState("")
+    const didAutoSelect = useRef(false)
 
     useEffect(() => {
         if (!userId) return
@@ -28,6 +30,14 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
                 const data = await res.json()
                 if (Array.isArray(data)) {
                     setConversations(data)
+
+                    if (!didAutoSelect.current && initialConversationId) {
+                        didAutoSelect.current = true
+                        const target = data.find((c: Conversation) => c.id === initialConversationId)
+                        if (target) {
+                            onSelect(target.id, target.recipient_username, target.recipient_id.toString(), target.tags || [], target.profile_pic_url)
+                        }
+                    }
                 }
             } catch (error) {
                 console.error("Failed to load conversations", error)
@@ -37,6 +47,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect }: C
         }
 
         fetchConversations()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId, refreshKey])
 
     const allTags = useMemo(() => {

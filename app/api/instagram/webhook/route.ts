@@ -420,6 +420,7 @@ export async function POST(request: NextRequest) {
                     attachment_url: echoAttachment?.payload?.url || null,
                     attachment_type: echoAttachment?.type || null,
                     is_from_instagram: false,
+                    source: "echo",
                   },
                   { onConflict: "id", ignoreDuplicates: true },
                 )
@@ -522,6 +523,7 @@ export async function POST(request: NextRequest) {
                   attachment_url: attachmentUrl,
                   attachment_type: attachmentType,
                   is_from_instagram: true,
+                  source: "customer",
                 },
                 { onConflict: "id", ignoreDuplicates: true },
               )
@@ -612,6 +614,7 @@ export async function POST(request: NextRequest) {
                   sender_username: user.username,
                   content: replyTextLog,
                   is_from_instagram: false,
+                  source: "automation",
                 },
                 { onConflict: "id", ignoreDuplicates: true },
               )

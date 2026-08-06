@@ -80,7 +80,8 @@ export async function POST(request: NextRequest) {
                     content: message || "[Attachment]",
                     attachment_url: attachment?.payload?.url || null,
                     attachment_type: attachment?.type || null,
-                    is_from_instagram: false
+                    is_from_instagram: false,
+                    source: "manual"
                 },
                 { onConflict: "id", ignoreDuplicates: true },
             )

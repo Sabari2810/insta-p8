@@ -17,10 +17,50 @@ interface DashboardStats {
         id: string
         content: string
         created_at: string
+        conversation_id: string
+        attachment_type?: string | null
+        source?: "customer" | "automation" | "manual" | "echo" | null
         recipient?: {
             recipient_username: string
         }
     }>
+}
+
+const ATTACHMENT_LABELS: Record<string, string> = {
+    image: "📷 Sent a photo",
+    video: "🎥 Sent a video",
+    audio: "🎵 Sent audio",
+    file: "📎 Sent a file",
+    share: "🔗 Shared a post",
+    story_mention: "Mentioned in a story",
+    ig_reel: "🎬 Shared a reel",
+    reel: "🎬 Shared a reel",
+}
+
+const SOURCE_LABELS: Record<string, string> = {
+    automation: "Automation replied to",
+    manual: "You replied to",
+    echo: "You messaged",
+    customer: "Message from",
+}
+
+function activityLabel(item: DashboardStats["recentActivity"][number]) {
+    const verb = (item.source && SOURCE_LABELS[item.source]) || "Reply sent to"
+    return `${verb} @${item.recipient?.recipient_username || "user"}`
+}
+
+function activityPreview(item: DashboardStats["recentActivity"][number]) {
+    if (item.attachment_type && /^\[.+\]$/.test(item.content)) {
+        return ATTACHMENT_LABELS[item.attachment_type] || `📎 Sent a ${item.attachment_type.replace(/_/g, " ")}`
+    }
+    return item.content
+}
+
+function activityTimestamp(iso: string) {
+    const date = new Date(iso)
+    const isToday = date.toDateString() === new Date().toDateString()
+    const time = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    return isToday ? time : `${date.toLocaleDateString([], { month: "short", day: "numeric" })}, ${time}`
 }
 
 export default function DashboardPage() {
@@ -102,20 +142,24 @@ export default function DashboardPage() {
                     <div className="space-y-4">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
-                                <div key={msg.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors">
+                                <Link
+                                    key={msg.id}
+                                    href={`/dashboard/inbox?conversation=${msg.conversation_id}`}
+                                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                                >
                                     <div className="w-10 h-10 rounded-full bg-[#ffe14d]/10 flex items-center justify-center text-[#ffe14d] shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0">
                                         <p className="text-sm text-white font-medium truncate">
-                                            Auto-reply to @{msg.recipient?.recipient_username || "user"}
+                                            {activityLabel(msg)}
                                         </p>
-                                        <p className="text-xs text-muted-foreground truncate w-full max-w-[300px]">{msg.content}</p>
+                                        <p className="text-xs text-muted-foreground truncate w-full max-w-[300px]">{activityPreview(msg)}</p>
                                     </div>
                                     <div className="ml-auto text-[10px] text-muted-foreground whitespace-nowrap">
-                                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        {activityTimestamp(msg.created_at)}
                                     </div>
-                                </div>
+                                </Link>
                             ))
                         ) : (
                             <div className="py-8 text-center text-muted-foreground text-sm">

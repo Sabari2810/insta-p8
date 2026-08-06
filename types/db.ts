@@ -20,6 +20,7 @@ export interface Message {
     is_from_instagram: boolean
     attachment_url?: string | null
     attachment_type?: string | null
+    source?: "customer" | "automation" | "manual" | "echo" | null
     created_at: string
 }
 
