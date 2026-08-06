@@ -53,8 +53,14 @@ CREATE TABLE IF NOT EXISTS public.messages (
   sender_username TEXT NOT NULL,
   content TEXT NOT NULL,
   is_from_instagram BOOLEAN DEFAULT TRUE,
+  attachment_url TEXT,
+  attachment_type TEXT,
   created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Safe to re-run against an existing database that predates attachments.
+ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS attachment_url TEXT;
+ALTER TABLE public.messages ADD COLUMN IF NOT EXISTS attachment_type TEXT;
 
 -- ==========================================
 -- 4. Table: public.webhook_events

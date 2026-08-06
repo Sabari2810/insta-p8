@@ -18,6 +18,8 @@ export interface Message {
     sender_username?: string
     content: string
     is_from_instagram: boolean
+    attachment_url?: string | null
+    attachment_type?: string | null
     created_at: string
 }
 

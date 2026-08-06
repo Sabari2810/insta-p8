@@ -70,15 +70,20 @@ export async function POST(request: NextRequest) {
         // without knowing username. Assuming it exists for now as this is usually a reply flow.
 
         if (conv) {
-            await supabase.from("messages").insert({
-                id: `mid_out_${Date.now()}_${Math.random()}`,
-                conversation_id: conv.id,
-                user_id: userId,
-                sender_id: user.business_account_id,
-                sender_username: user.username,
-                content: message || "[Attachment]",
-                is_from_instagram: false
-            })
+            await supabase.from("messages").upsert(
+                {
+                    id: data.message_id || `mid_out_${Date.now()}_${Math.random()}`,
+                    conversation_id: conv.id,
+                    user_id: userId,
+                    sender_id: user.business_account_id,
+                    sender_username: user.username,
+                    content: message || "[Attachment]",
+                    attachment_url: attachment?.payload?.url || null,
+                    attachment_type: attachment?.type || null,
+                    is_from_instagram: false
+                },
+                { onConflict: "id", ignoreDuplicates: true },
+            )
 
             // Update conversation timestamp
             await supabase

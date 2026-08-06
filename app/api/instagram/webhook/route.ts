@@ -393,10 +393,50 @@ export async function POST(request: NextRequest) {
       // ============================================================
       if (entry.messaging) {
         for (const event of entry.messaging) {
-          if (event.read || event.delivery || event.reaction || event.message?.is_echo) continue
+          if (event.read || event.delivery || event.reaction) continue
+
+          // Business sent this message via another channel (native IG app, etc.) — Meta echoes it
+          // back so we can log it, but it must never be treated as a trigger or it'd create an
+          // automation reply loop. Recipient/sender are swapped vs. a normal inbound event.
+          if (event.message?.is_echo) {
+            try {
+              const { data: echoConv } = await supabase
+                .from("conversations")
+                .select("id")
+                .eq("user_id", user.id)
+                .eq("recipient_id", event.recipient.id)
+                .single()
+
+              if (echoConv && event.message.mid) {
+                const echoAttachment = event.message.attachments?.[0]
+                await supabase.from("messages").upsert(
+                  {
+                    id: event.message.mid,
+                    conversation_id: echoConv.id,
+                    user_id: user.id,
+                    sender_id: user.business_account_id,
+                    sender_username: user.username,
+                    content: event.message.text || (echoAttachment ? `[${echoAttachment.type}]` : "[message]"),
+                    attachment_url: echoAttachment?.payload?.url || null,
+                    attachment_type: echoAttachment?.type || null,
+                    is_from_instagram: false,
+                  },
+                  { onConflict: "id", ignoreDuplicates: true },
+                )
+                await supabase.from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", echoConv.id)
+              }
+            } catch (err) {
+              console.error("[webhook] Failed to log echo message", err)
+            }
+            continue
+          }
 
           const senderId = event.sender.id
           if (senderId === webhookId || senderId === user.business_account_id || senderId === user.page_id) continue
+
+          const attachment = event.message?.attachments?.[0]
+          const attachmentUrl = attachment?.payload?.url || null
+          const attachmentType = attachment?.type || null
 
           let triggerType = ""
           let triggerValue = ""
@@ -410,11 +450,13 @@ export async function POST(request: NextRequest) {
           } else if (event.postback?.payload) {
             triggerType = "postback"
             triggerValue = event.postback.payload
-          } else {
+          } else if (!attachment) {
+            // Nothing we can log or act on (e.g. an unsupported event type).
             continue
           }
 
-          console.log(`[webhook] 📩 DM from ${senderId}: "${triggerValue}"`)
+          const displayContent = triggerValue || (attachmentType ? `[${attachmentType}]` : "[message]")
+          console.log(`[webhook] 📩 DM from ${senderId}: "${displayContent}"`)
 
           // ---------- Persist conversation + incoming message ----------
           let conv = null
@@ -465,15 +507,20 @@ export async function POST(request: NextRequest) {
             }
 
             if (conv) {
-              await supabase.from("messages").insert({
-                id: event.message?.mid || `mid_${Date.now()}_${Math.random()}`,
-                conversation_id: conv.id,
-                user_id: user.id,
-                sender_id: senderId,
-                sender_username: "User",
-                content: triggerValue,
-                is_from_instagram: true,
-              })
+              await supabase.from("messages").upsert(
+                {
+                  id: event.message?.mid || `mid_${Date.now()}_${Math.random()}`,
+                  conversation_id: conv.id,
+                  user_id: user.id,
+                  sender_id: senderId,
+                  sender_username: "User",
+                  content: displayContent,
+                  attachment_url: attachmentUrl,
+                  attachment_type: attachmentType,
+                  is_from_instagram: true,
+                },
+                { onConflict: "id", ignoreDuplicates: true },
+              )
             }
           } catch (err) {
             console.error("[webhook] Failed to save incoming message", err)
@@ -552,15 +599,18 @@ export async function POST(request: NextRequest) {
 
           if (result?.ok && conv) {
             try {
-              await supabase.from("messages").insert({
-                id: `mid_reply_${Date.now()}_${Math.random()}`,
-                conversation_id: conv.id,
-                user_id: user.id,
-                sender_id: user.business_account_id,
-                sender_username: user.username,
-                content: replyTextLog,
-                is_from_instagram: false,
-              })
+              await supabase.from("messages").upsert(
+                {
+                  id: result.id || `mid_reply_${Date.now()}_${Math.random()}`,
+                  conversation_id: conv.id,
+                  user_id: user.id,
+                  sender_id: user.business_account_id,
+                  sender_username: user.username,
+                  content: replyTextLog,
+                  is_from_instagram: false,
+                },
+                { onConflict: "id", ignoreDuplicates: true },
+              )
             } catch (e) {
               console.error("[webhook] Failed to save outgoing message", e)
             }

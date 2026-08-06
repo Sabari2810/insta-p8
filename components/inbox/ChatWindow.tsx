@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Send, Loader2, Zap, ChevronLeft, Plus, X } from "lucide-react"
+import { Send, Loader2, Zap, ChevronLeft, Plus, X, Paperclip } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/inbox/Avatar"
@@ -212,17 +212,39 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                 ) : (
                     messages.map((msg) => {
                         const isMe = !msg.is_from_instagram
+                        const isImage = msg.attachment_type === "image" && msg.attachment_url
+                        const isVideo = msg.attachment_type === "video" && msg.attachment_url
+                        const isOtherAttachment = msg.attachment_url && !isImage && !isVideo
+                        const isPlaceholderText = /^\[.+\]$/.test(msg.content || "")
+                        const showText = msg.content && (!isPlaceholderText || (!isImage && !isVideo && !isOtherAttachment))
                         return (
                             <div key={msg.id} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                                 <div className={cn(
-                                    "max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm break-words",
+                                    "max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm break-words space-y-2",
                                     isMe
                                         ? "bg-[#ffe14d] text-black rounded-br-none"
                                         : "bg-white/10 text-white rounded-bl-none border border-white/5"
                                 )}>
-                                    {msg.content}
+                                    {isImage && (
+                                        <img src={msg.attachment_url!} alt="" className="rounded-lg max-h-64 max-w-full object-cover" />
+                                    )}
+                                    {isVideo && (
+                                        <video src={msg.attachment_url!} controls className="rounded-lg max-h-64 max-w-full" />
+                                    )}
+                                    {isOtherAttachment && (
+                                        <a
+                                            href={msg.attachment_url!}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className={cn("flex items-center gap-1.5 underline underline-offset-2", isMe ? "text-black" : "text-white")}
+                                        >
+                                            <Paperclip className="w-3.5 h-3.5 shrink-0" />
+                                            {msg.attachment_type ? `Sent a ${msg.attachment_type.replace(/_/g, " ")}` : "Sent an attachment"}
+                                        </a>
+                                    )}
+                                    {showText && <div>{msg.content}</div>}
                                     <div className={cn(
-                                        "text-[10px] mt-1 opacity-70",
+                                        "text-[10px] opacity-70",
                                         isMe ? "text-black/50 text-right" : "text-neutral-500"
                                     )}>
                                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
