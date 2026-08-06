@@ -53,7 +53,7 @@ export function LandingPage() {
       <nav className="relative z-50 flex items-center justify-between px-5 md:px-10 h-16 border-b border-white/[0.08]">
         <div className="flex items-center gap-2.5">
           <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full" />
-          <span className="font-mono-ui text-sm font-bold tracking-tight">Sovex</span>
+          <span className="font-mono-ui text-sm font-bold tracking-tight">Wingman</span>
           <span className="hidden sm:inline-block font-mono-ui text-[10px] text-neutral-500 border border-white/10 rounded-full px-2 py-0.5">open source</span>
         </div>
         <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-white/[0.08] px-5 md:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
         <span className="font-mono-ui text-[11px] text-neutral-600">
-          Sovex — open-source Instagram automation. MIT licensed.
+          Wingman - Instagram automation.
         </span>
         <div className="flex items-center gap-5 font-mono-ui text-[11px] text-neutral-500">
           <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="hover:text-[#2AABEE] transition-colors">Telegram support</a>

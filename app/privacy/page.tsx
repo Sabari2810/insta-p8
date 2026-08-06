@@ -6,7 +6,7 @@ export default function PrivacyPage() {
 
       <section className="space-y-4">
         <p>
-          This app (&quot;Sovex&quot;) is owned and operated by <strong>Sabari Manikandan</strong>. The app uses the Instagram Graph API to help users manage
+          This app (&quot;Wingman&quot;) is owned and operated by <strong>Sabari Manikandan</strong>. The app uses the Instagram Graph API to help users manage
           their Instagram account, including auto-replying to comments, direct
           messages, and story interactions, and viewing analytics about that
           activity.

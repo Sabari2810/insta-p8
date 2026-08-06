@@ -1,4 +1,4 @@
--- Supabase Database Schema Dump for Sovex
+-- Supabase Database Schema Dump for Wingman
 -- This script contains all 11 tables, constraints, indexes, and storage bucket settings.
 
 -- Enable UUID extension

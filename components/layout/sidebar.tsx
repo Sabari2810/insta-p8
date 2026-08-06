@@ -33,7 +33,7 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
       {/* Brand */}
       <div className="px-5 pt-6 pb-5 flex items-center gap-2.5">
         <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full shrink-0" />
-        <span className="font-mono-ui text-sm font-bold tracking-tight text-white">Sovex</span>
+        <span className="font-mono-ui text-sm font-bold tracking-tight text-white">Wingman</span>
       </div>
 
       <div className="mx-5 h-px bg-white/[0.06]" />
