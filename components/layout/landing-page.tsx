@@ -3,11 +3,9 @@
 import { useRouter } from "next/navigation"
 import {
   MessageCircle, Sparkles, ArrowUpRight,
-  Send, AtSign, Inbox, Lock, Terminal,
+  Send, AtSign, Inbox, Lock, Terminal, ShieldCheck,
   Loader2,
 } from "lucide-react"
-
-const TELEGRAM_URL = "https://t.me/instagramautomationp8"
 
 export function LandingPage() {
   const router = useRouter()
@@ -54,7 +52,6 @@ export function LandingPage() {
         <div className="flex items-center gap-2.5">
           <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full" />
           <span className="font-mono-ui text-sm font-bold tracking-tight">Wingman</span>
-          <span className="hidden sm:inline-block font-mono-ui text-[10px] text-neutral-500 border border-white/10 rounded-full px-2 py-0.5">open source</span>
         </div>
         <div className="flex items-center gap-2">
           {process.env.NODE_ENV === "development" && (
@@ -79,7 +76,7 @@ export function LandingPage() {
         <section className="px-5 md:px-10 pt-16 md:pt-28 pb-16 max-w-6xl mx-auto">
           <div className="fade-up" style={{ animationDelay: "0ms" }}>
             <p className="font-mono-ui text-[11px] uppercase tracking-[0.25em] text-neutral-500 mb-6">
-              Instagram automation // self-hosted // no monthly fees
+              Instagram automation // your own private setup // built for creators & brands
             </p>
           </div>
 
@@ -91,8 +88,8 @@ export function LandingPage() {
 
           <div className="fade-up mt-10 flex flex-col md:flex-row md:items-end gap-8 md:gap-16" style={{ animationDelay: "160ms" }}>
             <p className="text-neutral-400 text-base md:text-lg max-w-md leading-relaxed">
-              Comment-to-DM funnels, keyword triggers, story reactions, a live inbox,
-              and Reels scheduling. The open-source ManyChat alternative — your data stays in your own Supabase.
+              Comment-to-DM funnels, keyword triggers, story reactions, and a live inbox —
+              automation that converts, running on your own dedicated setup, never shared with anyone else's data.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <button
@@ -111,13 +108,6 @@ export function LandingPage() {
                   Dev Login
                 </button>
               )}
-              <a
-                href={TELEGRAM_URL} target="_blank" rel="noreferrer"
-                className="flex items-center gap-2 font-mono-ui text-sm text-neutral-300 border border-white/15 px-6 py-4 rounded-full hover:border-[#2AABEE]/60 hover:text-[#2AABEE] transition-colors"
-              >
-                <Send className="w-4 h-4" />
-                Telegram support
-              </a>
             </div>
           </div>
         </section>
@@ -141,7 +131,6 @@ export function LandingPage() {
         <section className="px-5 md:px-10 py-20 max-w-6xl mx-auto">
           <div className="flex items-baseline justify-between mb-10">
             <h2 className="font-serif-display text-4xl md:text-5xl">Everything the paid tools do.</h2>
-            <span className="hidden md:block font-mono-ui text-xs text-neutral-600">$0/month</span>
           </div>
 
           <div className="grid md:grid-cols-3 gap-px bg-white/[0.08] border border-white/[0.08]">
@@ -157,40 +146,18 @@ export function LandingPage() {
               desc="Lock content behind a follow. Non-followers get a follow prompt; one tap later they unlock the goods." />
             <Feature icon={<Sparkles className="w-4 h-4" />} title="Human-like sending"
               desc="Optional typing indicators and randomized delays so replies land natural, not botty." />
-            <Feature icon={<Terminal className="w-4 h-4" />} title="Self-hosted & hackable"
-              desc="Next.js + Supabase. Deploy on free tiers. Read every line, fork it, own your data and your tokens." />
+            <Feature icon={<ShieldCheck className="w-4 h-4" />} title="Dedicated & private"
+              desc="Your own private setup, encrypted end to end — never a shared tool where your data sits next to someone else's." />
           </div>
         </section>
 
-        {/* Community strip */}
-        <section className="px-5 md:px-10 pb-24 max-w-6xl mx-auto">
-          <div className="border border-white/[0.08] rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 bg-gradient-to-br from-white/[0.03] to-transparent">
-            <div>
-              <h3 className="font-serif-display text-3xl md:text-4xl mb-2">Built in the open.</h3>
-              <p className="text-neutral-500 text-sm max-w-md">
-                Questions, bugs, feature requests — the Telegram chat is where it all happens.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href={TELEGRAM_URL} target="_blank" rel="noreferrer"
-                className="flex items-center gap-2 bg-[#2AABEE] text-white font-mono-ui text-xs font-bold px-5 py-3 rounded-full hover:brightness-110 transition-all"
-              >
-                <Send className="w-3.5 h-3.5" /> Join Telegram
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.08] px-5 md:px-10 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-white/[0.08] px-5 md:px-10 py-8 flex items-center justify-center">
         <span className="font-mono-ui text-[11px] text-neutral-600">
           Wingman - Instagram automation.
         </span>
-        <div className="flex items-center gap-5 font-mono-ui text-[11px] text-neutral-500">
-          <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="hover:text-[#2AABEE] transition-colors">Telegram support</a>
-        </div>
       </footer>
     </div>
   )
