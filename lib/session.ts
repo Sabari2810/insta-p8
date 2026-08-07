@@ -74,3 +74,31 @@ export function clearSessionCookie(response: NextResponse) {
     secure: process.env.NODE_ENV === "production",
   })
 }
+
+// --- OAuth login CSRF state (short-lived, separate from the session cookie above) ---
+
+export const OAUTH_STATE_COOKIE_NAME = "ig_oauth_state"
+
+export function setOAuthStateCookie(response: NextResponse, state: string, maxAgeSeconds = 600) {
+  response.cookies.set(OAUTH_STATE_COOKIE_NAME, state, {
+    path: "/",
+    maxAge: maxAgeSeconds,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  })
+}
+
+export function getOAuthState(request: NextRequest): string | null {
+  return request.cookies.get(OAUTH_STATE_COOKIE_NAME)?.value ?? null
+}
+
+export function clearOAuthStateCookie(response: NextResponse) {
+  response.cookies.set(OAUTH_STATE_COOKIE_NAME, "", {
+    path: "/",
+    maxAge: 0,
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  })
+}

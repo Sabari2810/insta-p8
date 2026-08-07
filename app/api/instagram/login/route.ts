@@ -1,5 +1,6 @@
 import crypto from "crypto"
 import { NextResponse } from "next/server"
+import { setOAuthStateCookie } from "@/lib/session"
 
 /**
  * GET /api/instagram/login
@@ -30,12 +31,6 @@ export async function GET() {
   authorizeUrl.searchParams.set("state", state)
 
   const response = NextResponse.redirect(authorizeUrl)
-  response.cookies.set("ig_oauth_state", state, {
-    path: "/",
-    maxAge: 600,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
+  setOAuthStateCookie(response, state)
   return response
 }

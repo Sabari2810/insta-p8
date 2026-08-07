@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 
 export function useInstagramSession() {
@@ -11,6 +11,9 @@ export function useInstagramSession() {
 
     const searchParams = useSearchParams()
     const router = useRouter()
+    // Guards against the same OAuth code being exchanged twice — the state cookie backing it is
+    // consumed on first use, so a second attempt would always 400 regardless of why it re-fired.
+    const exchangingCodeRef = useRef<string | null>(null)
 
     useEffect(() => {
         const code = searchParams.get("code")
@@ -19,6 +22,11 @@ export function useInstagramSession() {
         const handleSession = async () => {
             // CASE A: New Login from Instagram
             if (code) {
+                if (exchangingCodeRef.current === code) {
+                    setIsLoading(false)
+                    return
+                }
+                exchangingCodeRef.current = code
                 try {
                     const res = await fetch("/api/instagram/callback", {
                         method: "POST",

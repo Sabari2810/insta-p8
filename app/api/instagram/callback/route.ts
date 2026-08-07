@@ -1,20 +1,8 @@
 import crypto from "crypto"
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
-import { setSessionCookie } from "@/lib/session"
+import { setSessionCookie, getOAuthState, clearOAuthStateCookie } from "@/lib/session"
 import { encryptSecret } from "@/lib/crypto"
-
-const OAUTH_STATE_COOKIE = "ig_oauth_state"
-
-function clearOAuthStateCookie(response: NextResponse) {
-  response.cookies.set(OAUTH_STATE_COOKIE, "", {
-    path: "/",
-    maxAge: 0,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
-}
 
 function timingSafeEqualStr(a: string, b: string): boolean {
   const bufA = Buffer.from(a)
@@ -50,8 +38,13 @@ export async function POST(request: NextRequest) {
     const { code, state } = body
     if (!code) return NextResponse.json({ error: "No code" }, { status: 400 })
 
-    const expectedState = request.cookies.get(OAUTH_STATE_COOKIE)?.value
+    const expectedState = getOAuthState(request)
     if (!expectedState || !state || !timingSafeEqualStr(state, expectedState)) {
+      const reason = !expectedState ? "no state cookie on request" : !state ? "no state in POST body" : "state mismatch"
+      console.error(
+        `[callback] 400 state check failed: ${reason}; cookieLen=${expectedState?.length ?? 0} bodyStateLen=${state?.length ?? 0} ` +
+          `host=${request.headers.get("host")} origin=${request.headers.get("origin")} referer=${request.headers.get("referer")}`,
+      )
       const response = NextResponse.json(
         { error: "Login attempt expired or invalid. Please try connecting again." },
         { status: 400 },
