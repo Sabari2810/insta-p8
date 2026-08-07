@@ -1,14 +1,7 @@
-import crypto from "crypto"
 import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
-import { setSessionCookie, getOAuthState, clearOAuthStateCookie } from "@/lib/session"
+import { setSessionCookie, verifyOAuthState } from "@/lib/session"
 import { encryptSecret } from "@/lib/crypto"
-
-function timingSafeEqualStr(a: string, b: string): boolean {
-  const bufA = Buffer.from(a)
-  const bufB = Buffer.from(b)
-  return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB)
-}
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -40,19 +33,15 @@ export async function POST(request: NextRequest) {
     const { code, state } = body
     if (!code) return NextResponse.json({ error: "No code" }, { status: 400 })
 
-    const expectedState = getOAuthState(request)
-    if (!expectedState || !state || !timingSafeEqualStr(state, expectedState)) {
-      const reason = !expectedState ? "no state cookie on request" : !state ? "no state in POST body" : "state mismatch"
+    if (!verifyOAuthState(state)) {
       console.error(
-        `[callback] 400 state check failed: ${reason}; cookieLen=${expectedState?.length ?? 0} bodyStateLen=${state?.length ?? 0} ` +
+        `[callback] 400 state check failed: bodyStateLen=${state?.length ?? 0} ` +
           `host=${request.headers.get("host")} origin=${request.headers.get("origin")} referer=${request.headers.get("referer")}`,
       )
-      const response = NextResponse.json(
+      return NextResponse.json(
         { error: "Login attempt expired or invalid. Please try connecting again." },
         { status: 400 },
       )
-      clearOAuthStateCookie(response)
-      return response
     }
 
     // 1. Env Vars
@@ -147,7 +136,6 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({ success: true, username, userId: loginUserId, profilePic })
     setSessionCookie(response, { userId: loginUserId, username }, expiresIn)
-    clearOAuthStateCookie(response)
     return response
 
   } catch (error: any) {

@@ -1,12 +1,12 @@
-import crypto from "crypto"
 import { NextResponse } from "next/server"
-import { setOAuthStateCookie } from "@/lib/session"
+import { createOAuthState } from "@/lib/session"
 
 /**
  * GET /api/instagram/login
- * Starts the Instagram OAuth flow. Generates a random `state` value, stores it in a short-lived
- * httpOnly cookie, and redirects to Instagram's authorize screen with that state attached — the
- * callback validates it matches before exchanging the code, preventing login CSRF.
+ * Starts the Instagram OAuth flow. Generates a signed, self-verifying `state` value and
+ * redirects to Instagram's authorize screen with it attached — the callback checks its
+ * signature and timestamp before exchanging the code, preventing login CSRF without needing
+ * any cookie to survive the redirect chain.
  */
 export async function GET() {
   const clientId = process.env.NEXT_PUBLIC_INSTAGRAM_APP_ID
@@ -16,7 +16,7 @@ export async function GET() {
     return NextResponse.json({ error: "Instagram app is not configured" }, { status: 500 })
   }
 
-  const state = crypto.randomBytes(24).toString("base64url")
+  const state = createOAuthState()
 
   const authorizeUrl = new URL("https://www.instagram.com/oauth/authorize")
   authorizeUrl.searchParams.set("enable_fb_login", "0")
@@ -30,7 +30,5 @@ export async function GET() {
   )
   authorizeUrl.searchParams.set("state", state)
 
-  const response = NextResponse.redirect(authorizeUrl)
-  setOAuthStateCookie(response, state)
-  return response
+  return NextResponse.redirect(authorizeUrl)
 }

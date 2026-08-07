@@ -75,30 +75,30 @@ export function clearSessionCookie(response: NextResponse) {
   })
 }
 
-// --- OAuth login CSRF state (short-lived, separate from the session cookie above) ---
+// --- OAuth login CSRF state ---
+// Self-verifying signed token instead of a server-stored cookie: some browsers (private/
+// incognito mode, strict cross-site cookie settings, extensions) were dropping the
+// short-lived state cookie somewhere across the Instagram redirect chain, so the state
+// carries its own HMAC signature + timestamp and needs nothing stored server-side to check.
 
-export const OAUTH_STATE_COOKIE_NAME = "ig_oauth_state"
-
-export function setOAuthStateCookie(response: NextResponse, state: string, maxAgeSeconds = 600) {
-  response.cookies.set(OAUTH_STATE_COOKIE_NAME, state, {
-    path: "/",
-    maxAge: maxAgeSeconds,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
+export function createOAuthState(): string {
+  const nonce = crypto.randomBytes(16).toString("base64url")
+  const payload = `${nonce}.${Date.now()}`
+  return `${payload}.${sign(payload)}`
 }
 
-export function getOAuthState(request: NextRequest): string | null {
-  return request.cookies.get(OAUTH_STATE_COOKIE_NAME)?.value ?? null
-}
+export function verifyOAuthState(state: string | null | undefined, maxAgeSeconds = 600): boolean {
+  if (!state) return false
+  const parts = state.split(".")
+  if (parts.length !== 3) return false
+  const [nonce, timestamp, signature] = parts
+  const payload = `${nonce}.${timestamp}`
 
-export function clearOAuthStateCookie(response: NextResponse) {
-  response.cookies.set(OAUTH_STATE_COOKIE_NAME, "", {
-    path: "/",
-    maxAge: 0,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  })
+  const expected = Buffer.from(sign(payload))
+  const received = Buffer.from(signature)
+  if (received.length !== expected.length || !crypto.timingSafeEqual(received, expected)) return false
+
+  const ts = Number(timestamp)
+  if (!Number.isFinite(ts) || Date.now() - ts > maxAgeSeconds * 1000) return false
+  return true
 }
