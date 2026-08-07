@@ -8,7 +8,7 @@
   /* Minimal B/W Theme */
   --background: oklch(0.05 0 0); /* Pure black */
   --foreground: oklch(0.98 0 0); /* White */
-  --accent-yellow: #ffe14d;
+  --accent-green: #c3fb3a;
   
   --card: oklch(0.08 0 0);
   --card-foreground: oklch(0.98 0 0);
@@ -96,6 +96,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-brand: var(--accent-green);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);

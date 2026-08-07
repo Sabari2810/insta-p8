@@ -87,7 +87,7 @@ export default function AutomationsPage() {
                             className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${
                                 showCreateForm
                                     ? 'border border-white/20 text-white hover:border-white/40'
-                                    : 'bg-[#ffe14d] text-black hover:brightness-95'
+                                    : 'bg-brand text-black hover:brightness-95'
                             }`}
                         >
                             <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
@@ -104,7 +104,7 @@ export default function AutomationsPage() {
                             onClick={() => setActiveTab(tab.key)}
                             className={`relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2 ${
                                 activeTab === tab.key
-                                    ? 'text-white border-[#ffe14d]'
+                                    ? 'text-white border-brand'
                                     : 'text-neutral-600 border-transparent hover:text-neutral-300'
                             }`}
                         >
@@ -112,7 +112,7 @@ export default function AutomationsPage() {
                             <span>{tab.label}</span>
                             {tab.count > 0 && (
                                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                                    activeTab === tab.key ? 'bg-[#ffe14d] text-black' : 'bg-white/10 text-neutral-400'
+                                    activeTab === tab.key ? 'bg-brand text-black' : 'bg-white/10 text-neutral-400'
                                 }`}>
                                     {tab.count}
                                 </span>

@@ -228,7 +228,7 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
               ) : isMedia ? (
                 <ImageIcon className="w-3 h-3 text-pink-400" />
               ) : (
-                <MessageCircle className="w-3 h-3 text-[#ffe14d]" />
+                <MessageCircle className="w-3 h-3 text-brand" />
               )}
               <span className="text-[11px] text-neutral-400 truncate max-w-[120px]">{responsePreview}</span>
             </div>
@@ -254,7 +254,7 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
               </Badge>
             )}
             {content.check_follow && (
-              <Badge variant="secondary" className="bg-[#ffe14d]/10 text-[#ffe14d] border border-[#ffe14d]/20 text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className="bg-brand/10 text-brand border border-brand/20 text-[10px] px-1.5 py-0">
                 <Lock className="w-2.5 h-2.5 mr-0.5" /> Follow
               </Badge>
             )}

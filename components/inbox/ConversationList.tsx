@@ -77,7 +77,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                     <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-[#ffe14d]/50 placeholder:text-muted-foreground/50 transition-all"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-brand/50 placeholder:text-muted-foreground/50 transition-all"
                         placeholder="Search by username..."
                     />
                 </div>
@@ -87,7 +87,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             onClick={() => setActiveTag(null)}
                             className={cn(
                                 "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
-                                !activeTag ? "bg-[#ffe14d] text-black border-[#ffe14d]" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
+                                !activeTag ? "bg-brand text-black border-brand" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
                             )}
                         >
                             All
@@ -98,7 +98,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                                 onClick={() => setActiveTag(tag === activeTag ? null : tag)}
                                 className={cn(
                                     "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
-                                    activeTag === tag ? "bg-[#ffe14d] text-black border-[#ffe14d]" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
+                                    activeTag === tag ? "bg-brand text-black border-brand" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
                                 )}
                             >
                                 {tag}
@@ -125,7 +125,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             className={cn(
                                 "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
-                                    ? "bg-[#ffe14d]/[0.06] border-[#ffe14d]/20"
+                                    ? "bg-brand/[0.06] border-brand/20"
                                     : "hover:bg-white/5 hover:border-white/5"
                             )}
                         >
@@ -134,7 +134,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                                 <div className="flex items-center justify-between mb-0.5">
                                     <span className={cn(
                                         "font-semibold text-sm truncate",
-                                        selectedId === conv.id ? "text-[#ffe14d]" : "text-white"
+                                        selectedId === conv.id ? "text-brand" : "text-white"
                                     )}>
                                         {conv.recipient_username}
                                     </span>

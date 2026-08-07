@@ -54,8 +54,8 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
                   : "text-neutral-500 hover:text-neutral-200 hover:bg-white/[0.03]",
               )}
             >
-              {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-[#ffe14d]" />}
-              <Icon className={cn("w-4 h-4 shrink-0", active ? "text-[#ffe14d]" : "")} strokeWidth={active ? 2.2 : 1.8} />
+              {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-brand" />}
+              <Icon className={cn("w-4 h-4 shrink-0", active ? "text-brand" : "")} strokeWidth={active ? 2.2 : 1.8} />
               <span className={active ? "font-medium" : ""}>{label}</span>
             </Link>
           )
@@ -75,7 +75,7 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
               : "text-neutral-500 hover:text-neutral-200 hover:bg-white/[0.03]",
           )}
         >
-          {pathname === "/dashboard/settings" && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-[#ffe14d]" />}
+          {pathname === "/dashboard/settings" && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-brand" />}
           <Settings className="w-4 h-4 shrink-0" strokeWidth={1.8} />
           <span>Settings</span>
         </Link>

@@ -222,7 +222,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                                 <div className={cn(
                                     "max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm break-words space-y-2",
                                     isMe
-                                        ? "bg-[#ffe14d] text-black rounded-br-none"
+                                        ? "bg-brand text-black rounded-br-none"
                                         : "bg-white/10 text-white rounded-bl-none border border-white/5"
                                 )}>
                                     {isImage && (
@@ -281,7 +281,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
 
             {/* Input Area */}
             <div className="p-3 md:p-4 border-t border-white/5 bg-black/40 shrink-0">
-                <div className="flex items-center gap-2 bg-white/5 rounded-xl border border-white/10 p-1.5 focus-within:border-[#ffe14d]/50 transition-all">
+                <div className="flex items-center gap-2 bg-white/5 rounded-xl border border-white/10 p-1.5 focus-within:border-brand/50 transition-all">
                     <Button
                         size="icon"
                         variant="ghost"
@@ -307,7 +307,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                         onClick={() => handleSendMessage()}
                         disabled={sending || !inputText.trim()}
                         size="icon"
-                        className="h-9 w-9 bg-[#ffe14d] hover:brightness-95 text-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                        className="h-9 w-9 bg-brand hover:brightness-95 text-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                     >
                         {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </Button>

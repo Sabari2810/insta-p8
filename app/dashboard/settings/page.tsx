@@ -101,7 +101,7 @@ export default function SettingsPage() {
             {/* Connected Account */}
             <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-5">
                 <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-[#ffe14d]" />
+                    <User className="w-4 h-4 text-brand" />
                     <h2 className="text-sm font-semibold text-white">Connected account</h2>
                 </div>
 
@@ -140,7 +140,7 @@ export default function SettingsPage() {
             {/* Webhook Configuration */}
             <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-4">
                 <div className="flex items-center gap-2">
-                    <Webhook className="w-4 h-4 text-[#ffe14d]" />
+                    <Webhook className="w-4 h-4 text-brand" />
                     <h2 className="text-sm font-semibold text-white">Webhook configuration</h2>
                 </div>
                 <p className="text-xs text-neutral-500">

@@ -279,7 +279,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 >
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                     isCompleted
-                      ? "bg-[#ffe14d] text-black shadow-[0_0_15px_rgba(255,225,77,0.3)]"
+                      ? "bg-brand text-black shadow-[0_0_15px_rgba(195,251,58,0.3)]"
                       : isActive
                         ? "bg-white text-black ring-4 ring-white/10"
                         : "bg-neutral-800 text-neutral-500 border border-white/5"
@@ -295,7 +295,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 </button>
                 {i < STEPS.length - 1 && (
                   <div className="flex-1 h-[2px] mx-2 relative bg-neutral-800 rounded-full overflow-hidden">
-                    <div className={`absolute inset-y-0 left-0 transition-all duration-500 bg-[#ffe14d] ${
+                    <div className={`absolute inset-y-0 left-0 transition-all duration-500 bg-brand ${
                       isCompleted ? "w-full" : "w-0"
                     }`} />
                   </div>
@@ -334,11 +334,11 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         onClick={() => setStoryTriggerType(key)}
                         className={`p-4 rounded-xl border text-left flex flex-col gap-2 transition-all duration-200 ${
                           storyTriggerType === key
-                            ? "border-[#ffe14d] bg-[#ffe14d]/[0.06] text-[#ffe14d]"
+                            ? "border-brand bg-brand/[0.06] text-brand"
                             : "border-white/10 text-neutral-400 hover:border-white/20 hover:text-white bg-white/[0.01]"
                         }`}
                       >
-                        <span className={storyTriggerType === key ? "text-[#ffe14d]" : "text-neutral-500"}>{icon}</span>
+                        <span className={storyTriggerType === key ? "text-brand" : "text-neutral-500"}>{icon}</span>
                         <div>
                           <p className="text-xs font-bold uppercase tracking-wider">{label}</p>
                           <p className="text-[10px] text-neutral-500 font-normal mt-0.5">{desc}</p>
@@ -354,7 +354,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                   <FieldLabel>Automate which post or reel?</FieldLabel>
                   {loadingReels ? (
                     <div className="p-8 flex flex-col items-center justify-center gap-3 border border-white/5 rounded-2xl bg-white/[0.01]">
-                      <Loader2 className="w-6 h-6 animate-spin text-[#ffe14d]" />
+                      <Loader2 className="w-6 h-6 animate-spin text-brand" />
                       <span className="text-xs text-neutral-500 font-mono-ui">Fetching Instagram feed...</span>
                     </div>
                   ) : (
@@ -368,7 +368,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         }}
                         className={`aspect-square rounded-xl border flex flex-col items-center justify-center p-4 text-center transition-all duration-200 ${
                           hasSelectedReelOption && selectedReel === null
-                            ? "border-[#ffe14d] bg-[#ffe14d]/[0.06] text-[#ffe14d]"
+                            ? "border-brand bg-brand/[0.06] text-brand"
                             : "border-white/10 text-neutral-400 hover:border-white/20 hover:text-white bg-white/[0.01]"
                         }`}
                       >
@@ -389,7 +389,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                             }}
                             className={`aspect-square rounded-xl border overflow-hidden relative group text-left transition-all duration-200 ${
                               isSelected
-                                ? "border-[#ffe14d] ring-2 ring-[#ffe14d]/20"
+                                ? "border-brand ring-2 ring-brand/20"
                                 : "border-white/10 hover:border-white/25 bg-[#0e0e0e]"
                             }`}
                           >
@@ -408,8 +408,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
                             {/* Selected Check overlay */}
                             {isSelected && (
-                              <div className="absolute inset-0 bg-[#ffe14d]/10 flex items-center justify-center backdrop-blur-[1px]">
-                                <div className="w-8 h-8 rounded-full bg-[#ffe14d] text-black flex items-center justify-center shadow-lg">
+                              <div className="absolute inset-0 bg-brand/10 flex items-center justify-center backdrop-blur-[1px]">
+                                <div className="w-8 h-8 rounded-full bg-brand text-black flex items-center justify-center shadow-lg">
                                   <Check className="w-4 h-4 stroke-[3]" />
                                 </div>
                               </div>
@@ -434,7 +434,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                     <div className="space-y-2">
                       <FieldLabel>Keywords to match</FieldLabel>
                       <p className="text-[11px] text-neutral-500">
-                        What keyword triggers this DM? <span className="text-[#ffe14d] font-semibold">Keep empty to reply to every comment.</span>
+                        What keyword triggers this DM? <span className="text-brand font-semibold">Keep empty to reply to every comment.</span>
                       </p>
                       <TagInput
                         value={triggers}
@@ -501,7 +501,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         type="button"
                         onClick={() => setReplyMode(key)}
                         className={`h-11 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all ${
-                          replyMode === key ? "border-[#ffe14d] bg-[#ffe14d]/10 text-[#ffe14d]" : "border-white/10 text-neutral-400 hover:text-white"
+                          replyMode === key ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
                         }`}
                       >
                         {label}
@@ -534,7 +534,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                           type="button"
                           onClick={() => setType(key)}
                           className={`p-3 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
-                            type === key ? "border-[#ffe14d] bg-[#ffe14d]/10 text-[#ffe14d]" : "border-white/10 text-neutral-400 hover:text-white"
+                            type === key ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
                           }`}
                         >
                           {icon}
@@ -552,7 +552,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         onChange={(e) => setMessageText(e.target.value)}
                         rows={5}
                         maxLength={1000}
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-neutral-600 resize-none focus:outline-none focus:border-[#ffe14d]/50 transition-colors"
+                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-neutral-600 resize-none focus:outline-none focus:border-brand/50 transition-colors"
                         placeholder="Type the message to send in DMs..."
                       />
                       <p className="font-mono-ui text-[10px] text-neutral-600 text-right">{messageText.length}/1000</p>
@@ -617,7 +617,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                               type="button"
                               onClick={() => setMediaType(m)}
                               className={`h-10 rounded-xl border text-xs font-bold uppercase transition-all ${
-                                mediaType === m ? "border-[#ffe14d] bg-[#ffe14d]/10 text-[#ffe14d]" : "border-white/10 text-neutral-400 hover:text-white"
+                                mediaType === m ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
                               }`}
                             >
                               {m === "image" ? "Photo" : m === "video" ? "Video" : "Audio"}
@@ -647,7 +647,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                                 value={q.title}
                                 onChange={(e) => updateQuickReply(q.id, e.target.value)}
                                 maxLength={20}
-                                className="h-10 text-xs flex-1 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-[#ffe14d]/50"
+                                className="h-10 text-xs flex-1 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-brand/50"
                                 placeholder='e.g. "Send Details!"'
                               />
                               <button type="button" onClick={() => removeQuickReply(q.id)} className="text-neutral-500 hover:text-red-400 p-1.5 transition-colors">
@@ -712,13 +712,13 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
               </div>
 
               {/* Plain-text Summary Panel */}
-              <div className="rounded-2xl border border-[#ffe14d]/15 bg-[#ffe14d]/[0.03] p-5 space-y-2">
+              <div className="rounded-2xl border border-brand/15 bg-brand/[0.03] p-5 space-y-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#ffe14d]" />
-                  <span className="text-xs font-mono-ui uppercase tracking-widest text-[#ffe14d] font-bold">Rule Logic Summary</span>
+                  <Sparkles className="w-4 h-4 text-brand" />
+                  <span className="text-xs font-mono-ui uppercase tracking-widest text-brand font-bold">Rule Logic Summary</span>
                 </div>
                 <p className="text-sm text-neutral-300 leading-relaxed">
-                  When <span className="text-white font-semibold underline decoration-[#ffe14d]/40 decoration-2">{summary.who}</span>, we will <span className="text-[#ffe14d] font-semibold">{summary.what}</span>.
+                  When <span className="text-white font-semibold underline decoration-brand/40 decoration-2">{summary.who}</span>, we will <span className="text-brand font-semibold">{summary.what}</span>.
                 </p>
               </div>
             </div>
@@ -742,7 +742,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 type="button"
                 onClick={() => { if (stepValid[step]) setStep(step + 1) }}
                 disabled={!stepValid[step]}
-                className="flex items-center gap-2 h-11 px-6 rounded-full bg-white text-black font-mono-ui text-xs font-bold hover:bg-[#ffe14d] hover:shadow-[0_0_20px_rgba(255,225,77,0.25)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
+                className="flex items-center gap-2 h-11 px-6 rounded-full bg-white text-black font-mono-ui text-xs font-bold hover:bg-brand hover:shadow-[0_0_20px_rgba(195,251,58,0.25)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
               >
                 Continue
                 <ChevronRight className="w-4 h-4" />
@@ -752,7 +752,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 type="button"
                 onClick={handleSubmit}
                 disabled={!canSave || saving}
-                className="flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-[#ffe14d] text-black font-mono-ui text-sm font-bold hover:brightness-95 hover:shadow-[0_0_25px_rgba(255,225,77,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
+                className="flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-brand text-black font-mono-ui text-sm font-bold hover:brightness-95 hover:shadow-[0_0_25px_rgba(195,251,58,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
               >
                 {saving ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : <Zap className="w-4 h-4 stroke-[2.5]" />}
                 {saving ? "Saving Changes..." : isEditing ? "Save Automation" : "Go Live"}
@@ -938,7 +938,7 @@ function StepHeader({ number, title, description }: { number: number; title: str
   return (
     <div className="border-b border-white/5 pb-4">
       <div className="flex items-center gap-2 mb-1.5">
-        <div className="px-2 py-0.5 rounded-md bg-[#ffe14d]/10 border border-[#ffe14d]/25 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-[#ffe14d]">
+        <div className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/25 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-brand">
           Phase {number}
         </div>
       </div>
@@ -958,7 +958,7 @@ function TextField({ value, onChange, placeholder }: { value: string; onChange: 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full h-11 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-[#ffe14d]/50 focus:bg-white/[0.04] transition-all"
+      className="w-full h-11 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 focus:bg-white/[0.04] transition-all"
     />
   )
 }
@@ -977,15 +977,15 @@ function ToggleRow({
       type="button"
       onClick={onToggle}
       className={`w-full p-4 rounded-2xl border text-left flex items-center gap-3.5 transition-all duration-200 bg-white/[0.01] ${
-        on ? "border-[#ffe14d]/40 bg-[#ffe14d]/[0.03]" : "border-white/10 hover:border-white/20"
+        on ? "border-brand/40 bg-brand/[0.03]" : "border-white/10 hover:border-white/20"
       }`}
     >
-      <span className={on ? "text-[#ffe14d]" : "text-neutral-500"}>{icon}</span>
+      <span className={on ? "text-brand" : "text-neutral-500"}>{icon}</span>
       <span className="flex-1 min-w-0">
         <span className="block text-sm font-semibold text-white">{title}</span>
         <span className="block text-xs text-neutral-500 mt-0.5 leading-relaxed">{sub}</span>
       </span>
-      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-[#ffe14d]" : "bg-neutral-800"}`}>
+      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-brand" : "bg-neutral-800"}`}>
         <span className={`absolute top-0.5 w-4.5 h-4.5 rounded-full bg-black shadow-md transition-all ${on ? "left-[20px]" : "left-0.5"}`} />
       </span>
     </button>

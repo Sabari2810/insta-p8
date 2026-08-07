@@ -89,7 +89,7 @@ export function IceBreakersManager() {
                         Questions people see when they start a chat with you.
                     </p>
                 </div>
-                <Button onClick={handleSave} disabled={saving} className="bg-[#ffe14d] hover:brightness-95 text-black font-bold">
+                <Button onClick={handleSave} disabled={saving} className="bg-brand hover:brightness-95 text-black font-bold">
                     {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                     Save & Sync
                 </Button>

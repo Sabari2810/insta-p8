@@ -28,7 +28,7 @@ export function ConnectionBanner() {
     <div
       className={cn(
         "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 md:px-6 py-3 text-sm border-b",
-        expired ? "bg-red-500/10 border-red-500/20 text-red-300" : "bg-[#ffe14d]/10 border-[#ffe14d]/20 text-[#ffe14d]",
+        expired ? "bg-red-500/10 border-red-500/20 text-red-300" : "bg-brand/10 border-brand/20 text-brand",
       )}
     >
       <div className="flex items-center gap-2">

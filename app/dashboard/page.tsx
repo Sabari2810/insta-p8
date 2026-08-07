@@ -113,25 +113,25 @@ export default function DashboardPage() {
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
                     trend="Active"
-                    icon={<Zap className="w-5 h-5 text-[#ffe14d]" />}
+                    icon={<Zap className="w-5 h-5 text-brand" />}
                 />
                 <StatCard
                     title="Messages Sent"
                     value={stats?.metrics.messagesSent.toString() || "0"}
                     trend="Lifetime"
-                    icon={<MessageCircle className="w-5 h-5 text-[#ffe14d]" />}
+                    icon={<MessageCircle className="w-5 h-5 text-brand" />}
                 />
                 <StatCard
                     title="Active Triggers"
                     value={stats?.metrics.activeTriggers.toString() || "0"}
                     trend="Running"
-                    icon={<Activity className="w-5 h-5 text-[#ffe14d]" />}
+                    icon={<Activity className="w-5 h-5 text-brand" />}
                 />
                 <StatCard
                     title="Audience Reached"
                     value={stats?.metrics.audienceReached.toString() || "0"}
                     trend="Unique Users"
-                    icon={<Users className="w-5 h-5 text-[#ffe14d]" />}
+                    icon={<Users className="w-5 h-5 text-brand" />}
                 />
             </div>
 
@@ -147,7 +147,7 @@ export default function DashboardPage() {
                                     href={`/dashboard/inbox?conversation=${msg.conversation_id}`}
                                     className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-[#ffe14d]/10 flex items-center justify-center text-[#ffe14d] shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0">
@@ -189,7 +189,7 @@ function QuickAction({ href, icon, label }: { href: string, icon: React.ReactNod
             href={href}
             className="h-24 rounded-xl border border-white/10 flex flex-col items-center justify-center hover:bg-white/5 hover:border-white/20 transition-colors group"
         >
-            <span className="text-muted-foreground group-hover:text-[#ffe14d] mb-2 transition-colors">{icon}</span>
+            <span className="text-muted-foreground group-hover:text-brand mb-2 transition-colors">{icon}</span>
             <span className="text-xs font-medium text-muted-foreground group-hover:text-white transition-colors">{label}</span>
         </Link>
     )
