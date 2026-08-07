@@ -23,7 +23,9 @@ export async function GET(request: NextRequest) {
   }
 
   if (code) {
-    const redirectUrl = new URL("/", request.url)
+    // Go straight to /dashboard — bouncing through "/" first meant relying on that page's
+    // client-side redirect to relay `code`/`state` onward, which previously dropped `state`.
+    const redirectUrl = new URL("/dashboard", request.url)
     redirectUrl.searchParams.set("code", code)
     if (state) redirectUrl.searchParams.set("state", state)
     return NextResponse.redirect(redirectUrl)

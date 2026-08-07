@@ -12,12 +12,17 @@ export default function Home() {
   useEffect(() => {
     // Check if we have an active session or a callback code
     const code = searchParams.get("code")
+    const state = searchParams.get("state")
     const savedId = localStorage.getItem("ig_user_id")
 
-    if (code || savedId) {
-      // If code exists, Redirect to dashboard to handle the handshake (via the new hook)
-      // If local session exists, also redirect
-      router.replace("/dashboard?code=" + (code || ""))
+    if (code) {
+      // Relay to dashboard to handle the handshake (via the new hook). `state` must be
+      // forwarded too — the callback validates it against the oauth state cookie.
+      const params = new URLSearchParams({ code })
+      if (state) params.set("state", state)
+      router.replace(`/dashboard?${params.toString()}`)
+    } else if (savedId) {
+      router.replace("/dashboard")
     }
   }, [searchParams, router])
 
