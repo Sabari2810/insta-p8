@@ -27,6 +27,11 @@ export function useInstagramSession() {
                     return
                 }
                 exchangingCodeRef.current = code
+                // Strip code/state from the URL before the exchange even resolves — a refresh
+                // or re-mount while this is in flight (or after it fails) must never resend the
+                // same code. Instagram codes are single-use; a resend always 400s as "Code
+                // already used" with no way to recover except starting a fresh login.
+                router.replace("/dashboard")
                 try {
                     const res = await fetch("/api/instagram/callback", {
                         method: "POST",
@@ -42,8 +47,8 @@ export function useInstagramSession() {
                         setUserId(data.userId)
                         setUsername(data.username)
                         setProfilePic(data.profilePic || null)
-                        // Remove code from URL
-                        router.replace("/dashboard")
+                    } else {
+                        console.error("Login failed:", data.error)
                     }
                 } catch (err) {
                     console.error("Login failed:", err)
