@@ -9,9 +9,7 @@
   --background: oklch(0.05 0 0); /* Pure black */
   --foreground: oklch(0.98 0 0); /* White */
   --accent-green: #c3fb3a;
-  --accent-violet: #b98bff;
-  --accent-coral: #ff6b81;
-
+  
   --card: oklch(0.08 0 0);
   --card-foreground: oklch(0.98 0 0);
   
@@ -99,8 +97,6 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-brand: var(--accent-green);
-  --color-violet: var(--accent-violet);
-  --color-coral: var(--accent-coral);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -177,64 +173,4 @@
 }
 .font-mono-ui {
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-}
-
-/* Vibrant visual language — shared glow / motion / texture primitives */
-
-.gradient-text {
-  background: linear-gradient(100deg, var(--accent-green), var(--accent-violet) 65%, var(--accent-coral));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.glow-orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
-  opacity: 0.35;
-}
-
-@keyframes orb-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(3%, -4%) scale(1.08); }
-}
-.orb-animate {
-  animation: orb-drift 14s ease-in-out infinite;
-}
-
-.grain::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.fade-up {
-  animation: fade-up 0.7s cubic-bezier(.2,.7,.2,1) both;
-}
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.marquee-track {
-  animation: marquee 30s linear infinite;
-}
-
-.glow-card {
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-}
-.glow-card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklch, var(--accent-green) 40%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in oklch, var(--accent-green) 15%, transparent), 0 12px 32px -12px color-mix(in oklch, var(--accent-green) 35%, transparent);
 }
