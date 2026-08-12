@@ -97,48 +97,54 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-700">
+        <div className="relative p-8 space-y-8 animate-in fade-in duration-700 overflow-hidden">
+            <div className="glow-orb w-[24rem] h-[24rem] bg-brand -top-32 -right-20" />
+
             {/* Welcome Section */}
-            <div className="flex items-center justify-between">
+            <div className="relative flex items-center justify-between">
                 <div>
                     <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Overview</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Hey, {username}.</h1>
+                    <h1 className="font-serif-display font-black text-4xl md:text-5xl text-white leading-none">Hey, <span className="gradient-text">{username}</span>.</h1>
                     <p className="text-neutral-500 text-sm mt-3">Here's what your automations did while you were away.</p>
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
                     trend="Active"
-                    icon={<Zap className="w-5 h-5 text-brand" />}
+                    accent="brand"
+                    icon={<Zap className="w-5 h-5" />}
                 />
                 <StatCard
                     title="Messages Sent"
                     value={stats?.metrics.messagesSent.toString() || "0"}
                     trend="Lifetime"
-                    icon={<MessageCircle className="w-5 h-5 text-brand" />}
+                    accent="violet"
+                    icon={<MessageCircle className="w-5 h-5" />}
                 />
                 <StatCard
                     title="Active Triggers"
                     value={stats?.metrics.activeTriggers.toString() || "0"}
                     trend="Running"
-                    icon={<Activity className="w-5 h-5 text-brand" />}
+                    accent="coral"
+                    icon={<Activity className="w-5 h-5" />}
                 />
                 <StatCard
                     title="Audience Reached"
                     value={stats?.metrics.audienceReached.toString() || "0"}
                     trend="Unique Users"
-                    icon={<Users className="w-5 h-5 text-brand" />}
+                    accent="brand"
+                    icon={<Users className="w-5 h-5" />}
                 />
             </div>
 
             {/* Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card className="p-6 bg-[#0b0b0a] border-white/10">
-                    <h3 className="font-serif-display text-2xl text-white mb-5">Recent activity</h3>
+            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <Card className="glow-card p-6 bg-[#0b0b0a] border-white/10 rounded-2xl">
+                    <h3 className="font-serif-display font-bold text-2xl text-white mb-5">Recent activity</h3>
                     <div className="space-y-4">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
@@ -169,13 +175,13 @@ export default function DashboardPage() {
                     </div>
                 </Card>
 
-                <Card className="p-6 bg-[#0b0b0a] border-white/10">
-                    <h3 className="font-serif-display text-2xl text-white mb-5">Quick actions</h3>
+                <Card className="glow-card p-6 bg-[#0b0b0a] border-white/10 rounded-2xl">
+                    <h3 className="font-serif-display font-bold text-2xl text-white mb-5">Quick actions</h3>
                     <div className="grid grid-cols-2 gap-4">
-                        <QuickAction href="/dashboard/automations?new=1" icon={<Zap className="w-6 h-6" />} label="New Rule" />
-                        <QuickAction href="/dashboard/inbox" icon={<MessageSquare className="w-6 h-6" />} label="View Inbox" />
-                        <QuickAction href="/dashboard/ice-breakers" icon={<Snowflake className="w-6 h-6" />} label="Ice Breakers" />
-                        <QuickAction href="/dashboard/analytics" icon={<BarChart3 className="w-6 h-6" />} label="Analytics" />
+                        <QuickAction href="/dashboard/automations?new=1" icon={<Zap className="w-6 h-6" />} label="New Rule" accent="brand" />
+                        <QuickAction href="/dashboard/inbox" icon={<MessageSquare className="w-6 h-6" />} label="View Inbox" accent="violet" />
+                        <QuickAction href="/dashboard/ice-breakers" icon={<Snowflake className="w-6 h-6" />} label="Ice Breakers" accent="coral" />
+                        <QuickAction href="/dashboard/analytics" icon={<BarChart3 className="w-6 h-6" />} label="Analytics" accent="brand" />
                     </div>
                 </Card>
             </div>
@@ -183,27 +189,37 @@ export default function DashboardPage() {
     )
 }
 
-function QuickAction({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
+const ACCENT_CLASSES = {
+    brand: { text: "text-brand", hoverText: "group-hover:text-brand", hoverBorder: "hover:border-brand/30", bg: "bg-brand/10" },
+    violet: { text: "text-violet", hoverText: "group-hover:text-violet", hoverBorder: "hover:border-violet/30", bg: "bg-violet/10" },
+    coral: { text: "text-coral", hoverText: "group-hover:text-coral", hoverBorder: "hover:border-coral/30", bg: "bg-coral/10" },
+} as const
+
+function QuickAction({ href, icon, label, accent }: { href: string, icon: React.ReactNode, label: string, accent: keyof typeof ACCENT_CLASSES }) {
+    const styles = ACCENT_CLASSES[accent]
     return (
         <Link
             href={href}
-            className="h-24 rounded-xl border border-white/10 flex flex-col items-center justify-center hover:bg-white/5 hover:border-white/20 transition-colors group"
+            className={`h-24 rounded-xl border border-white/10 flex flex-col items-center justify-center hover:bg-white/5 ${styles.hoverBorder} transition-colors group`}
         >
-            <span className="text-muted-foreground group-hover:text-brand mb-2 transition-colors">{icon}</span>
+            <span className={`text-muted-foreground ${styles.hoverText} mb-2 transition-colors`}>{icon}</span>
             <span className="text-xs font-medium text-muted-foreground group-hover:text-white transition-colors">{label}</span>
         </Link>
     )
 }
 
-function StatCard({ title, value, trend, icon }: { title: string, value: string, trend: string, icon: React.ReactNode }) {
+function StatCard({ title, value, trend, icon, accent }: { title: string, value: string, trend: string, icon: React.ReactNode, accent: keyof typeof ACCENT_CLASSES }) {
+    const styles = ACCENT_CLASSES[accent]
     return (
-        <div className="p-6 rounded-2xl border border-white/10 bg-[#0b0b0a] hover:border-white/20 transition-colors group">
+        <div className="glow-card p-6 rounded-2xl border border-white/10 bg-[#0b0b0a] group">
             <div className="flex items-start justify-between">
-                {icon}
+                <div className={`w-10 h-10 rounded-xl ${styles.bg} ${styles.text} flex items-center justify-center`}>
+                    {icon}
+                </div>
                 <span className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-600">{trend}</span>
             </div>
             <div className="mt-6">
-                <p className="font-serif-display text-5xl text-white leading-none">{value}</p>
+                <p className="font-serif-display font-black text-5xl text-white leading-none">{value}</p>
                 <p className="font-mono-ui text-[10px] text-neutral-500 uppercase tracking-[0.2em] mt-3">{title}</p>
             </div>
         </div>

@@ -31,20 +31,6 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] selection:bg-brand selection:text-black overflow-x-hidden antialiased">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        .font-serif-display { font-family: 'Instrument Serif', Georgia, serif; }
-        .font-mono-ui { font-family: 'JetBrains Mono', ui-monospace, monospace; }
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-track { animation: marquee 30s linear infinite; }
-        @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-up { animation: fade-up .7s cubic-bezier(.2,.7,.2,1) both; }
-        .grain::before {
-          content: ""; position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: .04;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-      `}</style>
-
       <div className="grain" />
 
       {/* Nav */}
@@ -73,20 +59,24 @@ export function LandingPage() {
 
       {/* Hero */}
       <main className="relative z-10">
-        <section className="px-5 md:px-10 pt-16 md:pt-28 pb-16 max-w-6xl mx-auto">
-          <div className="fade-up" style={{ animationDelay: "0ms" }}>
+        <section className="relative px-5 md:px-10 pt-16 md:pt-28 pb-16 max-w-6xl mx-auto overflow-hidden">
+          <div className="glow-orb orb-animate w-[32rem] h-[32rem] bg-brand -top-40 -left-40" />
+          <div className="glow-orb orb-animate w-[26rem] h-[26rem] bg-violet top-10 right-0" style={{ animationDelay: "-6s" }} />
+          <div className="glow-orb orb-animate w-[20rem] h-[20rem] bg-coral bottom-0 left-1/3" style={{ animationDelay: "-10s" }} />
+
+          <div className="fade-up relative" style={{ animationDelay: "0ms" }}>
             <p className="font-mono-ui text-[11px] uppercase tracking-[0.25em] text-neutral-500 mb-6">
               Instagram automation // your own private setup // built for creators & brands
             </p>
           </div>
 
-          <h1 className="fade-up font-serif-display text-[15vw] md:text-[7.5rem] leading-[0.95] tracking-tight" style={{ animationDelay: "80ms" }}>
+          <h1 className="fade-up relative font-serif-display font-black text-[15vw] md:text-[7.5rem] leading-[0.95] tracking-tight" style={{ animationDelay: "80ms" }}>
             Your DMs,
             <br />
-            <span className="italic text-brand">on autopilot.</span>
+            <span className="italic gradient-text">on autopilot.</span>
           </h1>
 
-          <div className="fade-up mt-10 flex flex-col md:flex-row md:items-end gap-8 md:gap-16" style={{ animationDelay: "160ms" }}>
+          <div className="fade-up relative mt-10 flex flex-col md:flex-row md:items-end gap-8 md:gap-16" style={{ animationDelay: "160ms" }}>
             <p className="text-neutral-400 text-base md:text-lg max-w-md leading-relaxed">
               Comment-to-DM funnels, keyword triggers, story reactions, and a live inbox —
               automation that converts, running on your own dedicated setup, never shared with anyone else's data.
@@ -94,7 +84,7 @@ export function LandingPage() {
             <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={handleLogin}
-                className="group flex items-center gap-2 bg-brand text-black font-mono-ui text-sm font-bold px-7 py-4 rounded-full hover:scale-[1.03] active:scale-[0.98] transition-transform"
+                className="group flex items-center gap-2 bg-brand text-black font-mono-ui text-sm font-bold px-7 py-4 rounded-full shadow-[0_0_40px_-8px_var(--accent-green)] hover:scale-[1.03] hover:shadow-[0_0_56px_-6px_var(--accent-green)] active:scale-[0.98] transition-all"
               >
                 Connect Instagram
                 <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
@@ -113,13 +103,13 @@ export function LandingPage() {
         </section>
 
         {/* Marquee */}
-        <div className="border-y border-white/[0.08] py-3 overflow-hidden">
-          <div className="marquee-track flex whitespace-nowrap font-mono-ui text-xs uppercase tracking-[0.2em] text-neutral-600 gap-8 w-max">
+        <div className="relative border-y border-white/[0.08] py-3 overflow-hidden bg-gradient-to-r from-brand/[0.06] via-violet/[0.06] to-coral/[0.06]">
+          <div className="marquee-track flex whitespace-nowrap font-mono-ui text-xs uppercase tracking-[0.2em] text-neutral-500 gap-8 w-max">
             {Array.from({ length: 2 }).map((_, copy) => (
               <div key={copy} className="flex gap-8">
-                {["comment → DM", "keyword triggers", "story reactions", "live inbox", "ice breakers", "follow gate", "quick replies", "media attachments", "public + private replies"].map((t) => (
+                {["comment → DM", "keyword triggers", "story reactions", "live inbox", "ice breakers", "follow gate", "quick replies", "media attachments", "public + private replies"].map((t, i) => (
                   <span key={t} className="flex items-center gap-8">
-                    {t} <span className="text-brand">✦</span>
+                    {t} <span style={{ color: ACCENT_ROTATION[i % ACCENT_ROTATION.length] }}>✦</span>
                   </span>
                 ))}
               </div>
@@ -128,25 +118,25 @@ export function LandingPage() {
         </div>
 
         {/* Feature grid */}
-        <section className="px-5 md:px-10 py-20 max-w-6xl mx-auto">
+        <section className="relative px-5 md:px-10 py-20 max-w-6xl mx-auto">
           <div className="flex items-baseline justify-between mb-10">
-            <h2 className="font-serif-display text-4xl md:text-5xl">Everything the paid tools do.</h2>
+            <h2 className="font-serif-display font-black text-4xl md:text-5xl">Everything the paid tools do.</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-px bg-white/[0.08] border border-white/[0.08]">
-            <Feature icon={<MessageCircle className="w-4 h-4" />} title="Comment → DM funnels"
+          <div className="grid md:grid-cols-3 gap-4">
+            <Feature accent="brand" icon={<MessageCircle className="w-4 h-4" />} title="Comment → DM funnels"
               desc="Keyword or reply-all triggers on any post. Choose DM only, public reply only, or both — with your own rotating public replies." />
-            <Feature icon={<Send className="w-4 h-4" />} title="DM keyword automation"
+            <Feature accent="violet" icon={<Send className="w-4 h-4" />} title="DM keyword automation"
               desc="Auto-respond to DMs with text, media, or rich cards with buttons. Quick-reply chips guide people through your funnel." />
-            <Feature icon={<AtSign className="w-4 h-4" />} title="Story triggers"
+            <Feature accent="coral" icon={<AtSign className="w-4 h-4" />} title="Story triggers"
               desc="React to story mentions, emoji reactions, and story replies. Filter by emoji or keyword." />
-            <Feature icon={<Inbox className="w-4 h-4" />} title="Live inbox"
+            <Feature accent="violet" icon={<Inbox className="w-4 h-4" />} title="Live inbox"
               desc="Every conversation in one dashboard. Jump in manually anytime, fire quick responses from your saved automations." />
-            <Feature icon={<Lock className="w-4 h-4" />} title="Follow gate"
+            <Feature accent="coral" icon={<Lock className="w-4 h-4" />} title="Follow gate"
               desc="Lock content behind a follow. Non-followers get a follow prompt; one tap later they unlock the goods." />
-            <Feature icon={<Sparkles className="w-4 h-4" />} title="Human-like sending"
+            <Feature accent="brand" icon={<Sparkles className="w-4 h-4" />} title="Human-like sending"
               desc="Optional typing indicators and randomized delays so replies land natural, not botty." />
-            <Feature icon={<ShieldCheck className="w-4 h-4" />} title="Dedicated & private"
+            <Feature accent="violet" icon={<ShieldCheck className="w-4 h-4" />} title="Dedicated & private"
               desc="Your own private setup, encrypted end to end — never a shared tool where your data sits next to someone else's." />
           </div>
         </section>
@@ -163,10 +153,19 @@ export function LandingPage() {
   )
 }
 
-function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+const ACCENT_ROTATION = ["var(--accent-green)", "var(--accent-violet)", "var(--accent-coral)"]
+
+const ACCENT_STYLES = {
+  brand: { text: "text-brand", border: "group-hover:border-brand/40", bg: "bg-brand/10" },
+  violet: { text: "text-violet", border: "group-hover:border-violet/40", bg: "bg-violet/10" },
+  coral: { text: "text-coral", border: "group-hover:border-coral/40", bg: "bg-coral/10" },
+} as const
+
+function Feature({ icon, title, desc, accent }: { icon: React.ReactNode; title: string; desc: string; accent: keyof typeof ACCENT_STYLES }) {
+  const styles = ACCENT_STYLES[accent]
   return (
-    <div className="bg-[#0a0a0a] p-7 group hover:bg-[#0f0f0e] transition-colors">
-      <div className="w-9 h-9 rounded-lg border border-white/10 flex items-center justify-center text-neutral-500 group-hover:text-brand group-hover:border-brand/30 transition-colors mb-5">
+    <div className="glow-card bg-[#0d0d0c] border border-white/[0.08] rounded-2xl p-7 group">
+      <div className={`w-10 h-10 rounded-xl border border-white/10 ${styles.bg} flex items-center justify-center text-neutral-400 ${styles.text} ${styles.border} transition-colors mb-5`}>
         {icon}
       </div>
       <h3 className="font-mono-ui text-sm font-bold text-white mb-2">{title}</h3>
