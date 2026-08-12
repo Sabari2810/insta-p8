@@ -5,7 +5,7 @@ import * as RechartsPrimitive from "recharts"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { Loader2, MessageCircle, Send, Sparkles, TrendingUp, Trophy } from "lucide-react"
-import { BRAND_COLOR } from "@/lib/theme"
+import { BRAND_COLOR, VIOLET_COLOR, CORAL_COLOR } from "@/lib/theme"
 
 interface AnalyticsData {
     timeSeries: { date: string; sent: number; received: number; newConversations: number }[]
@@ -17,7 +17,7 @@ const RANGES = [7, 30, 90] as const
 
 const messagesChartConfig: ChartConfig = {
     sent: { label: "Sent", color: BRAND_COLOR },
-    received: { label: "Received", color: "#60a5fa" },
+    received: { label: "Received", color: VIOLET_COLOR },
 }
 
 const audienceChartConfig: ChartConfig = {
@@ -25,9 +25,9 @@ const audienceChartConfig: ChartConfig = {
 }
 
 const SOURCE_META = {
-    comment: { label: "Comments", icon: MessageCircle },
-    dm: { label: "DMs", icon: Send },
-    story: { label: "Stories", icon: Sparkles },
+    comment: { label: "Comments", icon: MessageCircle, color: BRAND_COLOR },
+    dm: { label: "DMs", icon: Send, color: VIOLET_COLOR },
+    story: { label: "Stories", icon: Sparkles, color: CORAL_COLOR },
 } as const
 
 function formatDateTick(dateStr: string) {
@@ -74,11 +74,12 @@ export default function AnalyticsPage() {
     }
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in duration-700">
-            <div className="flex items-end justify-between gap-4 flex-wrap">
+        <div className="relative p-8 space-y-8 animate-in fade-in duration-700 overflow-hidden">
+            <div className="glow-orb w-[22rem] h-[22rem] bg-coral -top-28 -left-16" />
+            <div className="relative flex items-end justify-between gap-4 flex-wrap">
                 <div>
                     <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Deep dive</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Analytics</h1>
+                    <h1 className="font-serif-display font-black text-4xl md:text-5xl text-white leading-none">Analytics</h1>
                 </div>
                 <div className="flex items-center gap-1 rounded-full border border-white/10 p-1">
                     {RANGES.map((r) => (
@@ -125,8 +126,8 @@ export default function AnalyticsPage() {
                                         <stop offset="95%" stopColor={BRAND_COLOR} stopOpacity={0} />
                                     </linearGradient>
                                     <linearGradient id="fillReceived" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+                                        <stop offset="5%" stopColor={VIOLET_COLOR} stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor={VIOLET_COLOR} stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
                                 <RechartsPrimitive.CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
@@ -141,7 +142,7 @@ export default function AnalyticsPage() {
                                 <RechartsPrimitive.YAxis tickLine={false} axisLine={false} tick={{ fill: "#737373", fontSize: 11 }} allowDecimals={false} width={28} />
                                 <ChartTooltip content={<ChartTooltipContent labelFormatter={(v) => formatDateTick(String(v))} />} />
                                 <RechartsPrimitive.Area dataKey="sent" type="monotone" stroke={BRAND_COLOR} fill="url(#fillSent)" strokeWidth={2} />
-                                <RechartsPrimitive.Area dataKey="received" type="monotone" stroke="#60a5fa" fill="url(#fillReceived)" strokeWidth={2} />
+                                <RechartsPrimitive.Area dataKey="received" type="monotone" stroke={VIOLET_COLOR} fill="url(#fillReceived)" strokeWidth={2} />
                             </RechartsPrimitive.AreaChart>
                         </ChartContainer>
                     </section>
@@ -216,13 +217,14 @@ export default function AnalyticsPage() {
                         <h2 className="text-sm font-semibold text-white mb-6">Active automations by channel</h2>
                         <div className="grid grid-cols-3 gap-4">
                             {(Object.keys(SOURCE_META) as Array<keyof typeof SOURCE_META>).map((key) => {
-                                const Icon = SOURCE_META[key].icon
+                                const meta = SOURCE_META[key]
+                                const Icon = meta.icon
                                 const count = data?.automationsBySource[key] ?? 0
                                 return (
-                                    <div key={key} className="rounded-xl border border-white/10 p-4 text-center">
-                                        <Icon className="w-4 h-4 text-neutral-500 mx-auto mb-2" />
-                                        <p className="text-2xl font-serif-display text-white">{count}</p>
-                                        <p className="text-[11px] uppercase tracking-wider text-neutral-600 mt-1">{SOURCE_META[key].label}</p>
+                                    <div key={key} className="glow-card rounded-xl border border-white/10 p-4 text-center">
+                                        <Icon className="w-4 h-4 mx-auto mb-2" style={{ color: meta.color }} />
+                                        <p className="text-2xl font-serif-display font-black text-white">{count}</p>
+                                        <p className="text-[11px] uppercase tracking-wider text-neutral-600 mt-1">{meta.label}</p>
                                     </div>
                                 )
                             })}

@@ -92,22 +92,25 @@ export default function SettingsPage() {
     const expired = daysRemaining !== null && daysRemaining <= 0
 
     return (
-        <div className="p-8 space-y-8 max-w-3xl mx-auto animate-in fade-in duration-700">
-            <div>
+        <div className="relative p-8 space-y-8 max-w-3xl mx-auto animate-in fade-in duration-700 overflow-hidden">
+            <div className="glow-orb w-[20rem] h-[20rem] bg-violet -top-24 right-0" />
+            <div className="relative">
                 <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Configuration</p>
-                <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Settings</h1>
+                <h1 className="font-serif-display font-black text-4xl md:text-5xl text-white leading-none">Settings</h1>
             </div>
 
             {/* Connected Account */}
-            <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-5">
+            <section className="glow-card relative rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-5">
                 <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-brand" />
                     <h2 className="text-sm font-semibold text-white">Connected account</h2>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-white/10 border border-white/15 shrink-0 overflow-hidden">
-                        {profilePic && <img src={profilePic} alt="" className="w-full h-full object-cover" />}
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-brand via-violet to-coral p-[1.5px] shrink-0">
+                        <div className="w-full h-full rounded-full bg-black overflow-hidden">
+                            {profilePic && <img src={profilePic} alt="" className="w-full h-full object-cover" />}
+                        </div>
                     </div>
                     <div className="min-w-0">
                         <p className="text-white font-semibold truncate">@{account?.username || "—"}</p>
@@ -138,9 +141,9 @@ export default function SettingsPage() {
             </section>
 
             {/* Webhook Configuration */}
-            <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-4">
+            <section className="glow-card relative rounded-2xl border border-white/10 bg-white/[0.02] p-6 space-y-4">
                 <div className="flex items-center gap-2">
-                    <Webhook className="w-4 h-4 text-brand" />
+                    <Webhook className="w-4 h-4 text-violet" />
                     <h2 className="text-sm font-semibold text-white">Webhook configuration</h2>
                 </div>
                 <p className="text-xs text-neutral-500">

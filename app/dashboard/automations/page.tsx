@@ -64,19 +64,20 @@ export default function AutomationsPage() {
     }
 
     const tabs = [
-        { key: 'comment' as const, icon: <MessageCircle className="w-4 h-4" />, label: 'Comments', count: counts.comment },
-        { key: 'dm' as const, icon: <Send className="w-4 h-4" />, label: 'DMs', count: counts.dm },
-        { key: 'story' as const, icon: <Sparkles className="w-4 h-4" />, label: 'Stories', count: counts.story },
+        { key: 'comment' as const, icon: <MessageCircle className="w-4 h-4" />, label: 'Comments', count: counts.comment, accent: 'var(--accent-green)' },
+        { key: 'dm' as const, icon: <Send className="w-4 h-4" />, label: 'DMs', count: counts.dm, accent: 'var(--accent-violet)' },
+        { key: 'story' as const, icon: <Sparkles className="w-4 h-4" />, label: 'Stories', count: counts.story, accent: 'var(--accent-coral)' },
     ]
 
     return (
-        <div className="min-h-screen bg-black">
-            <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
+        <div className="relative min-h-screen bg-black overflow-hidden">
+            <div className="glow-orb w-[22rem] h-[22rem] bg-violet -top-24 right-0" />
+            <div className="relative max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
                 {/* Header */}
                 <div className="flex items-end justify-between gap-4 flex-wrap">
                     <div>
                         <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Rules engine</p>
-                        <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Automations</h1>
+                        <h1 className="font-serif-display font-black text-4xl md:text-5xl text-white leading-none">Automations</h1>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
@@ -87,7 +88,7 @@ export default function AutomationsPage() {
                             className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${
                                 showCreateForm
                                     ? 'border border-white/20 text-white hover:border-white/40'
-                                    : 'bg-brand text-black hover:brightness-95'
+                                    : 'bg-brand text-black shadow-[0_0_28px_-6px_var(--accent-green)] hover:brightness-95'
                             }`}
                         >
                             <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
@@ -98,27 +99,31 @@ export default function AutomationsPage() {
 
                 {/* Tabs — editorial underline */}
                 <div className="flex items-center gap-6 border-b border-white/10">
-                    {tabs.map((tab) => (
-                        <button
-                            key={tab.key}
-                            onClick={() => setActiveTab(tab.key)}
-                            className={`relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2 ${
-                                activeTab === tab.key
-                                    ? 'text-white border-brand'
-                                    : 'text-neutral-600 border-transparent hover:text-neutral-300'
-                            }`}
-                        >
-                            {tab.icon}
-                            <span>{tab.label}</span>
-                            {tab.count > 0 && (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                                    activeTab === tab.key ? 'bg-brand text-black' : 'bg-white/10 text-neutral-400'
-                                }`}>
-                                    {tab.count}
-                                </span>
-                            )}
-                        </button>
-                    ))}
+                    {tabs.map((tab) => {
+                        const active = activeTab === tab.key
+                        return (
+                            <button
+                                key={tab.key}
+                                onClick={() => setActiveTab(tab.key)}
+                                className="relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2"
+                                style={{
+                                    color: active ? "white" : undefined,
+                                    borderColor: active ? tab.accent : "transparent",
+                                }}
+                            >
+                                <span className={active ? "" : "text-neutral-600"} style={active ? { color: tab.accent } : undefined}>{tab.icon}</span>
+                                <span className={active ? "" : "text-neutral-600 hover:text-neutral-300"}>{tab.label}</span>
+                                {tab.count > 0 && (
+                                    <span
+                                        className="text-[10px] px-1.5 py-0.5 rounded-full font-bold"
+                                        style={active ? { backgroundColor: tab.accent, color: "black" } : { backgroundColor: "rgba(255,255,255,0.1)", color: "#a3a3a3" }}
+                                    >
+                                        {tab.count}
+                                    </span>
+                                )}
+                            </button>
+                        )
+                    })}
                 </div>
 
                 {/* Create Form (Collapsible) */}

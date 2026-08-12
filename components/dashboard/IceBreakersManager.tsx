@@ -84,12 +84,12 @@ export function IceBreakersManager() {
         <div className="space-y-6 max-w-2xl mx-auto">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="font-serif-display text-3xl text-white">Ice Breakers</h2>
+                    <h2 className="font-serif-display font-black text-3xl text-white">Ice Breakers</h2>
                     <p className="text-muted-foreground text-sm">
                         Questions people see when they start a chat with you.
                     </p>
                 </div>
-                <Button onClick={handleSave} disabled={saving} className="bg-brand hover:brightness-95 text-black font-bold">
+                <Button onClick={handleSave} disabled={saving} className="bg-brand hover:brightness-95 text-black font-bold shadow-[0_0_28px_-8px_var(--accent-green)]">
                     {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                     Save & Sync
                 </Button>
@@ -97,7 +97,7 @@ export function IceBreakersManager() {
 
             <div className="space-y-4">
                 {breakers.map((item, idx) => (
-                    <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl space-y-3 relative group">
+                    <div key={idx} className="glow-card bg-white/5 border border-white/10 p-4 rounded-xl space-y-3 relative group">
                         <div className="flex justify-between items-start gap-4">
                             <div className="flex-1 space-y-3">
                                 <div>

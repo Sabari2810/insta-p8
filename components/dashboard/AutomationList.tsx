@@ -72,8 +72,8 @@ export function AutomationList({ automations, onDelete, onEdit, onChanged, userI
   if (automations.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-12 text-center">
-        <div className="w-16 h-16 mx-auto mb-4 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10">
-          <Zap className="w-7 h-7 text-neutral-600" />
+        <div className="w-16 h-16 mx-auto mb-4 bg-brand/10 rounded-2xl flex items-center justify-center border border-brand/20">
+          <Zap className="w-7 h-7 text-brand" />
         </div>
         <h3 className="text-base font-bold text-white mb-1">No automations yet</h3>
         <p className="text-sm text-neutral-500 max-w-sm mx-auto">
@@ -148,7 +148,7 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
       className={`group p-4 rounded-xl border transition-all duration-200 ${
         isPaused
           ? "border-white/5 bg-white/[0.01] opacity-60"
-          : "border-white/5 bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10"
+          : "glow-card border-white/5 bg-white/[0.02] hover:bg-white/[0.04]"
       }`}
       style={{ animationDelay: `${index * 60}ms` }}
     >

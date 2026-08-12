@@ -123,12 +123,15 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             key={conv.id}
                             onClick={() => onSelect(conv.id, conv.recipient_username, conv.recipient_id.toString(), conv.tags || [], conv.profile_pic_url)}
                             className={cn(
-                                "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
+                                "relative p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
                                     ? "bg-brand/[0.06] border-brand/20"
                                     : "hover:bg-white/5 hover:border-white/5"
                             )}
                         >
+                            {selectedId === conv.id && (
+                                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 rounded-full bg-brand" />
+                            )}
                             <Avatar src={conv.profile_pic_url} size={48} />
                             <div className="flex-1 min-w-0 text-left">
                                 <div className="flex items-center justify-between mb-0.5">
