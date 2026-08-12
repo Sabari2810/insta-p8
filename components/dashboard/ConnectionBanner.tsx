@@ -27,8 +27,8 @@ export function ConnectionBanner() {
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 md:px-6 py-3 text-sm border-b",
-        expired ? "bg-red-500/10 border-red-500/20 text-red-300" : "bg-brand/10 border-brand/20 text-brand",
+        "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-4 md:px-6 py-3 text-sm border-b-2",
+        expired ? "bg-[#ec3013]/10 border-[#ec3013]/30 text-[#ae1800]" : "bg-[#201e1d]/[0.04] border-[#201e1d]/40 text-[#201e1d]",
       )}
     >
       <div className="flex items-center gap-2">
@@ -43,7 +43,7 @@ export function ConnectionBanner() {
         onClick={() => {
           window.location.href = "/api/instagram/login"
         }}
-        className="shrink-0 font-mono-ui text-xs font-bold px-3 py-1.5 rounded-full bg-white text-black hover:bg-white/90 transition-colors"
+        className="shrink-0 text-xs font-bold px-3 py-1.5 bg-[#ec3013] text-[#f3f2f2] hover:bg-[#dd2b0f] transition-colors"
       >
         Reconnect
       </button>

@@ -3,40 +3,54 @@
 import { useState, useEffect, useMemo } from "react"
 import {
   Plus, Trash2, Film, Check, MessageCircle, Send, AtSign, Heart,
-  MessageSquare, Image as ImageIcon, Timer, Eye, Megaphone, Lock,
-  Link2, Zap, ChevronDown, ChevronRight, ChevronLeft, X, Loader2,
-  ArrowLeft, Phone, Video, Info, Sparkles, Smile, Camera, Mic, Image as PicIcon,
-  Globe
+  MessageSquare, Image as ImageIcon, Link2, Loader2, Globe, ArrowLeft,
 } from "lucide-react"
 import { TagInput } from "@/components/ui/tag-input"
 import type { ProButton, QuickReplyOption, Automation } from "@/lib/types"
 import { toast } from "sonner"
 
 /* ============================================================
-   AESTHETIC & SEXY WIZARD FOR INSTAGRAM AUTOMATION RULES
-   Step 1: TRIGGER  — Select Reel/Post first, then set keywords
-   Step 2: RESPONSE — What do they get?
-   Step 3: SETTINGS — Name it & delivery options
+   4-step automation builder — Trigger / Content / Response / Delivery
+   Matches the Claude Design "Automations" mockup's visual language and
+   flow; underlying fields/capabilities are the real product's, not a
+   1:1 mockup copy (the mockup drops some real capabilities — media/
+   card responses, multi-button, quick replies, reply rotation — those
+   stay, restyled to fit the new step layout).
    ============================================================ */
 
 interface CreateRuleFormProps {
   userId: string
-  triggerSource: "comment" | "dm" | "story"
   onSuccess: () => void
+  onCancel: () => void
   editRule?: Automation | null
 }
 
-const STEPS = [
-  { key: "trigger", label: "Trigger Source", sub: "When does it fire?" },
-  { key: "response", label: "Reply Payload", sub: "What do they get?" },
-  { key: "settings", label: "Final Settings", sub: "Speed & restrictions" },
-] as const
+const STEP_LABELS = ["Trigger", "Content", "Response", "Delivery"] as const
 
-export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: CreateRuleFormProps) {
+const SOURCES = [
+  { key: "comment" as const, label: "Comment", desc: "Someone comments on a post or reel" },
+  { key: "dm" as const, label: "Direct message", desc: "Someone sends you a DM" },
+  { key: "story" as const, label: "Story", desc: "A reply or mention on your story" },
+]
+
+const DELAYS = [
+  { key: "0", label: "Instant" },
+  { key: "3", label: "3s" },
+  { key: "5", label: "5s" },
+  { key: "10", label: "10s" },
+  { key: "30", label: "30s" },
+  { key: "random", label: "Random (3–10s)" },
+]
+
+export function CreateRuleForm({ userId, onSuccess, onCancel, editRule }: CreateRuleFormProps) {
   const isEditing = !!editRule
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(1)
 
   /* ---------- WHEN ---------- */
+  const [source, setSource] = useState<"comment" | "dm" | "story">(editRule?.trigger_source || "comment")
+  const [triggerMode, setTriggerMode] = useState<"keyword" | "reply_all">(
+    editRule && editRule.trigger_type === "reply_all" ? "reply_all" : "keyword",
+  )
   const [triggers, setTriggers] = useState<string[]>([])
   const [storyTriggerType, setStoryTriggerType] = useState<"mention" | "reaction" | "reply">("mention")
   const [selectedReel, setSelectedReel] = useState<any | null>(null)
@@ -64,6 +78,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
   const [checkFollow, setCheckFollow] = useState(false)
   const [delaySeconds, setDelaySeconds] = useState<string>("random")
   const [typingIndicator, setTypingIndicator] = useState(false)
+  const [markSeen, setMarkSeen] = useState(true)
 
   const [saving, setSaving] = useState(false)
   const [reels, setReels] = useState<any[]>([])
@@ -94,9 +109,11 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
         : editRule.response_content || {}
 
     setName(editRule.name)
+    setSource(editRule.trigger_source)
     if (["mention", "reaction", "reply"].includes(editRule.trigger_type)) {
       setStoryTriggerType(editRule.trigger_type as any)
     }
+    setTriggerMode(editRule.trigger_type === "reply_all" ? "reply_all" : "keyword")
     const rawTriggers = (editRule.trigger_value || "")
       .split(",").map((t) => t.trim())
       .filter((t) => t && !["ALL", "ALL_COMMENTS", "ALL_MENTIONS", "ALL_REACTIONS"].includes(t.toUpperCase()))
@@ -117,15 +134,16 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     setCheckFollow(content.check_follow === true)
     const loadedDelay = content.delay_seconds
     setDelaySeconds(
-      loadedDelay === "random" || [3, 5, 10, 30].includes(Number(loadedDelay)) ? String(loadedDelay) : "random",
+      loadedDelay === "random" || [0, 3, 5, 10, 30].includes(Number(loadedDelay)) ? String(loadedDelay) : "random",
     )
     setTypingIndicator(content.typing_indicator === true)
-    
+    setMarkSeen(content.mark_seen !== false)
+
     if (editRule.specific_media_id) {
       setSelectedReel({ id: editRule.specific_media_id, caption: "Selected post" })
       setHasSelectedReelOption(true)
     } else {
-      setHasSelectedReelOption(false)
+      setHasSelectedReelOption(true)
     }
   }, [editRule])
 
@@ -134,10 +152,18 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
      the field to type a custom name would immediately get overwritten by this effect. */
   useEffect(() => {
     if (nameEdited || isEditing) return
-    const isReplyAll = triggerSource === "comment" && triggers.length === 0
-    if (isReplyAll) setName("Reply to every comment")
+    if (source === "comment" && triggerMode === "reply_all") setName("Reply to every comment")
     else if (triggers.length > 0) setName(`Reply to "${triggers[0]}"`)
-  }, [triggers, nameEdited, isEditing, triggerSource])
+  }, [source, triggerMode, triggers, nameEdited, isEditing])
+
+  /* Switching source resets fields that don't carry over meaningfully. */
+  const changeSource = (next: "comment" | "dm" | "story") => {
+    setSource(next)
+    setTriggerMode("keyword")
+    setTriggers([])
+    setSelectedReel(null)
+    setHasSelectedReelOption(next !== "comment")
+  }
 
   /* ---------- helpers ---------- */
   const addButton = () => {
@@ -156,30 +182,24 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     setQuickReplies(quickReplies.map((q) => (q.id === id ? { ...q, title } : q)))
   const removeQuickReply = (id: string) => setQuickReplies(quickReplies.filter((q) => q.id !== id))
 
-  const needsKeywords = triggerSource === "dm" || (triggerSource === "story" && storyTriggerType !== "mention")
+  const needsKeywords = source === "dm" || (source === "story" && storyTriggerType !== "mention") || (source === "comment" && triggerMode === "keyword")
 
-  const whenValid = triggerSource === "comment" 
-    ? hasSelectedReelOption // Comment trigger is valid once they select a specific post or global option
-    : !needsKeywords || triggers.length > 0
-
-  const thenValid =
+  const step1Valid = (!needsKeywords || triggers.length > 0) && name.trim().length > 0
+  const step2Valid = source !== "comment" || hasSelectedReelOption
+  const step3Valid =
     replyMode === "public_only" ||
     (type === "text" ? messageText.trim().length > 0 : type === "card" ? cardTitle.trim().length > 0 : mediaUrl.trim().length > 0)
-  const canSave = whenValid && thenValid && name.trim().length > 0
+  const canSave = step1Valid && step2Valid && step3Valid
 
-  const stepValid = [
-    whenValid,  // step 0
-    thenValid,  // step 1
-    name.trim().length > 0, // step 2
-  ]
+  const stepValid = [step1Valid, step2Valid, step3Valid, true]
 
   /* Plain-language summary sentence */
   const summary = useMemo(() => {
-    const isReplyAll = triggerSource === "comment" && triggers.length === 0
+    const isReplyAll = source === "comment" && triggerMode === "reply_all"
     const who =
-      triggerSource === "comment"
+      source === "comment"
         ? isReplyAll ? "anyone comments on your post" : `someone comments ${triggers.length ? `"${triggers[0]}"` : "a keyword"}`
-        : triggerSource === "dm"
+        : source === "dm"
           ? `someone DMs you ${triggers.length ? `"${triggers[0]}"` : "a keyword"}`
           : storyTriggerType === "mention" ? "someone mentions you in a story"
             : storyTriggerType === "reaction" ? "someone reacts to your story"
@@ -190,19 +210,20 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
           : type === "media" ? `send them ${mediaType === "image" ? "an image" : `a ${mediaType}`}`
             : "send them a DM"
     return { who, what }
-  }, [triggerSource, triggers, storyTriggerType, replyMode, type, mediaType])
+  }, [source, triggerMode, triggers, storyTriggerType, replyMode, type, mediaType])
 
   /* ---------- save ---------- */
   const handleSubmit = async () => {
     if (!canSave || saving) return
     setSaving(true)
 
-    const isReplyAll = triggerSource === "comment" && triggers.length === 0
+    const isReplyAll = source === "comment" && triggerMode === "reply_all"
 
     const content: any = { check_follow: checkFollow }
     content.delay_seconds = delaySeconds === "random" ? "random" : Number(delaySeconds)
     if (typingIndicator) content.typing_indicator = true
-    if (triggerSource === "comment") {
+    if (!markSeen) content.mark_seen = false
+    if (source === "comment") {
       content.reply_mode = replyMode
       if (publicReplies.length > 0) content.public_replies = publicReplies
       if (includeReplies) content.include_replies = true
@@ -233,11 +254,11 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     const payload = {
       userId,
       name,
-      trigger_source: triggerSource,
-      trigger_type: isReplyAll ? "reply_all" : triggerSource === "story" ? storyTriggerType : "keyword",
+      trigger_source: source,
+      trigger_type: isReplyAll ? "reply_all" : source === "story" ? storyTriggerType : "keyword",
       trigger_value: isReplyAll ? "ALL_COMMENTS"
-        : triggerSource === "story" && storyTriggerType === "mention" ? "ALL_MENTIONS"
-          : triggerSource === "story" && storyTriggerType === "reaction" && triggers.length === 0 ? "ALL_REACTIONS"
+        : source === "story" && storyTriggerType === "mention" ? "ALL_MENTIONS"
+          : source === "story" && storyTriggerType === "reaction" && triggers.length === 0 ? "ALL_REACTIONS"
             : triggers.length > 0 ? triggers.join(", ") : "ALL",
       content,
       specific_media_id: selectedReel?.id || null,
@@ -262,119 +283,194 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
     }
   }
 
+  const nextStep = () => { if (stepValid[step - 1]) setStep((s) => Math.min(4, s + 1)) }
+  const prevStep = () => setStep((s) => Math.max(1, s - 1))
+
   return (
-    <div className="space-y-8">
-      {/* ── Sexy Stepper Timeline ── */}
-      <div className="relative bg-neutral-900/60 border border-white/5 rounded-2xl p-4 md:px-8">
-        <div className="flex items-center justify-between gap-4 relative">
-          {STEPS.map((s, i) => {
-            const isActive = i === step
-            const isCompleted = i < step
-            return (
-              <div key={s.key} className="flex items-center gap-3 flex-1 last:flex-initial">
-                <button
-                  type="button"
-                  onClick={() => { if (i < step || stepValid[step]) setStep(i) }}
-                  className="flex items-center gap-3 group text-left focus:outline-none"
-                >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                    isCompleted
-                      ? "bg-brand text-black shadow-[0_0_15px_rgba(195,251,58,0.3)]"
-                      : isActive
-                        ? "bg-white text-black ring-4 ring-white/10"
-                        : "bg-neutral-800 text-neutral-500 border border-white/5"
-                  }`}>
-                    {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : i + 1}
-                  </div>
-                  <div className="hidden md:block">
-                    <p className={`text-xs font-bold tracking-tight uppercase ${isActive ? "text-white" : "text-neutral-400 group-hover:text-neutral-200"}`}>
-                      {s.label}
-                    </p>
-                    <p className="text-[10px] text-neutral-500 font-mono-ui">{s.sub}</p>
-                  </div>
-                </button>
-                {i < STEPS.length - 1 && (
-                  <div className="flex-1 h-[2px] mx-2 relative bg-neutral-800 rounded-full overflow-hidden">
-                    <div className={`absolute inset-y-0 left-0 transition-all duration-500 bg-brand ${
-                      isCompleted ? "w-full" : "w-0"
-                    }`} />
-                  </div>
-                )}
-              </div>
-            )
-          })}
+    <div className="min-h-screen flex flex-col">
+      {/* Builder header */}
+      <header className="flex items-center justify-between gap-6 px-6 md:px-8 py-5 border-b-2 border-[#201e1d]/40">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={onCancel}
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-[#201e1d]/40 text-xs font-bold hover:bg-[#201e1d]/[0.06] transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back
+          </button>
+          <div>
+            <h6 className="text-[11px] tracking-[0.08em] uppercase text-[#7d7979]">{isEditing ? "Edit automation" : "New automation"}</h6>
+            <div className="text-lg md:text-xl font-black tracking-[-0.02em]">{name || "Untitled automation"}</div>
+          </div>
         </div>
-      </div>
+        <div className="flex items-center gap-3 shrink-0">
+          <span className="text-xs text-[#7d7979] hidden sm:inline">Step {step} of 4 · {STEP_LABELS[step - 1]}</span>
+          {step > 1 && (
+            <button onClick={prevStep} className="px-3.5 py-2 border border-[#201e1d]/40 text-xs font-bold hover:bg-[#201e1d]/[0.06] transition-colors">
+              Previous
+            </button>
+          )}
+          {step < 4 ? (
+            <button
+              onClick={nextStep}
+              disabled={!stepValid[step - 1]}
+              className="px-4 py-2 bg-[#201e1d] text-[#f3f2f2] text-xs font-bold hover:bg-black transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              disabled={!canSave || saving}
+              className="flex items-center gap-2 px-5 py-2 bg-[#ec3013] text-[#f3f2f2] text-xs font-bold hover:bg-[#dd2b0f] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {saving ? "Saving…" : isEditing ? "Save automation" : "Activate automation"}
+            </button>
+          )}
+        </div>
+      </header>
 
-      {/* ── Two Column Workspace ── */}
-      <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
-        {/* ── LEFT: Config Form ── */}
-        <div className="bg-[#0b0b0a] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
-          {/* ===== STEP 1: TRIGGER ===== */}
-          {step === 0 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
-              <StepHeader
-                number={1}
-                title={triggerSource === "comment" ? "Select the target post/reel" : triggerSource === "dm" ? "When someone DMs you" : "When someone interacts with your story"}
-                description={triggerSource === "comment" ? "Choose the specific media to automate." : "Set the conditions that launch this automation."}
-              />
+      <div className="flex-1 grid lg:grid-cols-[1fr_400px]">
+        {/* Left: step content */}
+        <div className="border-r-2 border-[#201e1d]/40 min-w-0">
+          <div className="grid grid-cols-4 border-b-2 border-[#201e1d]/40">
+            {STEP_LABELS.map((label, i) => (
+              <button
+                key={label}
+                onClick={() => { if (i + 1 < step || stepValid[step - 1]) setStep(i + 1) }}
+                className="text-left px-4 py-3 border-r border-[#201e1d]/25 last:border-r-0 hover:bg-[#201e1d]/[0.04] transition-colors"
+              >
+                <div className="text-[11px] tracking-[0.08em] uppercase text-[#7d7979]">Step {i + 1}</div>
+                <div className="text-sm font-bold mt-0.5">{label}</div>
+                <div className={`h-1 -mx-4 -mb-3 mt-2 ${step === i + 1 ? "bg-[#ec3013]" : "bg-transparent"}`} />
+              </button>
+            ))}
+          </div>
 
-              {triggerSource === "story" && (
-                <div className="space-y-3">
-                  <FieldLabel>Select Story Interaction Type</FieldLabel>
-                  <div className="grid grid-cols-3 gap-3">
-                    {([
-                      { key: "mention" as const, icon: <AtSign className="w-5 h-5" />, label: "Mentions me", desc: "Tagged in a story" },
-                      { key: "reaction" as const, icon: <Heart className="w-5 h-5" />, label: "Reacts", desc: "Sends emoji reaction" },
-                      { key: "reply" as const, icon: <MessageSquare className="w-5 h-5" />, label: "Replies", desc: "Text reply to story" },
-                    ]).map(({ key, icon, label, desc }) => (
+          <div className="px-6 md:px-7 py-7">
+            {step === 1 && (
+              <div className="space-y-7">
+                <div>
+                  <FieldLabel>Where does it listen</FieldLabel>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {SOURCES.map((o) => (
                       <button
-                        key={key}
-                        type="button"
-                        onClick={() => setStoryTriggerType(key)}
-                        className={`p-4 rounded-xl border text-left flex flex-col gap-2 transition-all duration-200 ${
-                          storyTriggerType === key
-                            ? "border-brand bg-brand/[0.06] text-brand"
-                            : "border-white/10 text-neutral-400 hover:border-white/20 hover:text-white bg-white/[0.01]"
+                        key={o.key}
+                        onClick={() => changeSource(o.key)}
+                        className={`text-left p-3.5 border flex flex-col gap-1.5 transition-colors ${
+                          source === o.key ? "border-[#ec3013] bg-[#ec3013]/[0.04]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
                         }`}
                       >
-                        <span className={storyTriggerType === key ? "text-brand" : "text-neutral-500"}>{icon}</span>
-                        <div>
-                          <p className="text-xs font-bold uppercase tracking-wider">{label}</p>
-                          <p className="text-[10px] text-neutral-500 font-normal mt-0.5">{desc}</p>
-                        </div>
+                        <span className={`h-1 w-7 block ${source === o.key ? "bg-[#ec3013]" : "bg-[#d7d3d3]"}`} />
+                        <span className="text-[15px] font-bold">{o.label}</span>
+                        <span className="text-xs text-[#7d7979]">{o.desc}</span>
                       </button>
                     ))}
                   </div>
                 </div>
-              )}
 
-              {triggerSource === "comment" && (
-                <div className="space-y-4">
-                  <FieldLabel>Automate which post or reel?</FieldLabel>
-                  {loadingReels ? (
-                    <div className="p-8 flex flex-col items-center justify-center gap-3 border border-white/5 rounded-2xl bg-white/[0.01]">
-                      <Loader2 className="w-6 h-6 animate-spin text-brand" />
-                      <span className="text-xs text-neutral-500 font-mono-ui">Fetching Instagram feed...</span>
+                {source === "story" && (
+                  <div>
+                    <FieldLabel>Trigger</FieldLabel>
+                    <div className="flex flex-col">
+                      {[
+                        { key: "mention" as const, icon: <AtSign className="w-4 h-4" />, label: "Story mention", desc: "Someone mentions you in their story" },
+                        { key: "reaction" as const, icon: <Heart className="w-4 h-4" />, label: "Story reaction", desc: "An emoji reaction on your story" },
+                        { key: "reply" as const, icon: <MessageSquare className="w-4 h-4" />, label: "Story reply", desc: "Someone replies to your story" },
+                      ].map((o) => (
+                        <button
+                          key={o.key}
+                          onClick={() => setStoryTriggerType(o.key)}
+                          className="flex items-center gap-3 text-left py-3 border-b border-[#201e1d]/25 hover:bg-[#201e1d]/[0.04] px-1 transition-colors"
+                        >
+                          <span className={`w-3 h-3 shrink-0 border ${storyTriggerType === o.key ? "bg-[#ec3013] border-[#ec3013]" : "border-[#201e1d]"}`} />
+                          <span>
+                            <span className="text-sm font-bold block">{o.label}</span>
+                            <span className="text-xs text-[#7d7979] block">{o.desc}</span>
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {source === "comment" && (
+                  <div>
+                    <FieldLabel>Trigger</FieldLabel>
+                    <div className="flex gap-2">
+                      {[
+                        { key: "keyword" as const, label: "Comment contains keyword" },
+                        { key: "reply_all" as const, label: "Any comment" },
+                      ].map((o) => (
+                        <button
+                          key={o.key}
+                          onClick={() => setTriggerMode(o.key)}
+                          className={`px-3.5 py-2 border text-xs font-bold transition-colors ${
+                            triggerMode === o.key ? "border-[#ec3013] bg-[#ec3013]/10 text-[#ae1800]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
+                          }`}
+                        >
+                          {o.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {needsKeywords && (
+                  <div>
+                    <FieldLabel>
+                      {source === "story" && storyTriggerType === "reaction" ? "Only react on these emojis" : "Keywords to match"}
+                    </FieldLabel>
+                    <p className="text-xs text-[#7d7979] mb-2">
+                      {source === "story" && storyTriggerType === "reaction"
+                        ? "Leave empty to trigger on any emoji reaction."
+                        : "Matching is case-insensitive and ignores punctuation."}
+                    </p>
+                    <TagInput
+                      value={triggers}
+                      onChange={setTriggers}
+                      placeholder={source === "story" && storyTriggerType === "reaction" ? "e.g. ❤️, 🔥, 👍" : "type keyword, press Enter"}
+                    />
+                  </div>
+                )}
+
+                {source === "comment" && triggerMode === "keyword" && triggers.length > 0 && (
+                  <ToggleRow title="Check replies to comments" sub="Normally only primary post comments trigger replies" on={includeReplies} onToggle={() => setIncludeReplies(!includeReplies)} />
+                )}
+
+                <div>
+                  <FieldLabel>Automation name</FieldLabel>
+                  <TextField value={name} onChange={(v) => { setName(v); setNameEdited(true) }} placeholder='e.g. "Free Ebook Download Trigger"' />
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-6">
+                <p className="text-sm text-[#7d7979]">
+                  {source === "story"
+                    ? "Story automations apply to every story you publish."
+                    : source === "dm"
+                      ? "DM automations listen on the whole inbox."
+                      : "Choose the reels and posts this automation watches."}
+                </p>
+
+                {source === "comment" && (
+                  loadingReels ? (
+                    <div className="p-8 flex flex-col items-center justify-center gap-3 border border-[#201e1d]/40">
+                      <Loader2 className="w-6 h-6 animate-spin text-[#ec3013]" />
+                      <span className="text-xs text-[#7d7979]">Fetching Instagram feed…</span>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto pr-1">
-                      {/* Option: Global Post Rule */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[420px] overflow-y-auto pr-1">
                       <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedReel(null)
-                          setHasSelectedReelOption(true)
-                        }}
-                        className={`aspect-square rounded-xl border flex flex-col items-center justify-center p-4 text-center transition-all duration-200 ${
-                          hasSelectedReelOption && selectedReel === null
-                            ? "border-brand bg-brand/[0.06] text-brand"
-                            : "border-white/10 text-neutral-400 hover:border-white/20 hover:text-white bg-white/[0.01]"
+                        onClick={() => { setSelectedReel(null); setHasSelectedReelOption(true) }}
+                        className={`aspect-square border flex flex-col items-center justify-center p-3 text-center transition-colors ${
+                          hasSelectedReelOption && selectedReel === null ? "border-[#ec3013] bg-[#ec3013]/[0.04]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
                         }`}
                       >
-                        <Globe className="w-8 h-8 mb-2 opacity-80" />
-                        <span className="text-xs font-bold">All Posts & Reels</span>
-                        <span className="text-[9px] text-neutral-500 mt-1">Global Trigger</span>
+                        <Globe className="w-7 h-7 mb-2 text-[#7d7979]" />
+                        <span className="text-xs font-bold">All posts &amp; reels</span>
                       </button>
 
                       {reels.map((reel) => {
@@ -382,574 +478,351 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         return (
                           <button
                             key={reel.id}
-                            type="button"
-                            onClick={() => {
-                              setSelectedReel(reel)
-                              setHasSelectedReelOption(true)
-                            }}
-                            className={`aspect-square rounded-xl border overflow-hidden relative group text-left transition-all duration-200 ${
-                              isSelected
-                                ? "border-brand ring-2 ring-brand/20"
-                                : "border-white/10 hover:border-white/25 bg-[#0e0e0e]"
+                            onClick={() => { setSelectedReel(reel); setHasSelectedReelOption(true) }}
+                            className={`aspect-square border relative text-left overflow-hidden transition-colors ${
+                              isSelected ? "border-[#ec3013]" : "border-[#201e1d]/40 hover:border-[#201e1d]/70"
                             }`}
                           >
                             {reel.media_url ? (
-                              <img src={reel.media_url} alt="" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+                              <img src={reel.media_url} alt="" className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full bg-neutral-900 flex items-center justify-center">
-                                <Film className="w-6 h-6 text-neutral-600" />
+                              <div className="w-full h-full bg-[#eae7e7] flex items-center justify-center">
+                                <Film className="w-6 h-6 text-[#9b9797]" />
                               </div>
                             )}
-
-                            {/* Type Overlay */}
-                            <span className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/60 text-[8px] font-mono-ui text-white uppercase tracking-wider">
+                            <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 bg-[#201e1d]/80 text-[8px] text-white uppercase tracking-wider">
                               {reel.media_type === "STORY" ? "Story" : reel.media_type === "VIDEO" ? "Reel" : "Post"}
                             </span>
-
-                            {/* Selected Check overlay */}
                             {isSelected && (
-                              <div className="absolute inset-0 bg-brand/10 flex items-center justify-center backdrop-blur-[1px]">
-                                <div className="w-8 h-8 rounded-full bg-brand text-black flex items-center justify-center shadow-lg">
+                              <div className="absolute inset-0 bg-[#ec3013]/15 flex items-center justify-center">
+                                <div className="w-7 h-7 bg-[#ec3013] text-white flex items-center justify-center">
                                   <Check className="w-4 h-4 stroke-[3]" />
                                 </div>
                               </div>
                             )}
-
-                            {/* Caption snippet at bottom */}
-                            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/80 to-transparent p-2 pt-6">
-                              <p className="text-[10px] text-white line-clamp-1 font-sans">{reel.caption || "Untitled"}</p>
-                            </div>
                           </button>
                         )
                       })}
                     </div>
-                  )}
-                </div>
-              )}
+                  )
+                )}
+              </div>
+            )}
 
-              {/* Configure keywords only after selection (for Comment triggers) or always for others */}
-              {(triggerSource !== "comment" || hasSelectedReelOption) && (
-                <div className="space-y-4 pt-3 border-t border-white/5 animate-in fade-in slide-in-from-top-2 duration-300">
-                  {triggerSource === "comment" ? (
-                    <div className="space-y-2">
-                      <FieldLabel>Keywords to match</FieldLabel>
-                      <p className="text-[11px] text-neutral-500">
-                        What keyword triggers this DM? <span className="text-brand font-semibold">Keep empty to reply to every comment.</span>
-                      </p>
-                      <TagInput
-                        value={triggers}
-                        onChange={setTriggers}
-                        placeholder="type keyword, press Enter (e.g. guide)"
-                      />
-                    </div>
-                  ) : needsKeywords ? (
-                    <div className="space-y-2 bg-neutral-900/40 p-5 rounded-2xl border border-white/5">
-                      <FieldLabel>
-                        {triggerSource === "story" && storyTriggerType === "reaction"
-                          ? "Only react on these emojis"
-                          : "Trigger keywords"}
-                      </FieldLabel>
-                      <p className="text-[11px] text-neutral-500 mb-3">
-                        {triggerSource === "story" && storyTriggerType === "reaction"
-                          ? "Leave empty to trigger on any emoji reaction."
-                          : "Matches exact phrases or words (case-insensitive)."}
-                      </p>
-                      <TagInput
-                        value={triggers}
-                        onChange={setTriggers}
-                        placeholder={
-                          triggerSource === "story" && storyTriggerType === "reaction" ? "e.g. ❤️, 🔥, 👍" : "type keyword, press Enter (e.g. price)"
-                        }
-                      />
-                    </div>
-                  ) : null}
-
-                  {triggerSource === "comment" && triggers.length > 0 && (
-                    <ToggleRow
-                      icon={<MessageSquare className="w-5 h-5" />}
-                      title="Check replies to comments"
-                      sub="Normally only primary post comments trigger replies"
-                      on={includeReplies}
-                      onToggle={() => setIncludeReplies(!includeReplies)}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ===== STEP 2: RESPONSE ===== */}
-          {step === 1 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
-              <StepHeader
-                number={2}
-                title="Compose response message"
-                description="Pick the format and craft the message sent to prospects."
-              />
-
-              {triggerSource === "comment" && (
-                <div className="space-y-2">
-                  <FieldLabel>Flow direction</FieldLabel>
-                  <div className="grid grid-cols-3 gap-2">
-                    {([
-                      { key: "both" as const, label: "Reply + DM" },
-                      { key: "public_only" as const, label: "Reply only" },
-                      { key: "dm_only" as const, label: "DM only" },
-                    ]).map(({ key, label }) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setReplyMode(key)}
-                        className={`h-11 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all ${
-                          replyMode === key ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
-                        }`}
-                      >
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {triggerSource === "comment" && replyMode !== "dm_only" && (
-                <div className="space-y-2 bg-neutral-900/40 p-5 rounded-2xl border border-white/5">
-                  <FieldLabel>Public comments rotation</FieldLabel>
-                  <p className="text-[11px] text-neutral-500 mb-3">Add multiple phrases. We rotate them dynamically to look human.</p>
-                  <TagInput value={publicReplies} onChange={setPublicReplies} placeholder={'e.g. "Sent you a DM!", "Check your inbox!"'} />
-                </div>
-              )}
-
-              {replyMode !== "public_only" && (
-                <div className="space-y-5 pt-2">
-                  <div className="space-y-2">
-                    <FieldLabel>Direct Message Format</FieldLabel>
-                    <div className="grid grid-cols-3 gap-3">
+            {step === 3 && (
+              <div className="space-y-6 max-w-2xl">
+                {source === "comment" && (
+                  <div>
+                    <FieldLabel>Reply mode</FieldLabel>
+                    <div className="flex gap-2">
                       {([
-                        { key: "text" as const, icon: <MessageCircle className="w-4.5 h-4.5" />, label: "Text Only" },
-                        { key: "card" as const, icon: <Link2 className="w-4.5 h-4.5" />, label: "Card / Link" },
-                        { key: "media" as const, icon: <ImageIcon className="w-4.5 h-4.5" />, label: "Rich Media" },
-                      ]).map(({ key, icon, label }) => (
+                        { key: "both" as const, label: "Reply + DM" },
+                        { key: "public_only" as const, label: "Reply only" },
+                        { key: "dm_only" as const, label: "DM only" },
+                      ]).map(({ key, label }) => (
                         <button
                           key={key}
-                          type="button"
-                          onClick={() => setType(key)}
-                          className={`p-3 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
-                            type === key ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
+                          onClick={() => setReplyMode(key)}
+                          className={`px-3.5 py-2 border text-xs font-bold transition-colors ${
+                            replyMode === key ? "border-[#ec3013] bg-[#ec3013]/10 text-[#ae1800]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
                           }`}
                         >
-                          {icon}
                           {label}
                         </button>
                       ))}
                     </div>
                   </div>
+                )}
 
-                  {type === "text" && (
-                    <div className="space-y-2">
-                      <FieldLabel>DM Message Text</FieldLabel>
-                      <textarea
-                        value={messageText}
-                        onChange={(e) => setMessageText(e.target.value)}
-                        rows={5}
-                        maxLength={1000}
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-neutral-600 resize-none focus:outline-none focus:border-brand/50 transition-colors"
-                        placeholder="Type the message to send in DMs..."
-                      />
-                      <p className="font-mono-ui text-[10px] text-neutral-600 text-right">{messageText.length}/1000</p>
-                    </div>
-                  )}
+                {source === "comment" && replyMode !== "dm_only" && (
+                  <div>
+                    <FieldLabel>Public reply rotation</FieldLabel>
+                    <p className="text-xs text-[#7d7979] mb-2">Add multiple phrases — they rotate to look human.</p>
+                    <TagInput value={publicReplies} onChange={setPublicReplies} placeholder='e.g. "Sent you a DM!"' />
+                  </div>
+                )}
 
-                  {type === "card" && (
-                    <div className="space-y-4">
-                      <div className="space-y-3">
-                        <FieldLabel>Card configuration</FieldLabel>
-                        <TextField value={cardTitle} onChange={setCardTitle} placeholder="Card main title" />
-                        <TextField value={cardSubtitle} onChange={setCardSubtitle} placeholder="Subtitle description (optional)" />
-                        <TextField value={cardImage} onChange={setCardImage} placeholder="Cover image URL (optional)" />
-                      </div>
-                      <div className="space-y-2.5">
-                        <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                          <FieldLabel>Interactive buttons ({buttons.length}/3)</FieldLabel>
-                          <button type="button" onClick={addButton} disabled={buttons.length >= 3}
-                            className="font-mono-ui text-[11px] text-neutral-400 hover:text-white disabled:opacity-40 flex items-center gap-1 transition-colors">
-                            <Plus className="w-3 h-3" /> Add button
+                {replyMode !== "public_only" && (
+                  <div className="space-y-5">
+                    <div>
+                      <FieldLabel>Direct message format</FieldLabel>
+                      <div className="grid grid-cols-3 gap-2">
+                        {([
+                          { key: "text" as const, icon: <MessageCircle className="w-4 h-4" />, label: "Text" },
+                          { key: "card" as const, icon: <Link2 className="w-4 h-4" />, label: "Card / link" },
+                          { key: "media" as const, icon: <ImageIcon className="w-4 h-4" />, label: "Media" },
+                        ]).map(({ key, icon, label }) => (
+                          <button
+                            key={key}
+                            onClick={() => setType(key)}
+                            className={`p-2.5 border text-xs font-bold flex items-center justify-center gap-2 transition-colors ${
+                              type === key ? "border-[#ec3013] bg-[#ec3013]/10 text-[#ae1800]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
+                            }`}
+                          >
+                            {icon}
+                            {label}
                           </button>
-                        </div>
-                        {buttons.map((btn) => (
-                          <div key={btn.id} className="flex gap-2 items-center bg-white/[0.02] p-3 rounded-2xl border border-white/5">
-                            <input
-                              value={btn.title}
-                              onChange={(e) => updateButton(btn.id, "title", e.target.value)}
-                              className="h-8 text-xs flex-1 bg-transparent border-none px-2 text-white placeholder:text-neutral-500 focus:outline-none"
-                              placeholder="Button label"
-                            />
-                            <select
-                              value={btn.type}
-                              onChange={(e) => updateButton(btn.id, "type", e.target.value)}
-                              className="h-8 text-[11px] bg-black border border-white/10 rounded-lg px-2 text-neutral-300 focus:outline-none"
-                            >
-                              <option value="web_url">Open Link</option>
-                              <option value="postback">Trigger Flow</option>
-                            </select>
-                            <input
-                              value={btn.type === "web_url" ? btn.url : btn.payload}
-                              onChange={(e) => updateButton(btn.id, btn.type === "web_url" ? "url" : "payload", e.target.value)}
-                              className="h-8 text-xs flex-1 bg-transparent border-none px-2 text-white placeholder:text-neutral-500 focus:outline-none font-mono"
-                              placeholder={btn.type === "web_url" ? "https://link" : "flow_keyword"}
-                            />
-                            <button type="button" onClick={() => removeButton(btn.id)} className="text-neutral-500 hover:text-red-400 p-1.5 transition-colors">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
                         ))}
                       </div>
                     </div>
-                  )}
 
-                  {type === "media" && (
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <FieldLabel>Select File Type</FieldLabel>
-                        <div className="grid grid-cols-3 gap-2">
-                          {(["image", "video", "audio"] as const).map((m) => (
-                            <button
-                              key={m}
-                              type="button"
-                              onClick={() => setMediaType(m)}
-                              className={`h-10 rounded-xl border text-xs font-bold uppercase transition-all ${
-                                mediaType === m ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
-                              }`}
-                            >
-                              {m === "image" ? "Photo" : m === "video" ? "Video" : "Audio"}
-                            </button>
-                          ))}
+                    {type === "text" && (
+                      <div>
+                        <FieldLabel>Message text</FieldLabel>
+                        <textarea
+                          value={messageText}
+                          onChange={(e) => setMessageText(e.target.value)}
+                          rows={5}
+                          maxLength={1000}
+                          className="w-full border border-[#201e1d]/40 bg-[#f8f4f4] px-4 py-3 text-sm resize-none focus:outline-none focus:border-[#ec3013] transition-colors"
+                          placeholder="Type the message to send in DMs…"
+                        />
+                        <p className="text-[10px] text-[#9b9797] text-right mt-1">{messageText.length}/1000</p>
+                      </div>
+                    )}
+
+                    {type === "card" && (
+                      <div className="space-y-4">
+                        <div className="space-y-2.5">
+                          <FieldLabel>Card configuration</FieldLabel>
+                          <TextField value={cardTitle} onChange={setCardTitle} placeholder="Card main title" />
+                          <TextField value={cardSubtitle} onChange={setCardSubtitle} placeholder="Subtitle (optional)" />
+                          <TextField value={cardImage} onChange={setCardImage} placeholder="Cover image URL (optional)" />
                         </div>
-                      </div>
-                      <TextField value={mediaUrl} onChange={setMediaUrl} placeholder="Link to public media file (e.g. mp4, jpg)" />
-                      <TextField value={messageText} onChange={setMessageText} placeholder="Optional caption message to send after..." />
-                    </div>
-                  )}
-
-                  {type !== "card" && (
-                    <div className="space-y-3 pt-2">
-                      <div className="flex items-center justify-between border-b border-white/5 pb-2">
-                        <FieldLabel>Quick Reply chips ({quickReplies.length}/4)</FieldLabel>
-                        <button type="button" onClick={addQuickReply} disabled={quickReplies.length >= 4}
-                          className="font-mono-ui text-[11px] text-neutral-400 hover:text-white disabled:opacity-40 flex items-center gap-1 transition-colors">
-                          <Plus className="w-3 h-3" /> Add chip
-                        </button>
-                      </div>
-                      {quickReplies.length > 0 && (
                         <div className="space-y-2">
-                          {quickReplies.map((q) => (
-                            <div key={q.id} className="flex gap-2 items-center">
+                          <div className="flex items-center justify-between border-b border-[#201e1d]/25 pb-2">
+                            <FieldLabel>Buttons ({buttons.length}/3)</FieldLabel>
+                            <button onClick={addButton} disabled={buttons.length >= 3} className="text-[11px] font-bold text-[#7d7979] hover:text-[#201e1d] disabled:opacity-40 flex items-center gap-1">
+                              <Plus className="w-3 h-3" /> Add button
+                            </button>
+                          </div>
+                          {buttons.map((btn) => (
+                            <div key={btn.id} className="flex gap-2 items-center border border-[#201e1d]/25 p-2">
                               <input
-                                value={q.title}
-                                onChange={(e) => updateQuickReply(q.id, e.target.value)}
-                                maxLength={20}
-                                className="h-10 text-xs flex-1 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-brand/50"
-                                placeholder='e.g. "Send Details!"'
+                                value={btn.title}
+                                onChange={(e) => updateButton(btn.id, "title", e.target.value)}
+                                className="h-8 text-xs flex-1 bg-transparent border-none px-2 focus:outline-none"
+                                placeholder="Button label"
                               />
-                              <button type="button" onClick={() => removeQuickReply(q.id)} className="text-neutral-500 hover:text-red-400 p-1.5 transition-colors">
+                              <select
+                                value={btn.type}
+                                onChange={(e) => updateButton(btn.id, "type", e.target.value)}
+                                className="h-8 text-[11px] bg-white border border-[#201e1d]/40 px-2 focus:outline-none"
+                              >
+                                <option value="web_url">Open link</option>
+                                <option value="postback">Trigger flow</option>
+                              </select>
+                              <input
+                                value={btn.type === "web_url" ? btn.url : btn.payload}
+                                onChange={(e) => updateButton(btn.id, btn.type === "web_url" ? "url" : "payload", e.target.value)}
+                                className="h-8 text-xs flex-1 bg-transparent border-none px-2 focus:outline-none font-mono"
+                                placeholder={btn.type === "web_url" ? "https://link" : "flow_keyword"}
+                              />
+                              <button onClick={() => removeButton(btn.id)} className="text-[#7d7979] hover:text-[#ec3013] p-1">
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
                           ))}
                         </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
+                      </div>
+                    )}
 
-          {/* ===== STEP 3: SETTINGS ===== */}
-          {step === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
-              <StepHeader
-                number={3}
-                title="Configure rules & name"
-                description="Finalize performance parameters and activate the automation."
-              />
+                    {type === "media" && (
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          {(["image", "video", "audio"] as const).map((m) => (
+                            <button
+                              key={m}
+                              onClick={() => setMediaType(m)}
+                              className={`px-3.5 py-2 border text-xs font-bold uppercase transition-colors ${
+                                mediaType === m ? "border-[#ec3013] bg-[#ec3013]/10 text-[#ae1800]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
+                              }`}
+                            >
+                              {m}
+                            </button>
+                          ))}
+                        </div>
+                        <TextField value={mediaUrl} onChange={setMediaUrl} placeholder="Link to public media file" />
+                        <TextField value={messageText} onChange={setMessageText} placeholder="Optional caption message" />
+                      </div>
+                    )}
 
-              <div className="space-y-2">
-                <FieldLabel>Automation identifier name</FieldLabel>
-                <TextField
-                  value={name}
-                  onChange={(v) => { setName(v); setNameEdited(true) }}
-                  placeholder='e.g. "Free Ebook Download Trigger"'
-                />
-              </div>
-
-              <div className="space-y-4">
-                <FieldLabel>Delivery options</FieldLabel>
-                <ToggleRow icon={<Lock className="w-5 h-5" />} title="Follow gate required" sub="Only followers get the payload. Non-followers get follow prompt first." on={checkFollow} onToggle={() => setCheckFollow(!checkFollow)} />
-                <ToggleRow icon={<Eye className="w-5 h-5" />} title="Mimic active typing status" sub="Displays typing bubble indicators to look completely organic." on={typingIndicator} onToggle={() => setTypingIndicator(!typingIndicator)} />
-                
-                <div className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.01]">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-neutral-900 flex items-center justify-center border border-white/5">
-                      <Timer className="w-4.5 h-4.5 text-neutral-400" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-white">Randomized delivery delay</p>
-                      <p className="text-[11px] text-neutral-500 mt-0.5">Waits before sending to simulate real human delays.</p>
-                    </div>
+                    {type !== "card" && (
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between border-b border-[#201e1d]/25 pb-2">
+                          <FieldLabel>Quick reply chips ({quickReplies.length}/4)</FieldLabel>
+                          <button onClick={addQuickReply} disabled={quickReplies.length >= 4} className="text-[11px] font-bold text-[#7d7979] hover:text-[#201e1d] disabled:opacity-40 flex items-center gap-1">
+                            <Plus className="w-3 h-3" /> Add chip
+                          </button>
+                        </div>
+                        {quickReplies.map((q) => (
+                          <div key={q.id} className="flex gap-2 items-center">
+                            <input
+                              value={q.title}
+                              onChange={(e) => updateQuickReply(q.id, e.target.value)}
+                              maxLength={20}
+                              className="h-9 text-xs flex-1 border border-[#201e1d]/40 bg-[#f8f4f4] px-3 focus:outline-none focus:border-[#ec3013]"
+                              placeholder='e.g. "Send Details!"'
+                            />
+                            <button onClick={() => removeQuickReply(q.id)} className="text-[#7d7979] hover:text-[#ec3013] p-1">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <select
-                    value={delaySeconds}
-                    onChange={(e) => setDelaySeconds(e.target.value)}
-                    className="bg-black border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none hover:border-white/20 transition-all cursor-pointer"
-                  >
-                    <option value="random">Random (3–10s)</option>
-                    <option value={3}>3s delay</option>
-                    <option value={5}>5s delay</option>
-                    <option value={10}>10s delay</option>
-                    <option value={30}>30s delay</option>
-                  </select>
+                )}
+              </div>
+            )}
+
+            {step === 4 && (
+              <div className="space-y-6 max-w-2xl">
+                <div>
+                  <FieldLabel>Delay before sending</FieldLabel>
+                  <div className="flex flex-wrap gap-2">
+                    {DELAYS.map((o) => (
+                      <button
+                        key={o.key}
+                        onClick={() => setDelaySeconds(o.key)}
+                        className={`px-3.5 py-2 border text-xs font-bold transition-colors ${
+                          delaySeconds === o.key ? "border-[#ec3013] bg-[#ec3013]/10 text-[#ae1800]" : "border-[#201e1d]/40 hover:bg-[#201e1d]/[0.04]"
+                        }`}
+                      >
+                        {o.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <ToggleRow title="Follow gate required" sub="Only followers get the payload; non-followers get a follow prompt first." on={checkFollow} onToggle={() => setCheckFollow(!checkFollow)} />
+                  <ToggleRow title="Show typing indicator" sub="Displays a typing bubble before the DM lands." on={typingIndicator} onToggle={() => setTypingIndicator(!typingIndicator)} />
+                  <ToggleRow title="Mark conversation as seen" sub="Marks the thread as read once we reply." on={markSeen} onToggle={() => setMarkSeen(!markSeen)} />
+                </div>
+
+                <hr className="border-t-2 border-[#201e1d]/40" />
+
+                <div>
+                  <FieldLabel>Summary</FieldLabel>
+                  <div className="border-t border-[#201e1d]/25">
+                    {[
+                      { k: "Trigger", v: `${SOURCES.find((s) => s.key === source)!.label} · ${source === "comment" && triggerMode === "reply_all" ? "Any comment" : triggers[0] ? `"${triggers[0]}"` : storyTriggerType} ` },
+                      { k: "Content", v: source !== "comment" ? "All" : hasSelectedReelOption && selectedReel === null ? "All posts and reels" : "1 selected" },
+                      { k: "Response", v: source === "comment" ? (replyMode === "both" ? "Public reply + DM" : replyMode === "public_only" ? "Public reply only" : "DM only") : "DM reply" },
+                      { k: "Delay", v: DELAYS.find((d) => d.key === delaySeconds)?.label || delaySeconds },
+                    ].map((r) => (
+                      <div key={r.k} className="grid grid-cols-[130px_1fr] gap-4 py-2.5 border-b border-[#201e1d]/25 text-sm">
+                        <div className="text-[#7d7979]">{r.k}</div>
+                        <div className="font-bold">{r.v}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-[#605d5d] leading-relaxed mt-3">
+                    When <span className="font-bold text-[#201e1d]">{summary.who}</span>, we will <span className="font-bold text-[#ec3013]">{summary.what}</span>.
+                  </p>
                 </div>
               </div>
-
-              {/* Plain-text Summary Panel */}
-              <div className="rounded-2xl border border-brand/15 bg-brand/[0.03] p-5 space-y-2">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-brand" />
-                  <span className="text-xs font-mono-ui uppercase tracking-widest text-brand font-bold">Rule Logic Summary</span>
-                </div>
-                <p className="text-sm text-neutral-300 leading-relaxed">
-                  When <span className="text-white font-semibold underline decoration-brand/40 decoration-2">{summary.who}</span>, we will <span className="text-brand font-semibold">{summary.what}</span>.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* ── Wizard Foot Navigation ── */}
-          <div className="flex items-center justify-between border-t border-white/5 pt-6">
-            {step > 0 ? (
-              <button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 h-11 px-5 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/25 font-mono-ui text-xs font-bold transition-all"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Back
-              </button>
-            ) : <div />}
-
-            {step < 2 ? (
-              <button
-                type="button"
-                onClick={() => { if (stepValid[step]) setStep(step + 1) }}
-                disabled={!stepValid[step]}
-                className="flex items-center gap-2 h-11 px-6 rounded-full bg-white text-black font-mono-ui text-xs font-bold hover:bg-brand hover:shadow-[0_0_20px_rgba(195,251,58,0.25)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
-              >
-                Continue
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={!canSave || saving}
-                className="flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-brand text-black font-mono-ui text-sm font-bold hover:brightness-95 hover:shadow-[0_0_25px_rgba(195,251,58,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
-              >
-                {saving ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : <Zap className="w-4 h-4 stroke-[2.5]" />}
-                {saving ? "Saving Changes..." : isEditing ? "Save Automation" : "Go Live"}
-              </button>
             )}
           </div>
         </div>
 
-        {/* ── RIGHT: iPhone Mockup ── */}
-        {replyMode !== "public_only" && (
-          <div className="hidden lg:block sticky top-6">
-            <div className="text-center mb-3">
-              <span className="font-mono-ui text-[10px] uppercase tracking-[0.25em] text-neutral-500 font-bold">Interactive Preview</span>
+        {/* Right: preview */}
+        <aside className="bg-[#eae9e9] p-6 flex flex-col gap-4">
+          <FieldLabel>Preview</FieldLabel>
+
+          <div className="bg-[#f8f4f4] border border-[#201e1d]/40">
+            <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#201e1d]/25">
+              <span className="w-6 h-6 bg-[#201e1d] text-[#f8f4f4] text-[9px] font-bold flex items-center justify-center">IG</span>
+              <span className="text-xs font-bold">{name || "your_account"}</span>
+              <span className="ml-auto text-[11px] text-[#7d7979]">{source === "story" ? "Story" : source === "dm" ? "Inbox" : "Post"}</span>
             </div>
-            
-            {/* iPhone Outer Frame */}
-            <div className="w-[320px] h-[580px] rounded-[3rem] border-8 border-[#1f1f1e] bg-black shadow-2xl relative flex flex-col overflow-hidden ring-1 ring-white/10">
-              
-              {/* iPhone Dynamic Island */}
-              <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-50 flex items-center justify-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-neutral-900 border border-neutral-800 ml-auto mr-3" />
-              </div>
-
-              {/* Status Bar Mockup */}
-              <div className="h-8 bg-neutral-950 flex items-end justify-between px-6 pb-1 text-[9px] text-white/80 font-mono-ui z-40 select-none">
-                <span>9:41</span>
-                <div className="flex items-center gap-1">
-                  <span>5G</span>
-                  <div className="w-4 h-2 border border-white/40 rounded-sm p-[1px] flex items-center"><div className="w-2 h-full bg-white rounded-2xs" /></div>
+            {source !== "dm" && (
+              <div className="aspect-[5/4] bg-[repeating-linear-gradient(135deg,#e3e0e0_0_8px,#f8f4f4_8px_16px)]" />
+            )}
+            {source === "comment" && (
+              <div className="p-3 flex flex-col gap-2.5">
+                <div className="flex gap-2">
+                  <span className="w-5.5 h-5.5 rounded-full bg-[#d7d3d3] shrink-0" />
+                  <span className="text-xs">
+                    <span className="font-bold block">commenter</span>
+                    {triggers[0] ? `"${triggers[0]}" please 🙏` : "This is so good!"}
+                  </span>
                 </div>
+                {replyMode !== "dm_only" && (
+                  <div className="flex gap-2 pl-7">
+                    <span className="w-5.5 h-5.5 rounded-full bg-[#201e1d] shrink-0" />
+                    <span className="text-xs">
+                      <span className="font-bold block">{name || "you"}</span>
+                      {publicReplies[0] || "Sent! Check your DMs 📩"}
+                    </span>
+                  </div>
+                )}
               </div>
+            )}
+          </div>
 
-              {/* True-to-life Instagram DM Header */}
-              <div className="flex items-center justify-between px-3 py-2.5 border-b border-white/5 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-40">
-                <div className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4 text-white cursor-pointer" />
-                  <div className="relative">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#8a3ab9] via-[#e95950] to-[#fccc63] p-[1.5px]">
-                      <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[10px] font-bold text-white font-mono">
-                        {(editRule?.name || "T").substring(0,1).toUpperCase()}
+          {replyMode !== "public_only" && (
+            <div className="bg-[#f8f4f4] border border-[#201e1d]/40 flex flex-col">
+              <div className="flex items-center gap-2 px-3 py-2.5 border-b border-[#201e1d]/25">
+                <span className="w-6 h-6 rounded-full bg-[#d7d3d3]" />
+                <span className="text-xs font-bold">recipient</span>
+                <span className="ml-auto text-[11px] text-[#7d7979]">Direct</span>
+              </div>
+              <div className="p-3 flex flex-col gap-2.5 items-end">
+                {type === "text" && (
+                  <div className="bg-[#ec3013] text-white px-3.5 py-2.5 text-xs max-w-[85%] whitespace-pre-wrap break-words">
+                    {messageText || "Type message content…"}
+                  </div>
+                )}
+                {type === "card" && (
+                  <div className="border border-[#201e1d]/40 w-48 bg-white">
+                    {cardImage && cardImage.startsWith("http") && <img src={cardImage} alt="" className="w-full h-24 object-cover" />}
+                    <div className="p-2.5">
+                      <p className="text-xs font-bold line-clamp-1">{cardTitle || "Card title"}</p>
+                      {cardSubtitle && <p className="text-[10px] text-[#7d7979] mt-1 line-clamp-2">{cardSubtitle}</p>}
+                    </div>
+                    {buttons.filter((b) => b.title).map((b) => (
+                      <div key={b.id} className="border-t border-[#201e1d]/25 py-1.5 text-center text-[10px] font-bold text-[#ec3013]">
+                        {b.title}
                       </div>
-                    </div>
-                    <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-neutral-950" />
-                  </div>
-                  <div className="leading-tight">
-                    <p className="text-[11px] font-semibold text-white truncate max-w-[100px]">@{userId ? "test_creator" : "creator"}</p>
-                    <p className="text-[8px] text-green-500 font-medium">Active now</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3.5 text-neutral-300">
-                  <Phone className="w-3.5 h-3.5" />
-                  <Video className="w-3.5 h-3.5" />
-                  <Info className="w-3.5 h-3.5" />
-                </div>
-              </div>
-
-              {/* Screen Body */}
-              <div className="flex-1 bg-black px-3 py-4 space-y-4 overflow-y-auto font-sans flex flex-col justify-end">
-                {/* Incoming bubble */}
-                <div className="flex justify-start items-end gap-1.5">
-                  <div className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-[9px] text-white">U</div>
-                  <div className="bg-[#1f1f1e] text-white rounded-2xl rounded-bl-sm px-3.5 py-2 text-xs max-w-[75%] shadow-md">
-                    {incomingMsg(triggerSource, triggers)}
-                  </div>
-                </div>
-
-                {/* Typing indicator simulator */}
-                {typingIndicator && (
-                  <div className="flex justify-end pr-1 animate-pulse">
-                    <span className="text-[9px] text-neutral-500 font-mono-ui italic">typing indicator active...</span>
-                  </div>
-                )}
-
-                {/* Outgoing Reply Bubble */}
-                {hasDMContent(type, messageText, cardTitle, mediaUrl) ? (
-                  <div className="flex justify-end items-end gap-1.5 animate-in fade-in zoom-in-95 duration-200">
-                    <div className="max-w-[80%] space-y-1.5 flex flex-col items-end">
-                      {type === "text" && (
-                        <div className="bg-[#3797f0] text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-xs whitespace-pre-wrap break-words leading-relaxed shadow-lg">
-                          {messageText || "Type message content..."}
-                        </div>
-                      )}
-                      {type === "card" && (
-                        <div className="bg-neutral-900 border border-white/10 rounded-2xl overflow-hidden w-48 shadow-2xl">
-                          {cardImage && cardImage.startsWith("http") && (
-                            <img src={cardImage} alt="" className="w-full h-24 object-cover" loading="lazy" />
-                          )}
-                          <div className="p-3">
-                            <p className="text-xs font-bold text-white line-clamp-1">{cardTitle || "Card Title"}</p>
-                            {cardSubtitle && <p className="text-[10px] text-neutral-400 mt-1 line-clamp-2 leading-tight">{cardSubtitle}</p>}
-                          </div>
-                          {buttons.filter((b) => b.title).map((b) => (
-                            <div key={b.id} className="border-t border-white/5 py-2 text-center text-[10px] font-bold text-[#3797f0] bg-white/[0.01] cursor-pointer hover:bg-white/[0.03] transition-colors">
-                              {b.title}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      {type === "media" && (
-                        <div className="bg-neutral-900 border border-white/10 rounded-2xl w-40 h-40 overflow-hidden flex items-center justify-center relative group shadow-xl">
-                          {mediaType === "image" && mediaUrl.startsWith("http") ? (
-                            <img src={mediaUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
-                          ) : (
-                            <div className="flex flex-col items-center gap-1.5 text-neutral-500">
-                              <ImageIcon className="w-6 h-6" />
-                              <span className="text-[9px] uppercase font-mono-ui tracking-wider">{mediaType}</span>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {type === "media" && messageText && (
-                        <div className="bg-[#3797f0] text-white rounded-2xl rounded-br-sm px-4 py-2.5 text-xs leading-relaxed shadow-lg">{messageText}</div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex justify-end animate-pulse">
-                    <div className="border border-dashed border-white/15 bg-white/[0.01] rounded-2xl px-4 py-3 text-[10px] text-neutral-500 font-mono-ui italic text-center w-full">
-                      Configure step 2 to build payload
-                    </div>
-                  </div>
-                )}
-
-                {/* Quick Reply Pills */}
-                {type !== "card" && quickReplies.filter((q) => q.title.trim()).length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 justify-end pt-2">
-                    {quickReplies.filter((q) => q.title.trim()).map((q) => (
-                      <span key={q.id} className="border border-[#3797f0] text-[#3797f0] hover:bg-[#3797f0]/5 cursor-pointer rounded-full px-3 py-1 text-[10px] font-bold transition-all">
-                        {q.title}
-                      </span>
                     ))}
                   </div>
                 )}
+                {type === "media" && (
+                  <div className="border border-[#201e1d]/40 w-36 h-36 flex items-center justify-center bg-white">
+                    {mediaType === "image" && mediaUrl.startsWith("http") ? (
+                      <img src={mediaUrl} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-[10px] text-[#7d7979] uppercase">{mediaType}</span>
+                    )}
+                  </div>
+                )}
+                {quickReplies.filter((q) => q.title.trim()).length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 justify-end">
+                    {quickReplies.filter((q) => q.title.trim()).map((q) => (
+                      <span key={q.id} className="border border-[#ec3013] text-[#ec3013] px-2.5 py-1 text-[10px] font-bold">{q.title}</span>
+                    ))}
+                  </div>
+                )}
+                <p className="text-[11px] text-[#7d7979]">
+                  {delaySeconds === "0" ? "sent instantly" : `sent after ${DELAYS.find((d) => d.key === delaySeconds)?.label.toLowerCase()}`}
+                </p>
               </div>
-
-              {/* iPhone Footer Navigation Bar */}
-              <div className="h-12 bg-neutral-950 border-t border-white/5 flex items-center justify-between px-5 text-neutral-500">
-                <Camera className="w-4 h-4" />
-                <div className="flex-1 max-w-[150px] h-7 bg-neutral-900 border border-white/5 rounded-full px-3 flex items-center justify-between text-[9px] text-neutral-600">
-                  <span>Message...</span>
-                  <Smile className="w-3 h-3" />
-                </div>
-                <Mic className="w-4 h-4" />
-                <PicIcon className="w-4 h-4" />
-              </div>
-
-              {/* iPhone Bottom Bar Indicator */}
-              <div className="h-5 bg-neutral-950 flex items-center justify-center pb-1">
-                <div className="w-24 h-1 bg-white/40 rounded-full" />
-              </div>
-
             </div>
-          </div>
-        )}
+          )}
+        </aside>
       </div>
     </div>
   )
 }
 
 /* ============================================================
-   Helper renders & string parsers
+   Small shared field primitives
    ============================================================ */
 
-function incomingMsg(triggerSource: string, triggers: string[]): string {
-  const primaryKw = triggers.length > 0 ? triggers[0] : null
-  if (triggerSource === "comment") {
-    return primaryKw ? `Commented "${primaryKw}"` : "Commented on post"
-  }
-  if (triggerSource === "story") {
-    return "Interacted with your Story"
-  }
-  return primaryKw ? `DMed keyword "${primaryKw}"` : "Sent you a message"
-}
-
-function hasDMContent(type: string, messageText: string, cardTitle: string, mediaUrl: string): boolean {
-  if (type === "text" && messageText.trim().length > 0) return true
-  if (type === "card" && cardTitle.trim().length > 0) return true
-  if (type === "media" && mediaUrl.trim().length > 0) return true
-  return false
-}
-
-function StepHeader({ number, title, description }: { number: number; title: string; description: string }) {
-  return (
-    <div className="border-b border-white/5 pb-4">
-      <div className="flex items-center gap-2 mb-1.5">
-        <div className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/25 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-brand">
-          Phase {number}
-        </div>
-      </div>
-      <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
-      <p className="text-xs text-neutral-500 mt-1 leading-relaxed">{description}</p>
-    </div>
-  )
-}
-
 function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <p className="font-mono-ui text-[9px] font-bold uppercase tracking-[0.18em] text-neutral-500 mb-2">{children}</p>
+  return <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#7d7979] mb-2">{children}</p>
 }
 
 function TextField({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
@@ -958,35 +831,23 @@ function TextField({ value, onChange, placeholder }: { value: string; onChange: 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full h-11 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 focus:bg-white/[0.04] transition-all"
+      className="w-full h-10 border border-[#201e1d]/40 bg-[#f8f4f4] px-3 text-sm focus:outline-none focus:border-[#ec3013] transition-colors"
     />
   )
 }
 
-function ToggleRow({
-  icon, title, sub, on, onToggle,
-}: {
-  icon: React.ReactNode
-  title: string
-  sub: string
-  on: boolean
-  onToggle: () => void
-}) {
+function ToggleRow({ title, sub, on, onToggle }: { title: string; sub: string; on: boolean; onToggle: () => void }) {
   return (
     <button
-      type="button"
       onClick={onToggle}
-      className={`w-full p-4 rounded-2xl border text-left flex items-center gap-3.5 transition-all duration-200 bg-white/[0.01] ${
-        on ? "border-brand/40 bg-brand/[0.03]" : "border-white/10 hover:border-white/20"
-      }`}
+      className="flex items-center gap-3.5 text-left py-3 border-b border-[#201e1d]/25 hover:bg-[#201e1d]/[0.03] transition-colors px-1"
     >
-      <span className={on ? "text-brand" : "text-neutral-500"}>{icon}</span>
       <span className="flex-1 min-w-0">
-        <span className="block text-sm font-semibold text-white">{title}</span>
-        <span className="block text-xs text-neutral-500 mt-0.5 leading-relaxed">{sub}</span>
+        <span className="block text-sm font-bold">{title}</span>
+        <span className="block text-xs text-[#7d7979] mt-0.5">{sub}</span>
       </span>
-      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-brand" : "bg-neutral-800"}`}>
-        <span className={`absolute top-0.5 w-4.5 h-4.5 rounded-full bg-black shadow-md transition-all ${on ? "left-[20px]" : "left-0.5"}`} />
+      <span className={`w-10 h-5.5 relative shrink-0 transition-colors ${on ? "bg-[#ec3013]" : "bg-[#d7d3d3]"}`}>
+        <span className={`absolute top-0.5 w-4.5 h-4.5 bg-white shadow-sm transition-all ${on ? "left-[20px]" : "left-0.5"}`} />
       </span>
     </button>
   )
