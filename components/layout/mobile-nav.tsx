@@ -18,11 +18,11 @@ export function MobileNav({ username, profilePic, onLogout }: MobileNavProps) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden text-[#201e1d] hover:bg-[#201e1d]/[0.08] hover:text-[#201e1d]">
+                <Button variant="ghost" size="icon" className="md:hidden">
                     <Menu className="h-6 w-6" />
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 border-r-2 border-[#201e1d]/40 bg-[#f3f2f2] w-72">
+            <SheetContent side="left" className="p-0 border-r border-white/10 bg-black w-72">
                 <Sidebar
                     className="h-full border-none bg-transparent"
                     username={username}

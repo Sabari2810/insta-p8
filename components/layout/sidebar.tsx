@@ -29,18 +29,17 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
   const pathname = usePathname()
 
   return (
-    <aside className={cn("flex flex-col bg-[#f3f2f2] text-[#201e1d]", className)} {...props}>
+    <aside className={cn("flex flex-col bg-[#0a0a09]", className)} {...props}>
       {/* Brand */}
-      <div className="px-5 pt-6 pb-[18px] border-b-2 border-[#201e1d]/40 flex items-center gap-2.5">
+      <div className="px-5 pt-6 pb-5 flex items-center gap-2.5">
         <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full shrink-0" />
-        <div>
-          <div className="font-black text-[18px] leading-none tracking-[-0.02em]">WINGMAN</div>
-          <div className="text-[11px] tracking-[0.08em] uppercase text-[#7d7979] mt-0.5">Instagram</div>
-        </div>
+        <span className="font-mono-ui text-sm font-bold tracking-tight text-white">Wingman</span>
       </div>
 
+      <div className="mx-5 h-px bg-white/[0.06]" />
+
       {/* Nav */}
-      <nav className="flex-1 flex flex-col py-2">
+      <nav className="flex-1 px-3 py-4 space-y-0.5">
         {NAV.map(({ href, icon: Icon, label }) => {
           const active = pathname === href
           return (
@@ -49,56 +48,64 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
               href={href}
               onClick={onNavigate}
               className={cn(
-                "flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-bold border-l-4 transition-colors",
+                "flex items-center gap-3 px-3 py-2 rounded-md text-[13px] transition-colors relative",
                 active
-                  ? "border-[#ec3013] text-[#201e1d]"
-                  : "border-transparent text-[#201e1d] hover:bg-[#201e1d]/[0.06]",
+                  ? "text-white bg-white/[0.06]"
+                  : "text-neutral-500 hover:text-neutral-200 hover:bg-white/[0.03]",
               )}
             >
-              <Icon className="w-4 h-4 shrink-0" strokeWidth={active ? 2.4 : 1.8} />
-              <span>{label}</span>
+              {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-brand" />}
+              <Icon className={cn("w-4 h-4 shrink-0", active ? "text-brand" : "")} strokeWidth={active ? 2.2 : 1.8} />
+              <span className={active ? "font-medium" : ""}>{label}</span>
             </Link>
           )
         })}
 
-        <div className="mt-auto" />
+        <div className="pt-5 pb-1 px-3">
+          <div className="h-px bg-white/[0.06]" />
+        </div>
 
         <Link
           href="/dashboard/settings"
           onClick={onNavigate}
           className={cn(
-            "flex items-center gap-2.5 px-4 py-2.5 text-[14px] font-bold border-l-4 border-t-2 border-t-[#201e1d]/40 transition-colors",
+            "flex items-center gap-3 px-3 py-2 rounded-md text-[13px] transition-colors relative",
             pathname === "/dashboard/settings"
-              ? "border-l-[#ec3013] text-[#201e1d]"
-              : "border-l-transparent text-[#201e1d] hover:bg-[#201e1d]/[0.06]",
+              ? "text-white bg-white/[0.06]"
+              : "text-neutral-500 hover:text-neutral-200 hover:bg-white/[0.03]",
           )}
         >
-          <Settings className="w-4 h-4 shrink-0" strokeWidth={pathname === "/dashboard/settings" ? 2.4 : 1.8} />
+          {pathname === "/dashboard/settings" && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-brand" />}
+          <Settings className="w-4 h-4 shrink-0" strokeWidth={1.8} />
           <span>Settings</span>
         </Link>
       </nav>
 
       {/* Account */}
-      <div className="px-4 py-4 border-t-2 border-[#201e1d]/40 flex items-center gap-2.5">
-        <div className="w-8 h-8 shrink-0 bg-[#201e1d] text-[#f3f2f2] text-[12px] font-bold flex items-center justify-center overflow-hidden">
-          {profilePic ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={profilePic} alt={username} className="w-full h-full object-cover" />
-          ) : (
-            <span>{username.slice(0, 2).toUpperCase()}</span>
-          )}
+      <div className="px-3 pb-4">
+        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-white/[0.06] group">
+          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-500 p-[1.5px] shrink-0">
+            <div className="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+              {profilePic ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={profilePic} alt={username} className="w-full h-full rounded-full object-cover" />
+              ) : (
+                <span className="text-[10px] font-bold text-white">{username.charAt(0).toUpperCase()}</span>
+              )}
+            </div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-white truncate">@{username}</p>
+            <p className="font-mono-ui text-[9px] uppercase tracking-wider text-neutral-600">connected</p>
+          </div>
+          <button
+            onClick={onLogout}
+            title="Log out"
+            className="p-1.5 rounded-md text-neutral-600 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+          </button>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[13px] font-bold truncate">@{username}</p>
-          <p className="text-[11px] text-[#7d7979]">Connected</p>
-        </div>
-        <button
-          onClick={onLogout}
-          title="Log out"
-          className="p-1.5 text-[#7d7979] hover:text-[#ec3013] transition-colors"
-        >
-          <LogOut className="w-3.5 h-3.5" />
-        </button>
       </div>
     </aside>
   )

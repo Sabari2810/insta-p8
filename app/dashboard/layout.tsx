@@ -15,18 +15,18 @@ export default function DashboardLayout({
 
     if (isLoading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-[#f3f2f2] text-[#201e1d]">
-                <Loader2 className="h-8 w-8 animate-spin" />
+            <div className="flex h-screen items-center justify-center bg-black text-white">
+                <Loader2 className="h-8 w-8 animate-spin text-white" />
             </div>
         )
     }
 
     return (
-        <div className="flex min-h-screen bg-[#f3f2f2] text-[#201e1d]">
+        <div className="flex min-h-screen bg-black text-foreground">
             {/* Desktop Sidebar */}
-            <div className="hidden md:flex md:w-[216px] md:flex-col md:fixed md:inset-y-0 z-50">
+            <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
                 <Sidebar
-                    className="h-full border-r-2 border-[#201e1d]/40"
+                    className="h-full border-r border-white/10 bg-black/50 backdrop-blur-xl"
                     username={username || "User"}
                     profilePic={profilePic}
                     onLogout={logout}
@@ -34,10 +34,10 @@ export default function DashboardLayout({
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col md:pl-[216px] transition-all duration-300">
+            <div className="flex-1 flex flex-col md:pl-64 transition-all duration-300">
                 {/* Mobile Header (Visible only on small screens) */}
-                <header className="md:hidden h-16 border-b-2 border-[#201e1d]/40 bg-[#f3f2f2] flex items-center justify-between px-4 sticky top-0 z-40">
-                    <span className="font-black text-xl">WINGMAN</span>
+                <header className="md:hidden h-16 border-b border-white/10 bg-black flex items-center justify-between px-4 sticky top-0 z-40">
+                    <span className="font-serif-display text-xl text-white">Wingman</span>
                     <MobileNav username={username || "User"} profilePic={profilePic} onLogout={logout} />
                 </header>
 

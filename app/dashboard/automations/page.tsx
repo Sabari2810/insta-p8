@@ -5,16 +5,8 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { AutomationList } from "@/components/dashboard/AutomationList"
 import { CreateRuleForm } from "@/components/dashboard/CreateRuleForm"
+import { MessageCircle, Send, Sparkles, Zap, Plus } from "lucide-react"
 import type { Automation } from "@/lib/types"
-
-interface DashboardStats {
-    metrics: {
-        totalAutomations: number
-        activeTriggers: number
-        audienceReached: number
-        messagesSent: number
-    }
-}
 
 export default function AutomationsPage() {
     const { userId, isLoading: isSessionLoading } = useInstagramSession()
@@ -22,7 +14,7 @@ export default function AutomationsPage() {
     const router = useRouter()
     const [automations, setAutomations] = useState<Automation[]>([])
     const [isLoading, setIsLoading] = useState(true)
-    const [stats, setStats] = useState<DashboardStats | null>(null)
+    const [activeTab, setActiveTab] = useState<'comment' | 'dm' | 'story'>('comment')
     const [showCreateForm, setShowCreateForm] = useState(false)
     const [editRule, setEditRule] = useState<Automation | null>(null)
 
@@ -51,14 +43,6 @@ export default function AutomationsPage() {
         if (userId) fetchAutomations()
     }, [userId, fetchAutomations])
 
-    useEffect(() => {
-        if (!userId) return
-        fetch(`/api/dashboard/stats?userId=${userId}`)
-            .then((res) => res.json())
-            .then((data) => data && !data.error && setStats(data))
-            .catch(() => {})
-    }, [userId])
-
     const handleDeleteRule = async (id: string) => {
         await fetch(`/api/automations?id=${id}`, { method: "DELETE" })
         fetchAutomations()
@@ -69,72 +53,106 @@ export default function AutomationsPage() {
         setShowCreateForm(true)
     }
 
-    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-[#f3f2f2]"><div className="w-6 h-6 border-2 border-[#201e1d]/20 border-t-[#201e1d] rounded-full animate-spin" /></div>
-    if (!userId) return <div className="h-screen flex items-center justify-center bg-[#f3f2f2] text-[#7d7979]">Please log in</div>
+    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-black"><div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>
+    if (!userId) return <div className="h-screen flex items-center justify-center bg-black text-neutral-500">Please log in</div>
 
-    const activeCount = automations.filter((a) => a.is_active !== false).length
+    const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
+    const counts = {
+        comment: automations.filter(a => a.trigger_source === 'comment').length,
+        dm: automations.filter(a => a.trigger_source === 'dm').length,
+        story: automations.filter(a => a.trigger_source === 'story').length,
+    }
 
-    const statCells = [
-        { label: "Active", value: String(activeCount) },
-        { label: "Total automations", value: String(stats?.metrics.totalAutomations ?? automations.length) },
-        { label: "Messages sent", value: String(stats?.metrics.messagesSent ?? 0) },
-        { label: "Audience reached", value: String(stats?.metrics.audienceReached ?? 0) },
+    const tabs = [
+        { key: 'comment' as const, icon: <MessageCircle className="w-4 h-4" />, label: 'Comments', count: counts.comment },
+        { key: 'dm' as const, icon: <Send className="w-4 h-4" />, label: 'DMs', count: counts.dm },
+        { key: 'story' as const, icon: <Sparkles className="w-4 h-4" />, label: 'Stories', count: counts.story },
     ]
 
     return (
-        <div className="min-h-screen bg-[#f3f2f2] text-[#201e1d]">
-            {showCreateForm ? (
-                <CreateRuleForm
-                    userId={userId}
-                    editRule={editRule}
-                    onCancel={() => { setShowCreateForm(false); setEditRule(null) }}
-                    onSuccess={() => {
-                        fetchAutomations()
-                        setShowCreateForm(false)
-                        setEditRule(null)
-                    }}
-                />
-            ) : (
-                <div>
-                    <header className="flex items-end justify-between gap-6 px-6 md:px-8 pt-7 pb-5 border-b-2 border-[#201e1d]/40">
-                        <div>
-                            <h6 className="text-[11px] tracking-[0.08em] uppercase text-[#7d7979] mb-1.5">Automations</h6>
-                            <h1 className="text-4xl md:text-[38px] font-black leading-none tracking-[-0.02em]">All automations</h1>
-                        </div>
-                        <button
-                            onClick={() => { setEditRule(null); setShowCreateForm(true) }}
-                            className="px-[18px] py-2.5 text-sm font-bold bg-[#ec3013] text-[#f3f2f2] hover:bg-[#dd2b0f] transition-colors shrink-0"
-                        >
-                            New automation
-                        </button>
-                    </header>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 border-b-2 border-[#201e1d]/40">
-                        {statCells.map((s, i) => (
-                            <div key={s.label} className={`px-6 py-[18px] ${i < statCells.length - 1 ? "md:border-r border-[#201e1d]/25" : ""}`}>
-                                <div className="text-[11px] tracking-[0.08em] uppercase text-[#7d7979]">{s.label}</div>
-                                <div className="text-3xl font-black tracking-[-0.02em] mt-1">{s.value}</div>
-                            </div>
-                        ))}
+        <div className="min-h-screen bg-black">
+            <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
+                {/* Header */}
+                <div className="flex items-end justify-between gap-4 flex-wrap">
+                    <div>
+                        <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Rules engine</p>
+                        <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Automations</h1>
                     </div>
-
-                    <div className="px-6 md:px-8 pb-10">
-                        {isLoading ? (
-                            <div className="flex items-center justify-center py-16">
-                                <div className="w-6 h-6 border-2 border-[#201e1d]/20 border-t-[#201e1d] rounded-full animate-spin" />
-                            </div>
-                        ) : (
-                            <AutomationList
-                                automations={automations}
-                                onDelete={handleDeleteRule}
-                                onEdit={handleEditRule}
-                                onChanged={fetchAutomations}
-                                userId={userId}
-                            />
-                        )}
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => {
+                                if (showCreateForm) setEditRule(null)
+                                setShowCreateForm(!showCreateForm)
+                            }}
+                            className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${
+                                showCreateForm
+                                    ? 'border border-white/20 text-white hover:border-white/40'
+                                    : 'bg-brand text-black hover:brightness-95'
+                            }`}
+                        >
+                            <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
+                            {showCreateForm ? 'Close' : 'New Rule'}
+                        </button>
                     </div>
                 </div>
-            )}
+
+                {/* Tabs — editorial underline */}
+                <div className="flex items-center gap-6 border-b border-white/10">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.key}
+                            onClick={() => setActiveTab(tab.key)}
+                            className={`relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2 ${
+                                activeTab === tab.key
+                                    ? 'text-white border-brand'
+                                    : 'text-neutral-600 border-transparent hover:text-neutral-300'
+                            }`}
+                        >
+                            {tab.icon}
+                            <span>{tab.label}</span>
+                            {tab.count > 0 && (
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                                    activeTab === tab.key ? 'bg-brand text-black' : 'bg-white/10 text-neutral-400'
+                                }`}>
+                                    {tab.count}
+                                </span>
+                            )}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Create Form (Collapsible) */}
+                {showCreateForm && (
+                    <div className="rounded-2xl border border-white/10 bg-[#0b0b0a] p-6 md:p-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <CreateRuleForm
+                            userId={userId}
+                            triggerSource={editRule ? editRule.trigger_source : activeTab}
+                            editRule={editRule}
+                            onSuccess={() => {
+                                fetchAutomations()
+                                setShowCreateForm(false)
+                                setEditRule(null)
+                            }}
+                        />
+                    </div>
+                )}
+
+
+                {/* Automation List */}
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-16">
+                        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    </div>
+                ) : (
+                    <AutomationList
+                        automations={filteredAutomations}
+                        onDelete={handleDeleteRule}
+                        onEdit={handleEditRule}
+                        onChanged={fetchAutomations}
+                        userId={userId}
+                    />
+                )}
+            </div>
         </div>
     )
 }
