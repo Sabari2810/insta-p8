@@ -138,8 +138,8 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
     if (!conversationId) {
         return (
             <div className="flex-1 flex items-center justify-center flex-col gap-4 text-center bg-black/40 h-full">
-                <div className="w-16 h-16 rounded-full bg-brand/10 border border-brand/20 flex items-center justify-center">
-                    <Send className="w-6 h-6 text-brand" />
+                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+                    <Send className="w-6 h-6 text-muted-foreground" />
                 </div>
                 <div>
                     <h3 className="text-lg font-bold text-white">Your Messages</h3>
@@ -220,9 +220,9 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                         return (
                             <div key={msg.id} className={cn("flex w-full", isMe ? "justify-end" : "justify-start")}>
                                 <div className={cn(
-                                    "max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm break-words space-y-2",
+                                    "max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm break-words space-y-2",
                                     isMe
-                                        ? "bg-brand text-black rounded-br-none shadow-[0_4px_20px_-6px_var(--accent-green)]"
+                                        ? "bg-brand text-black rounded-br-none"
                                         : "bg-white/10 text-white rounded-bl-none border border-white/5"
                                 )}>
                                     {isImage && (
@@ -307,7 +307,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                         onClick={() => handleSendMessage()}
                         disabled={sending || !inputText.trim()}
                         size="icon"
-                        className="h-9 w-9 bg-brand hover:brightness-95 text-black rounded-lg shadow-[0_0_20px_-6px_var(--accent-green)] disabled:shadow-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+                        className="h-9 w-9 bg-brand hover:brightness-95 text-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                     >
                         {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     </Button>
