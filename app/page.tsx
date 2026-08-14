@@ -3,7 +3,6 @@
 import { useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { LandingPage } from "@/components/layout/landing-page"
-import { Loader2 } from "lucide-react"
 
 export default function Home() {
   const router = useRouter()

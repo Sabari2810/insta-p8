@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { toast } from "sonner"
-import {
-    Loader2, User, Webhook, ShieldAlert, Copy, Check,
+import { User, Webhook, ShieldAlert, Copy, Check,
     ExternalLink, LogOut, Unplug, RefreshCw,
 } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 
 interface AccountInfo {
     username: string
@@ -81,7 +81,7 @@ export default function SettingsPage() {
     if (isSessionLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
+                <Spinner />
             </div>
         )
     }
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                             disabled={disconnecting}
                             className="flex items-center gap-2 h-9 px-4 rounded-full border border-red-500/30 bg-red-500/10 text-red-600 hover:bg-red-500/20 font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors shrink-0 disabled:opacity-50"
                         >
-                            {disconnecting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Unplug className="w-3.5 h-3.5" />}
+                            {disconnecting ? <Spinner /> : <Unplug className="w-3.5 h-3.5" />}
                             {confirmingDisconnect ? "Click again to confirm" : "Disconnect"}
                         </button>
                     </div>

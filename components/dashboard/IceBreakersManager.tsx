@@ -5,9 +5,10 @@ import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Loader2, Plus, Trash2, Save, RefreshCw } from "lucide-react"
+import { Plus, Trash2, Save, RefreshCw } from "lucide-react"
 import { toast } from "sonner"
 import type { IceBreaker } from "@/types/db"
+import { Spinner } from "../ui/spinner"
 
 export function IceBreakersManager() {
     const { userId, isLoading } = useInstagramSession()
@@ -77,7 +78,7 @@ export function IceBreakersManager() {
     }
 
     if (isLoading || fetching && !breakers.length) {
-        return <div className="p-10 flex justify-center"><Loader2 className="animate-spin text-purple-500" /></div>
+        return <div className="p-10 flex justify-center"><Spinner /></div>
     }
 
     return (
@@ -90,7 +91,7 @@ export function IceBreakersManager() {
                     </p>
                 </div>
                 <Button onClick={handleSave} disabled={saving} className="bg-brand hover:brightness-95 text-black font-bold">
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                    {saving ? <Spinner /> : <Save className="w-4 h-4 mr-2" />}
                     Save & Sync
                 </Button>
             </div>

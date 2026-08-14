@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Send, Loader2, Zap, ChevronLeft, Plus, X, Paperclip } from "lucide-react"
+import { Send, Zap, ChevronLeft, Plus, X, Paperclip } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/inbox/Avatar"
 import type { Message } from "@/types/db"
+import { Spinner } from "../ui/spinner"
 
 interface ChatWindowProps {
     conversationId: string | null
@@ -207,7 +208,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
             <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6">
                 {loading ? (
                     <div className="flex justify-center py-10">
-                        <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
+                        <Spinner />
                     </div>
                 ) : (
                     messages.map((msg) => {
@@ -309,7 +310,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                         size="icon"
                         className="h-9 w-9 bg-brand hover:brightness-95 text-black rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
                     >
-                        {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                        {sending ? <Spinner /> : <Send className="w-4 h-4" />}
                     </Button>
                 </div>
             </div>

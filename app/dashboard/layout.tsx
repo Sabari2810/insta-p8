@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { ConnectionBanner } from "@/components/dashboard/ConnectionBanner"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Loader2 } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function DashboardLayout({
     children,
@@ -16,7 +16,7 @@ export default function DashboardLayout({
     if (isLoading) {
         return (
             <div className="flex h-screen items-center justify-center bg-[#f6f5f3] text-neutral-900">
-                <Loader2 className="h-8 w-8 animate-spin text-neutral-900" />
+                <Spinner />
             </div>
         )
     }

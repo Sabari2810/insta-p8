@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from "react"
 import * as RechartsPrimitive from "recharts"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
-import { Loader2, MessageCircle, Send, Sparkles, TrendingUp, Trophy } from "lucide-react"
+import { MessageCircle, Send, Sparkles, TrendingUp, Trophy } from "lucide-react"
 import { INK_COLOR } from "@/lib/theme"
+import { Spinner } from "@/components/ui/spinner"
 
 interface AnalyticsData {
     timeSeries: { date: string; sent: number; received: number; newConversations: number }[]
@@ -68,7 +69,7 @@ export default function AnalyticsPage() {
     if (isSessionLoading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
+                <Spinner />
             </div>
         )
     }
@@ -97,7 +98,7 @@ export default function AnalyticsPage() {
 
             {loading ? (
                 <div className="flex items-center justify-center py-24">
-                    <Loader2 className="w-6 h-6 text-neutral-300 animate-spin" />
+                    <Spinner />
                 </div>
             ) : !hasActivity ? (
                 <div className="rounded-2xl border border-black/10 bg-black/[0.015] p-16 text-center">

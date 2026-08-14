@@ -5,8 +5,8 @@ import { useSearchParams } from "next/navigation"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { ConversationList } from "@/components/inbox/ConversationList"
 import { ChatWindow } from "@/components/inbox/ChatWindow"
-import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function InboxPage() {
     const { userId, isLoading } = useInstagramSession()
@@ -35,7 +35,7 @@ export default function InboxPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
+                <Spinner />
             </div>
         )
     }

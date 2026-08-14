@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation"
 import {
   MessageCircle, Sparkles, ArrowUpRight,
-  Send, AtSign, Inbox, Lock, Terminal, ShieldCheck,
-  Loader2,
+  Send, AtSign, Inbox, Lock, Terminal, ShieldCheck
 } from "lucide-react"
 
 export function LandingPage() {

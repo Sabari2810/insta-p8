@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Search, Loader2 } from "lucide-react"
+import { Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/inbox/Avatar"
 import type { Conversation } from "@/types/db"
+import { Spinner } from "../ui/spinner"
 
 interface ConversationListProps {
     userId: string
@@ -63,7 +64,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
     if (loading) {
         return (
             <div className="flex items-center justify-center h-full">
-                <Loader2 className="w-6 h-6 text-neutral-300 animate-spin" />
+                <Spinner />
             </div>
         )
     }

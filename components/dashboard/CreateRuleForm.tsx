@@ -4,13 +4,14 @@ import { useState, useEffect, useMemo } from "react"
 import {
   Plus, Trash2, Film, Check, MessageCircle, Send, AtSign, Heart,
   MessageSquare, Image as ImageIcon, Timer, Eye, Megaphone, Lock,
-  Link2, Zap, ChevronDown, ChevronRight, ChevronLeft, X, Loader2,
+  Link2, Zap, ChevronDown, ChevronRight, ChevronLeft, X,
   ArrowLeft, Phone, Video, Info, Sparkles, Smile, Camera, Mic, Image as PicIcon,
   Globe
 } from "lucide-react"
 import { TagInput } from "@/components/ui/tag-input"
 import type { ProButton, QuickReplyOption, Automation } from "@/lib/types"
 import { toast } from "sonner"
+import { Spinner } from "../ui/spinner"
 
 /* ============================================================
    AESTHETIC & SEXY WIZARD FOR INSTAGRAM AUTOMATION RULES
@@ -354,7 +355,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                   <FieldLabel>Automate which post or reel?</FieldLabel>
                   {loadingReels ? (
                     <div className="p-8 flex flex-col items-center justify-center gap-3 border border-black/10 rounded-2xl bg-black/[0.015]">
-                      <Loader2 className="w-6 h-6 animate-spin text-neutral-900" />
+                      <Spinner />
                       <span className="text-xs text-neutral-500 font-mono-ui">Fetching Instagram feed...</span>
                     </div>
                   ) : (
@@ -754,7 +755,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 disabled={!canSave || saving}
                 className="flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-brand text-black font-mono-ui text-sm font-bold hover:brightness-95 hover:shadow-[0_0_25px_rgba(195,251,58,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
               >
-                {saving ? <Loader2 className="w-4.5 h-4.5 animate-spin" /> : <Zap className="w-4 h-4 stroke-[2.5]" />}
+                {saving ? <Spinner /> : <Zap className="w-4 h-4 stroke-[2.5]" />}
                 {saving ? "Saving Changes..." : isEditing ? "Save Automation" : "Go Live"}
               </button>
             )}

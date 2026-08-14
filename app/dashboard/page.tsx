@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2, MessageSquare, Snowflake, BarChart3, ArrowRight } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, MessageSquare, Snowflake, BarChart3, ArrowRight } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 
 interface DashboardStats {
     metrics: {
@@ -100,7 +101,7 @@ export default function DashboardPage() {
     if (isSessionLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
+                <Spinner />
             </div>
         )
     }
