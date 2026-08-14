@@ -78,7 +78,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                     <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-black/[0.03] border border-black/10 rounded-xl pl-10 pr-4 py-2 text-sm text-neutral-900 focus:outline-none focus:border-neutral-900 placeholder:text-muted-foreground/60 transition-all"
+                        className="w-full bg-black/[0.03] border border-black/10 rounded-xl pl-10 pr-4 py-2 text-sm text-neutral-900 focus:outline-none focus:border-brand placeholder:text-muted-foreground/60 transition-all"
                         placeholder="Search by username..."
                     />
                 </div>
@@ -88,7 +88,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             onClick={() => setActiveTag(null)}
                             className={cn(
                                 "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
-                                !activeTag ? "bg-neutral-900 text-white border-neutral-900" : "text-neutral-500 border-black/10 hover:text-neutral-900 hover:border-black/25",
+                                !activeTag ? "bg-brand text-white border-brand" : "text-neutral-500 border-black/10 hover:text-neutral-900 hover:border-black/25",
                             )}
                         >
                             All
@@ -99,7 +99,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                                 onClick={() => setActiveTag(tag === activeTag ? null : tag)}
                                 className={cn(
                                     "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
-                                    activeTag === tag ? "bg-neutral-900 text-white border-neutral-900" : "text-neutral-500 border-black/10 hover:text-neutral-900 hover:border-black/25",
+                                    activeTag === tag ? "bg-brand text-white border-brand" : "text-neutral-500 border-black/10 hover:text-neutral-900 hover:border-black/25",
                                 )}
                             >
                                 {tag}
@@ -126,7 +126,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             className={cn(
                                 "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
-                                    ? "bg-black/[0.05] border-black/15"
+                                    ? "bg-brand/10 border-brand/25"
                                     : "hover:bg-black/[0.03] hover:border-black/5"
                             )}
                         >

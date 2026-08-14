@@ -8,10 +8,7 @@
   /* Minimal B/W Theme — light */
   --background: #f6f5f3; /* Dashboard canvas */
   --foreground: oklch(0.15 0 0); /* Near-black */
-  --accent-green: #c3fb3a;
-  --accent-green-dark: #4d6b0f; /* Same hue, darkened for text on light backgrounds — the raw neon green fails contrast as text on white */
-  --accent-violet: #b98bff;
-  --accent-coral: #ff6b81;
+  --accent-primary: #7e3bed; /* Violet — buttons, hovers, active/selected states, highlights */
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.15 0 0);
@@ -38,7 +35,7 @@
 
   --border: oklch(0.9 0 0);
   --input: oklch(0.9 0 0);
-  --ring: oklch(0.7 0 0);
+  --ring: var(--accent-primary);
 
   --radius: 0.5rem;
 
@@ -71,7 +68,7 @@
   --destructive-foreground: oklch(0.98 0 0);
   --border: oklch(0.9 0 0);
   --input: oklch(0.9 0 0);
-  --ring: oklch(0.7 0 0);
+  --ring: var(--accent-primary);
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: oklch(0.4 0 0);
   --sidebar-primary: oklch(0.15 0 0);
@@ -99,8 +96,8 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-brand: var(--accent-green);
-  --color-brand-dark: var(--accent-green-dark);
+  --color-brand: var(--accent-primary);
+  --color-brand-dark: var(--accent-primary); /* Violet is dark/saturated enough to also work as text on white — no separate shade needed */
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);

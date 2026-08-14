@@ -50,13 +50,13 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-md text-[13px] transition-colors relative",
                 active
-                  ? "text-neutral-900 bg-black/[0.05]"
+                  ? "text-brand bg-brand/10"
                   : "text-neutral-500 hover:text-neutral-800 hover:bg-black/[0.03]",
               )}
             >
-              {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-neutral-900" />}
+              {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-brand" />}
               <div className="flex gap-3">
-                <Icon className={cn("w-4 h-4 shrink-0", active ? "text-neutral-900" : "")} strokeWidth={active ? 2.2 : 1.8} />
+                <Icon className={cn("w-4 h-4 shrink-0", active ? "text-brand" : "")} strokeWidth={active ? 2.2 : 1.8} />
                 <span className={active ? "font-medium" : ""}>{label}</span>
               </div>
             </Link>
@@ -73,13 +73,13 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
           className={cn(
             "flex items-center gap-3 px-3 py-2 rounded-md text-[13px] transition-colors relative",
             pathname === "/dashboard/settings"
-              ? "text-neutral-900 bg-black/[0.05]"
+              ? "text-brand bg-brand/10"
               : "text-neutral-500 hover:text-neutral-800 hover:bg-black/[0.03]",
           )}
         >
-          {pathname === "/dashboard/settings" && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-neutral-900" />}
+          {pathname === "/dashboard/settings" && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-brand" />}
           <div className="flex gap-3">
-            <Settings className="w-4 h-4 shrink-0" strokeWidth={1.8} />
+            <Settings className={cn("w-4 h-4 shrink-0", pathname === "/dashboard/settings" && "text-brand")} strokeWidth={1.8} />
             <span>Settings</span>
           </div>
         </Link>

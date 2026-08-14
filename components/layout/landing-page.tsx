@@ -29,7 +29,7 @@ export function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#171717] selection:bg-brand selection:text-black overflow-x-hidden antialiased">
+    <div className="min-h-screen bg-white text-[#171717] selection:bg-brand selection:text-white overflow-x-hidden antialiased">
       <style>{`
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .marquee-track { animation: marquee 30s linear infinite; }
@@ -54,7 +54,7 @@ export function LandingPage() {
           )}
           <button
             onClick={handleLogin}
-            className="font-mono-ui text-xs font-bold bg-[#171717] text-white rounded-full px-4 py-1.5 hover:bg-brand hover:text-black transition-colors"
+            className="font-mono-ui text-xs font-bold bg-[#171717] text-white rounded-full px-4 py-1.5 hover:bg-brand hover:text-white transition-colors"
           >
             Log in
           </button>
@@ -84,7 +84,7 @@ export function LandingPage() {
             <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={handleLogin}
-                className="group flex items-center gap-2 bg-brand text-black font-mono-ui text-sm font-bold px-7 py-4 rounded-full hover:scale-[1.03] active:scale-[0.98] transition-transform"
+                className="group flex items-center gap-2 bg-brand text-white font-mono-ui text-sm font-bold px-7 py-4 rounded-full hover:scale-[1.03] active:scale-[0.98] transition-transform"
               >
                 Connect Instagram
                 <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />

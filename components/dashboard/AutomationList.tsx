@@ -88,7 +88,7 @@ export function AutomationList({ automations, onDelete, onEdit, onChanged, userI
       <div className="flex items-center justify-between">
         <h2 className="text-xs font-bold uppercase tracking-widest text-neutral-500 flex items-center gap-2">
           Rules
-          <span className="bg-black/[0.06] text-neutral-900 px-2 py-0.5 rounded-full text-[10px]">{automations.length}</span>
+          <span className="bg-brand/10 text-brand px-2 py-0.5 rounded-full text-[10px]">{automations.length}</span>
         </h2>
       </div>
 
@@ -182,13 +182,13 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
                 <>
                   <Button
                     variant="ghost" size="icon" onClick={() => onEdit(rule)} title="Edit"
-                    className="h-7 w-7 text-neutral-500 hover:text-neutral-900 hover:bg-black/[0.06] opacity-0 group-hover:opacity-100 transition-all"
+                    className="h-7 w-7 text-neutral-500 hover:text-brand hover:bg-brand/10 opacity-0 group-hover:opacity-100 transition-all"
                   >
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
                   <Button
                     variant="ghost" size="icon" onClick={() => onDuplicate(rule)} title="Duplicate"
-                    className="h-7 w-7 text-neutral-500 hover:text-neutral-900 hover:bg-black/[0.06] opacity-0 group-hover:opacity-100 transition-all"
+                    className="h-7 w-7 text-neutral-500 hover:text-brand hover:bg-brand/10 opacity-0 group-hover:opacity-100 transition-all"
                   >
                     <Copy className="w-3.5 h-3.5" />
                   </Button>
@@ -228,7 +228,7 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
               ) : isMedia ? (
                 <ImageIcon className="w-3 h-3 text-pink-500" />
               ) : (
-                <MessageCircle className="w-3 h-3 text-neutral-900" />
+                <MessageCircle className="w-3 h-3 text-brand" />
               )}
               <span className="text-[11px] text-neutral-500 truncate max-w-[120px]">{responsePreview}</span>
             </div>
@@ -254,7 +254,7 @@ function RuleCard({ rule, onDelete, onEdit, onToggle, onDuplicate, index, isSpec
               </Badge>
             )}
             {content.check_follow && (
-              <Badge variant="secondary" className="bg-black/[0.06] text-neutral-900 border border-black/15 text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className="bg-brand/10 text-brand border border-brand/30 text-[10px] px-1.5 py-0">
                 <Lock className="w-2.5 h-2.5 mr-0.5" /> Follow
               </Badge>
             )}

@@ -280,9 +280,9 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 >
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all duration-300 ${
                     isCompleted
-                      ? "bg-neutral-900 text-white"
+                      ? "bg-brand text-white"
                       : isActive
-                        ? "bg-neutral-900 text-white ring-4 ring-black/10"
+                        ? "bg-brand text-white ring-4 ring-brand/20"
                         : "bg-black/[0.06] text-neutral-500 border border-black/10"
                   }`}>
                     {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : i + 1}
@@ -296,7 +296,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 </button>
                 {i < STEPS.length - 1 && (
                   <div className="flex-1 h-[2px] mx-2 relative bg-black/10 rounded-full overflow-hidden">
-                    <div className={`absolute inset-y-0 left-0 transition-all duration-500 bg-neutral-900 ${
+                    <div className={`absolute inset-y-0 left-0 transition-all duration-500 bg-brand ${
                       isCompleted ? "w-full" : "w-0"
                     }`} />
                   </div>
@@ -335,11 +335,11 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         onClick={() => setStoryTriggerType(key)}
                         className={`p-4 rounded-xl border text-left flex flex-col gap-2 transition-all duration-200 ${
                           storyTriggerType === key
-                            ? "border-neutral-900 bg-black/[0.04] text-neutral-900"
+                            ? "border-brand bg-brand/10 text-brand"
                             : "border-black/10 text-neutral-500 hover:border-black/20 hover:text-neutral-900 bg-black/[0.01]"
                         }`}
                       >
-                        <span className={storyTriggerType === key ? "text-neutral-900" : "text-neutral-400"}>{icon}</span>
+                        <span className={storyTriggerType === key ? "text-brand" : "text-neutral-400"}>{icon}</span>
                         <div>
                           <p className="text-xs font-bold uppercase tracking-wider">{label}</p>
                           <p className="text-[10px] text-neutral-500 font-normal mt-0.5">{desc}</p>
@@ -369,7 +369,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         }}
                         className={`aspect-square rounded-xl border flex flex-col items-center justify-center p-4 text-center transition-all duration-200 ${
                           hasSelectedReelOption && selectedReel === null
-                            ? "border-neutral-900 bg-black/[0.04] text-neutral-900"
+                            ? "border-brand bg-brand/10 text-brand"
                             : "border-black/10 text-neutral-500 hover:border-black/20 hover:text-neutral-900 bg-black/[0.01]"
                         }`}
                       >
@@ -390,7 +390,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                             }}
                             className={`aspect-square rounded-xl border overflow-hidden relative group text-left transition-all duration-200 ${
                               isSelected
-                                ? "border-neutral-900 ring-2 ring-black/15"
+                                ? "border-brand ring-2 ring-brand/20"
                                 : "border-black/10 hover:border-black/25 bg-neutral-100"
                             }`}
                           >
@@ -409,8 +409,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
                             {/* Selected Check overlay */}
                             {isSelected && (
-                              <div className="absolute inset-0 bg-black/10 flex items-center justify-center backdrop-blur-[1px]">
-                                <div className="w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center shadow-lg">
+                              <div className="absolute inset-0 bg-brand/10 flex items-center justify-center backdrop-blur-[1px]">
+                                <div className="w-8 h-8 rounded-full bg-brand text-white flex items-center justify-center shadow-lg">
                                   <Check className="w-4 h-4 stroke-[3]" />
                                 </div>
                               </div>
@@ -435,7 +435,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                     <div className="space-y-2">
                       <FieldLabel>Keywords to match</FieldLabel>
                       <p className="text-[11px] text-neutral-500">
-                        What keyword triggers this DM? <span className="text-neutral-900 font-semibold">Keep empty to reply to every comment.</span>
+                        What keyword triggers this DM? <span className="text-brand font-semibold">Keep empty to reply to every comment.</span>
                       </p>
                       <TagInput
                         value={triggers}
@@ -502,7 +502,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         type="button"
                         onClick={() => setReplyMode(key)}
                         className={`h-11 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all ${
-                          replyMode === key ? "border-neutral-900 bg-black/[0.04] text-neutral-900" : "border-black/10 text-neutral-500 hover:text-neutral-900"
+                          replyMode === key ? "border-brand bg-brand/10 text-brand" : "border-black/10 text-neutral-500 hover:text-neutral-900"
                         }`}
                       >
                         {label}
@@ -535,7 +535,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                           type="button"
                           onClick={() => setType(key)}
                           className={`p-3 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
-                            type === key ? "border-neutral-900 bg-black/[0.04] text-neutral-900" : "border-black/10 text-neutral-500 hover:text-neutral-900"
+                            type === key ? "border-brand bg-brand/10 text-brand" : "border-black/10 text-neutral-500 hover:text-neutral-900"
                           }`}
                         >
                           {icon}
@@ -553,7 +553,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         onChange={(e) => setMessageText(e.target.value)}
                         rows={5}
                         maxLength={1000}
-                        className="w-full bg-black/[0.02] border border-black/10 rounded-2xl px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 resize-none focus:outline-none focus:border-neutral-900 transition-colors"
+                        className="w-full bg-black/[0.02] border border-black/10 rounded-2xl px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 resize-none focus:outline-none focus:border-brand transition-colors"
                         placeholder="Type the message to send in DMs..."
                       />
                       <p className="font-mono-ui text-[10px] text-neutral-500 text-right">{messageText.length}/1000</p>
@@ -618,7 +618,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                               type="button"
                               onClick={() => setMediaType(m)}
                               className={`h-10 rounded-xl border text-xs font-bold uppercase transition-all ${
-                                mediaType === m ? "border-neutral-900 bg-black/[0.04] text-neutral-900" : "border-black/10 text-neutral-500 hover:text-neutral-900"
+                                mediaType === m ? "border-brand bg-brand/10 text-brand" : "border-black/10 text-neutral-500 hover:text-neutral-900"
                               }`}
                             >
                               {m === "image" ? "Photo" : m === "video" ? "Video" : "Audio"}
@@ -648,7 +648,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                                 value={q.title}
                                 onChange={(e) => updateQuickReply(q.id, e.target.value)}
                                 maxLength={20}
-                                className="h-10 text-xs flex-1 bg-black/[0.02] border border-black/10 rounded-xl px-4 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900"
+                                className="h-10 text-xs flex-1 bg-black/[0.02] border border-black/10 rounded-xl px-4 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand"
                                 placeholder='e.g. "Send Details!"'
                               />
                               <button type="button" onClick={() => removeQuickReply(q.id)} className="text-neutral-400 hover:text-red-500 p-1.5 transition-colors">
@@ -713,13 +713,13 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
               </div>
 
               {/* Plain-text Summary Panel */}
-              <div className="rounded-2xl border border-black/15 bg-black/[0.03] p-5 space-y-2">
+              <div className="rounded-2xl border border-brand/25 bg-brand/[0.06] p-5 space-y-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-neutral-900" />
-                  <span className="text-xs font-mono-ui uppercase tracking-widest text-neutral-900 font-bold">Rule Logic Summary</span>
+                  <Sparkles className="w-4 h-4 text-brand" />
+                  <span className="text-xs font-mono-ui uppercase tracking-widest text-brand font-bold">Rule Logic Summary</span>
                 </div>
                 <p className="text-sm text-neutral-700 leading-relaxed">
-                  When <span className="text-neutral-900 font-semibold underline decoration-neutral-400 decoration-2">{summary.who}</span>, we will <span className="text-neutral-900 font-semibold">{summary.what}</span>.
+                  When <span className="text-neutral-900 font-semibold underline decoration-brand decoration-2">{summary.who}</span>, we will <span className="text-brand font-semibold">{summary.what}</span>.
                 </p>
               </div>
             </div>
@@ -743,7 +743,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 type="button"
                 onClick={() => { if (stepValid[step]) setStep(step + 1) }}
                 disabled={!stepValid[step]}
-                className="flex items-center gap-2 h-11 px-6 rounded-full bg-neutral-900 text-white font-mono-ui text-xs font-bold hover:bg-brand hover:text-black hover:shadow-[0_0_20px_rgba(195,251,58,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
+                className="flex items-center gap-2 h-11 px-6 rounded-full bg-neutral-900 text-white font-mono-ui text-xs font-bold hover:bg-brand hover:shadow-[0_0_20px_rgba(126,59,237,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
               >
                 Continue
                 <ChevronRight className="w-4 h-4" />
@@ -753,7 +753,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 type="button"
                 onClick={handleSubmit}
                 disabled={!canSave || saving}
-                className="flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-brand text-black font-mono-ui text-sm font-bold hover:brightness-95 hover:shadow-[0_0_25px_rgba(195,251,58,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
+                className="flex items-center justify-center gap-2 h-11 px-8 rounded-full bg-brand text-white font-mono-ui text-sm font-bold hover:brightness-110 hover:shadow-[0_0_25px_rgba(126,59,237,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
               >
                 {saving ? <Spinner /> : <Zap className="w-4 h-4 stroke-[2.5]" />}
                 {saving ? "Saving Changes..." : isEditing ? "Save Automation" : "Go Live"}
@@ -939,7 +939,7 @@ function StepHeader({ number, title, description }: { number: number; title: str
   return (
     <div className="border-b border-black/10 pb-4">
       <div className="flex items-center gap-2 mb-1.5">
-        <div className="px-2 py-0.5 rounded-md bg-black/[0.05] border border-black/15 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-neutral-900">
+        <div className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/30 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-brand">
           Phase {number}
         </div>
       </div>
@@ -959,7 +959,7 @@ function TextField({ value, onChange, placeholder }: { value: string; onChange: 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full h-11 bg-black/[0.02] border border-black/10 rounded-xl px-4 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-neutral-900 focus:bg-black/[0.04] transition-all"
+      className="w-full h-11 bg-black/[0.02] border border-black/10 rounded-xl px-4 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand focus:bg-black/[0.04] transition-all"
     />
   )
 }
@@ -978,15 +978,15 @@ function ToggleRow({
       type="button"
       onClick={onToggle}
       className={`w-full p-4 rounded-2xl border text-left flex items-center gap-3.5 transition-all duration-200 bg-black/[0.01] ${
-        on ? "border-neutral-900/40 bg-black/[0.04]" : "border-black/10 hover:border-black/20"
+        on ? "border-brand/50 bg-brand/10" : "border-black/10 hover:border-black/20"
       }`}
     >
-      <span className={on ? "text-neutral-900" : "text-neutral-400"}>{icon}</span>
+      <span className={on ? "text-brand" : "text-neutral-400"}>{icon}</span>
       <span className="flex-1 min-w-0">
         <span className="block text-sm font-semibold text-neutral-900">{title}</span>
         <span className="block text-xs text-neutral-500 mt-0.5 leading-relaxed">{sub}</span>
       </span>
-      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-neutral-900" : "bg-neutral-300"}`}>
+      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-brand" : "bg-neutral-300"}`}>
         <span className={`absolute top-0.5 w-4.5 h-4.5 rounded-full bg-white shadow-md transition-all ${on ? "left-[20px]" : "left-0.5"}`} />
       </span>
     </button>

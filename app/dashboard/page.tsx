@@ -132,25 +132,25 @@ export default function DashboardPage() {
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
                     trend="Active"
-                    icon={<Zap className="w-5 h-5 text-neutral-900" />}
+                    icon={<Zap className="w-5 h-5 text-brand" />}
                 />
                 <StatCard
                     title="Messages Sent"
                     value={stats?.metrics.messagesSent.toString() || "0"}
                     trend="Lifetime"
-                    icon={<MessageCircle className="w-5 h-5 text-neutral-900" />}
+                    icon={<MessageCircle className="w-5 h-5 text-brand" />}
                 />
                 <StatCard
                     title="Active Triggers"
                     value={stats?.metrics.activeTriggers.toString() || "0"}
                     trend="Running"
-                    icon={<Activity className="w-5 h-5 text-neutral-900" />}
+                    icon={<Activity className="w-5 h-5 text-brand" />}
                 />
                 <StatCard
                     title="Audience Reached"
                     value={stats?.metrics.audienceReached.toString() || "0"}
                     trend="Unique Users"
-                    icon={<Users className="w-5 h-5 text-neutral-900" />}
+                    icon={<Users className="w-5 h-5 text-brand" />}
                 />
             </div>
 
@@ -166,7 +166,7 @@ export default function DashboardPage() {
                                     href={`/dashboard/inbox?conversation=${msg.conversation_id}`}
                                     className="flex items-center gap-4 p-3 rounded-lg hover:bg-black/[0.03] transition-colors"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-black/[0.06] flex items-center justify-center text-neutral-900 shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0">
@@ -206,7 +206,7 @@ function QuickActionPrimary({ href, icon, label, sub }: { href: string, icon: Re
     return (
         <Link
             href={href}
-            className="flex items-center gap-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 px-4 py-3.5 transition-colors group"
+            className="flex items-center gap-3 rounded-xl bg-brand hover:brightness-110 px-4 py-3.5 transition-colors group"
         >
             <span className="text-white shrink-0">{icon}</span>
             <span className="flex-1 min-w-0">
@@ -222,11 +222,11 @@ function QuickActionRow({ href, icon, label }: { href: string, icon: React.React
     return (
         <Link
             href={href}
-            className="flex items-center gap-3 rounded-xl border border-black/10 hover:bg-black/[0.03] hover:border-black/20 px-4 py-3.5 transition-colors group"
+            className="flex items-center gap-3 rounded-xl border border-black/10 hover:bg-brand/[0.06] hover:border-brand/30 px-4 py-3.5 transition-colors group"
         >
-            <span className="text-muted-foreground group-hover:text-neutral-900 transition-colors shrink-0">{icon}</span>
+            <span className="text-muted-foreground group-hover:text-brand transition-colors shrink-0">{icon}</span>
             <span className="flex-1 text-sm font-medium text-neutral-900">{label}</span>
-            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-neutral-900 transition-all shrink-0" />
+            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-brand transition-all shrink-0" />
         </Link>
     )
 }

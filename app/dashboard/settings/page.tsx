@@ -101,7 +101,7 @@ export default function SettingsPage() {
                 {/* Connected Account */}
                 <section className="rounded-2xl border border-black/10 bg-white p-6 space-y-5">
                     <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-neutral-900" />
+                        <User className="w-4 h-4 text-brand" />
                         <h2 className="text-sm font-semibold text-neutral-900">Connected account</h2>
                     </div>
 
@@ -130,7 +130,7 @@ export default function SettingsPage() {
 
                     <button
                         onClick={handleReconnect}
-                        className="flex items-center gap-2 h-9 px-4 rounded-full border border-black/10 text-neutral-700 hover:text-neutral-900 hover:border-black/25 font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors"
+                        className="flex items-center gap-2 h-9 px-4 rounded-full border border-black/10 text-neutral-700 hover:text-brand hover:border-brand/40 font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors"
                     >
                         <RefreshCw className="w-3.5 h-3.5" />
                         Reconnect Instagram
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                 {/* Webhook Configuration */}
                 <section className="rounded-2xl border border-black/10 bg-white p-6 space-y-4">
                     <div className="flex items-center gap-2">
-                        <Webhook className="w-4 h-4 text-neutral-900" />
+                        <Webhook className="w-4 h-4 text-brand" />
                         <h2 className="text-sm font-semibold text-neutral-900">Webhook configuration</h2>
                     </div>
                     <p className="text-xs text-neutral-500">
@@ -152,7 +152,7 @@ export default function SettingsPage() {
                         </code>
                         <button
                             onClick={handleCopyWebhookUrl}
-                            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-black/10 text-neutral-500 hover:text-neutral-900 hover:border-black/25 transition-colors"
+                            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-black/10 text-neutral-500 hover:text-brand hover:border-brand/40 transition-colors"
                             title="Copy"
                         >
                             {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
@@ -190,7 +190,7 @@ export default function SettingsPage() {
                         </div>
                         <button
                             onClick={logout}
-                            className="flex items-center gap-2 h-9 px-4 rounded-full border border-black/10 text-neutral-700 hover:text-neutral-900 hover:border-black/25 font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors shrink-0"
+                            className="flex items-center gap-2 h-9 px-4 rounded-full border border-black/10 text-neutral-700 hover:text-brand hover:border-brand/40 font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors shrink-0"
                         >
                             <LogOut className="w-3.5 h-3.5" />
                             Log out
