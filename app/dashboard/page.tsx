@@ -156,7 +156,7 @@ export default function DashboardPage() {
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="p-6 bg-white border-black/10">
-                    <h3 className="font-serif-display text-2xl text-neutral-900 mb-5">Recent activity</h3>
+                    <h3 className="font-serif-display text-2xl text-neutral-900">Recent activity</h3>
                     <div className="space-y-4">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
@@ -188,7 +188,7 @@ export default function DashboardPage() {
                 </Card>
 
                 <Card className="p-6 bg-white border-black/10">
-                    <h3 className="font-serif-display text-2xl text-neutral-900 mb-5">Quick actions</h3>
+                    <h3 className="font-serif-display text-2xl text-neutral-900">Quick actions</h3>
                     <div className="space-y-2">
                         <QuickActionPrimary href="/dashboard/automations?new=1" icon={<Zap className="w-4 h-4" />} label="New automation" sub="Comment, DM, or story trigger" />
                         <QuickActionRow href="/dashboard/inbox" icon={<MessageSquare className="w-4 h-4" />} label="View inbox" />
