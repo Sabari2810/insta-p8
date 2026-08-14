@@ -108,15 +108,15 @@ export default function DashboardPage() {
     return (
         <div className="p-8 space-y-8 animate-in fade-in duration-700">
             {/* Welcome Section */}
-            <div className="rounded-2xl bg-neutral-900 px-8 py-7 flex items-center justify-between gap-6 flex-wrap">
+            <div className="rounded-2xl bg-white px-8 py-7 flex items-center justify-between gap-6 flex-wrap">
                 <div>
                     <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-400 mb-2">Overview</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Hey, {username}.</h1>
+                    <h1 className="font-serif-display text-4xl md:text-5xl text-black leading-none">Hey, {username}.</h1>
                     <p className="text-neutral-400 text-sm mt-3">Here's what your automations did while you were away.</p>
                 </div>
                 {now && (
                     <div className="text-right shrink-0">
-                        <p className="font-mono-ui text-2xl text-white tabular-nums">
+                        <p className="font-mono-ui text-2xl text-black tabular-nums">
                             {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
                         </p>
                         <p className="text-neutral-400 text-xs mt-1">
