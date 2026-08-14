@@ -113,25 +113,25 @@ export default function DashboardPage() {
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
                     trend="Active"
-                    icon={<Zap className="w-5 h-5 text-brand-dark" />}
+                    icon={<Zap className="w-5 h-5 text-neutral-900" />}
                 />
                 <StatCard
                     title="Messages Sent"
                     value={stats?.metrics.messagesSent.toString() || "0"}
                     trend="Lifetime"
-                    icon={<MessageCircle className="w-5 h-5 text-brand-dark" />}
+                    icon={<MessageCircle className="w-5 h-5 text-neutral-900" />}
                 />
                 <StatCard
                     title="Active Triggers"
                     value={stats?.metrics.activeTriggers.toString() || "0"}
                     trend="Running"
-                    icon={<Activity className="w-5 h-5 text-brand-dark" />}
+                    icon={<Activity className="w-5 h-5 text-neutral-900" />}
                 />
                 <StatCard
                     title="Audience Reached"
                     value={stats?.metrics.audienceReached.toString() || "0"}
                     trend="Unique Users"
-                    icon={<Users className="w-5 h-5 text-brand-dark" />}
+                    icon={<Users className="w-5 h-5 text-neutral-900" />}
                 />
             </div>
 
@@ -147,7 +147,7 @@ export default function DashboardPage() {
                                     href={`/dashboard/inbox?conversation=${msg.conversation_id}`}
                                     className="flex items-center gap-4 p-3 rounded-lg hover:bg-black/[0.03] transition-colors"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-brand/15 flex items-center justify-center text-brand-dark shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-black/[0.06] flex items-center justify-center text-neutral-900 shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0">

@@ -5,7 +5,7 @@ import * as RechartsPrimitive from "recharts"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { Loader2, MessageCircle, Send, Sparkles, TrendingUp, Trophy } from "lucide-react"
-import { BRAND_COLOR } from "@/lib/theme"
+import { INK_COLOR } from "@/lib/theme"
 
 interface AnalyticsData {
     timeSeries: { date: string; sent: number; received: number; newConversations: number }[]
@@ -16,12 +16,12 @@ interface AnalyticsData {
 const RANGES = [7, 30, 90] as const
 
 const messagesChartConfig: ChartConfig = {
-    sent: { label: "Sent", color: BRAND_COLOR },
+    sent: { label: "Sent", color: INK_COLOR },
     received: { label: "Received", color: "#60a5fa" },
 }
 
 const audienceChartConfig: ChartConfig = {
-    newConversations: { label: "New conversations", color: BRAND_COLOR },
+    newConversations: { label: "New conversations", color: INK_COLOR },
 }
 
 const SOURCE_META = {
@@ -121,8 +121,8 @@ export default function AnalyticsPage() {
                             <RechartsPrimitive.AreaChart data={data?.timeSeries}>
                                 <defs>
                                     <linearGradient id="fillSent" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor={BRAND_COLOR} stopOpacity={0.3} />
-                                        <stop offset="95%" stopColor={BRAND_COLOR} stopOpacity={0} />
+                                        <stop offset="5%" stopColor={INK_COLOR} stopOpacity={0.3} />
+                                        <stop offset="95%" stopColor={INK_COLOR} stopOpacity={0} />
                                     </linearGradient>
                                     <linearGradient id="fillReceived" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.3} />
@@ -140,7 +140,7 @@ export default function AnalyticsPage() {
                                 />
                                 <RechartsPrimitive.YAxis tickLine={false} axisLine={false} tick={{ fill: "#737373", fontSize: 11 }} allowDecimals={false} width={28} />
                                 <ChartTooltip content={<ChartTooltipContent labelFormatter={(v) => formatDateTick(String(v))} />} />
-                                <RechartsPrimitive.Area dataKey="sent" type="monotone" stroke={BRAND_COLOR} fill="url(#fillSent)" strokeWidth={2} />
+                                <RechartsPrimitive.Area dataKey="sent" type="monotone" stroke={INK_COLOR} fill="url(#fillSent)" strokeWidth={2} />
                                 <RechartsPrimitive.Area dataKey="received" type="monotone" stroke="#60a5fa" fill="url(#fillReceived)" strokeWidth={2} />
                             </RechartsPrimitive.AreaChart>
                         </ChartContainer>
@@ -166,7 +166,7 @@ export default function AnalyticsPage() {
                                     />
                                     <RechartsPrimitive.YAxis tickLine={false} axisLine={false} tick={{ fill: "#737373", fontSize: 11 }} allowDecimals={false} width={28} />
                                     <ChartTooltip content={<ChartTooltipContent labelFormatter={(v) => formatDateTick(String(v))} />} />
-                                    <RechartsPrimitive.Bar dataKey="newConversations" fill={BRAND_COLOR} radius={[4, 4, 0, 0]} />
+                                    <RechartsPrimitive.Bar dataKey="newConversations" fill={INK_COLOR} radius={[4, 4, 0, 0]} />
                                 </RechartsPrimitive.BarChart>
                             </ChartContainer>
                         </section>
@@ -175,7 +175,7 @@ export default function AnalyticsPage() {
                         <section className="rounded-2xl border border-black/10 bg-black/[0.015] p-6">
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-2">
-                                    <Trophy className="w-4 h-4 text-brand-dark" />
+                                    <Trophy className="w-4 h-4 text-neutral-900" />
                                     <h2 className="text-sm font-semibold text-neutral-900">Top automations</h2>
                                 </div>
                                 <span className="text-[10px] uppercase tracking-wider text-neutral-500">All-time</span>
@@ -201,7 +201,7 @@ export default function AnalyticsPage() {
                                                     </span>
                                                 </div>
                                                 <div className="h-1.5 rounded-full bg-black/[0.06] overflow-hidden">
-                                                    <div className="h-full rounded-full bg-brand" style={{ width: `${pct}%` }} />
+                                                    <div className="h-full rounded-full bg-neutral-900" style={{ width: `${pct}%` }} />
                                                 </div>
                                             </div>
                                         )

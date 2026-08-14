@@ -222,7 +222,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                                 <div className={cn(
                                     "max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 text-sm shadow-sm break-words space-y-2",
                                     isMe
-                                        ? "bg-brand text-black rounded-br-none"
+                                        ? "bg-neutral-900 text-white rounded-br-none"
                                         : "bg-black/[0.05] text-neutral-900 rounded-bl-none border border-black/5"
                                 )}>
                                     {isImage && (
@@ -236,7 +236,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                                             href={msg.attachment_url!}
                                             target="_blank"
                                             rel="noreferrer"
-                                            className={cn("flex items-center gap-1.5 underline underline-offset-2", isMe ? "text-black" : "text-neutral-900")}
+                                            className={cn("flex items-center gap-1.5 underline underline-offset-2", isMe ? "text-white" : "text-neutral-900")}
                                         >
                                             <Paperclip className="w-3.5 h-3.5 shrink-0" />
                                             {msg.attachment_type ? `Sent a ${msg.attachment_type.replace(/_/g, " ")}` : "Sent an attachment"}
@@ -245,7 +245,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
                                     {showText && <div>{msg.content}</div>}
                                     <div className={cn(
                                         "text-[10px] opacity-70",
-                                        isMe ? "text-black/50 text-right" : "text-neutral-500"
+                                        isMe ? "text-white/60 text-right" : "text-neutral-500"
                                     )}>
                                         {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </div>
@@ -281,7 +281,7 @@ export function ChatWindow({ conversationId, recipientId, recipientName, userId,
 
             {/* Input Area */}
             <div className="p-3 md:p-4 border-t border-black/10 bg-white/70 shrink-0">
-                <div className="flex items-center gap-2 bg-black/[0.03] rounded-xl border border-black/10 p-1.5 focus-within:border-brand transition-all">
+                <div className="flex items-center gap-2 bg-black/[0.03] rounded-xl border border-black/10 p-1.5 focus-within:border-neutral-900 transition-all">
                     <Button
                         size="icon"
                         variant="ghost"
