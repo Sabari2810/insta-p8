@@ -142,7 +142,7 @@ export default function AutomationsPage() {
                 {/* Automation List */}
                 {isLoading ? (
                     <div className="flex items-center justify-center py-16">
-                        <div className="w-6 h-6 border-2 border-black/10 border-t-neutral-900 rounded-full animate-spin" />
+                        <Spinner />
                     </div>
                 ) : (
                     <AutomationList
