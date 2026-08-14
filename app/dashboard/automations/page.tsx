@@ -104,7 +104,7 @@ export default function AutomationsPage() {
                             onClick={() => setActiveTab(tab.key)}
                             className={`relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2 ${
                                 activeTab === tab.key
-                                    ? 'text-neutral-900 border-brand'
+                                    ? 'text-neutral-900 border-neutral-900'
                                     : 'text-neutral-500 border-transparent hover:text-neutral-700'
                             }`}
                         >
@@ -112,7 +112,7 @@ export default function AutomationsPage() {
                             <span>{tab.label}</span>
                             {tab.count > 0 && (
                                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                                    activeTab === tab.key ? 'bg-brand text-black' : 'bg-black/[0.06] text-neutral-500'
+                                    activeTab === tab.key ? 'bg-neutral-900 text-white' : 'bg-black/[0.06] text-neutral-500'
                                 }`}>
                                     {tab.count}
                                 </span>

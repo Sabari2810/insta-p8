@@ -86,7 +86,7 @@ export default function AnalyticsPage() {
                             key={r}
                             onClick={() => setRange(r)}
                             className={`h-8 px-4 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors ${
-                                range === r ? "bg-brand text-black" : "text-neutral-500 hover:text-neutral-900"
+                                range === r ? "bg-neutral-900 text-white" : "text-neutral-500 hover:text-neutral-900"
                             }`}
                         >
                             {r}d
