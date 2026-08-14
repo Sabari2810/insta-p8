@@ -7,6 +7,7 @@ import { AutomationList } from "@/components/dashboard/AutomationList"
 import { CreateRuleForm } from "@/components/dashboard/CreateRuleForm"
 import { MessageCircle, Send, Sparkles, Zap, Plus } from "lucide-react"
 import type { Automation } from "@/lib/types"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function AutomationsPage() {
     const { userId, isLoading: isSessionLoading } = useInstagramSession()
@@ -53,7 +54,9 @@ export default function AutomationsPage() {
         setShowCreateForm(true)
     }
 
-    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3]"><div className="w-6 h-6 border-2 border-black/10 border-t-neutral-900 rounded-full animate-spin" /></div>
+    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3]">
+        <Spinner />
+    </div>
     if (!userId) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3] text-neutral-500">Please log in</div>
 
     const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
@@ -84,8 +87,8 @@ export default function AutomationsPage() {
                             setShowCreateForm(!showCreateForm)
                         }}
                         className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${showCreateForm
-                                ? 'border border-black/15 text-neutral-900 hover:border-black/30'
-                                : 'bg-brand text-black hover:brightness-95'
+                            ? 'border border-black/15 text-neutral-900 hover:border-black/30'
+                            : 'bg-brand text-black hover:brightness-95'
                             }`}
                     >
                         <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
@@ -103,8 +106,8 @@ export default function AutomationsPage() {
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
                             className={`relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2 ${activeTab === tab.key
-                                    ? 'text-neutral-900 border-neutral-900'
-                                    : 'text-neutral-500 border-transparent hover:text-neutral-700'
+                                ? 'text-neutral-900 border-neutral-900'
+                                : 'text-neutral-500 border-transparent hover:text-neutral-700'
                                 }`}
                         >
                             {tab.icon}
