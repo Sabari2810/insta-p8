@@ -94,7 +94,6 @@ See [Environment variables](#environment-variables) below for what each one does
 | `META_APP_SECRET` | Optional fallback — only needed if webhook signature validation 401s because Meta signed the delivery with the parent app secret instead. |
 | `NEXT_PUBLIC_INSTAGRAM_REDIRECT_URI` | Must exactly match an OAuth redirect URI configured in the Instagram product's business login settings — character-for-character, including scheme and trailing slash. |
 | `INSTAGRAM_WEBHOOK_VERIFY_TOKEN` | Any random string, entered identically in both the env var and Meta's webhook subscription form. |
-| `DISABLE_WEBHOOK_SIGNATURE_CHECK` | **Debug only.** Set to `"true"` to bypass HMAC signature verification on incoming webhooks when troubleshooting 401s. If this is ever left `true` on a real deployment, anyone can POST forged webhook events and get the client's Instagram account to send arbitrary DMs. Never set this on a client's production env. |
 
 ## Architecture
 
