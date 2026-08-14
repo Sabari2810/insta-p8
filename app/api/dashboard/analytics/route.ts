@@ -62,12 +62,12 @@ export async function GET(request: NextRequest) {
 
   const timeSeries = Array.from(buckets.values())
 
-  const automations = automationsRes.data || []
+  const automations: any[] = automationsRes.data || []
   const topAutomations = automations
-    .filter((a) => (a.trigger_count || 0) > 0)
-    .sort((a, b) => (b.trigger_count || 0) - (a.trigger_count || 0))
+    .filter((a: any) => (a.trigger_count || 0) > 0)
+    .sort((a: any, b: any) => (b.trigger_count || 0) - (a.trigger_count || 0))
     .slice(0, 5)
-    .map((a) => ({
+    .map((a: any) => ({
       id: a.id,
       name: a.name,
       triggerSource: a.trigger_source,
@@ -75,11 +75,11 @@ export async function GET(request: NextRequest) {
       unlockCount: a.unlock_count || 0,
     }))
 
-  const activeAutomations = automations.filter((a) => a.is_active)
+  const activeAutomations = automations.filter((a: any) => a.is_active)
   const automationsBySource = {
-    comment: activeAutomations.filter((a) => a.trigger_source === "comment").length,
-    dm: activeAutomations.filter((a) => a.trigger_source === "dm").length,
-    story: activeAutomations.filter((a) => a.trigger_source === "story").length,
+    comment: activeAutomations.filter((a: any) => a.trigger_source === "comment").length,
+    dm: activeAutomations.filter((a: any) => a.trigger_source === "dm").length,
+    story: activeAutomations.filter((a: any) => a.trigger_source === "story").length,
   }
 
   return NextResponse.json({ timeSeries, topAutomations, automationsBySource })

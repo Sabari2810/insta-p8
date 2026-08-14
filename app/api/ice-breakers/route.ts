@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { getSession } from "@/lib/session"
 import { decryptSecret } from "@/lib/crypto"
+import { isDemoMode } from "@/lib/demo-mode"
 
 export async function GET(request: NextRequest) {
     try {
@@ -61,7 +62,11 @@ export async function POST(request: NextRequest) {
 
         if (insertError) throw insertError
 
-        // 2. Sync to Instagram
+        // 2. Sync to Instagram (skipped in demo mode — no real access token to sync with)
+        if (isDemoMode) {
+            return NextResponse.json({ success: true, data: inserted })
+        }
+
         const { data: user } = await supabase.from("users").select("access_token, page_id").eq("id", userId).single()
         const accessToken = user?.access_token ? decryptSecret(user.access_token) : null
 

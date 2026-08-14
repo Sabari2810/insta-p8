@@ -2,12 +2,23 @@ import { type NextRequest, NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase-server"
 import { getSession } from "@/lib/session"
 import { decryptSecret } from "@/lib/crypto"
+import { isDemoMode } from "@/lib/demo-mode"
+
+const DEMO_MEDIA = [
+  { id: "demo-media-1", caption: "New drop is live 🎉", media_type: "IMAGE", media_url: "https://placehold.co/600x600/171717/fff?text=Post+1", thumbnail_url: null, permalink: "#", timestamp: new Date().toISOString() },
+  { id: "demo-media-2", caption: "Behind the scenes", media_type: "VIDEO", media_url: "https://placehold.co/600x600/7e3bed/fff?text=Reel+1", thumbnail_url: "https://placehold.co/600x600/7e3bed/fff?text=Reel+1", permalink: "#", timestamp: new Date().toISOString() },
+  { id: "demo-media-3", caption: "Thank you for 10k!", media_type: "IMAGE", media_url: "https://placehold.co/600x600/171717/fff?text=Post+2", thumbnail_url: null, permalink: "#", timestamp: new Date().toISOString() },
+]
 
 export async function GET(request: NextRequest) {
   try {
     const session = getSession(request)
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     const userId = session.userId
+
+    if (isDemoMode) {
+      return NextResponse.json({ data: DEMO_MEDIA })
+    }
 
     const supabase = await getSupabaseServerClient()
 
