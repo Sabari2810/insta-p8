@@ -97,7 +97,7 @@ export default function SettingsPage() {
                 <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Configuration</p>
                 <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Settings</h1>
             </div>
-            <div className="p-8 space-y-8 max-w-3xl mx-auto animate-in fade-in duration-700">
+            <div className="p-8 space-y-8 animate-in fade-in duration-700">
                 {/* Connected Account */}
                 <section className="rounded-2xl border border-black/10 bg-white p-6 space-y-5">
                     <div className="flex items-center gap-2">

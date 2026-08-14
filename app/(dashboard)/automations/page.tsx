@@ -121,7 +121,7 @@ export default function AutomationsPage() {
                     ))}
                 </div>
             </div>
-            <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
+            <div className="p-8 space-y-8">
 
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (

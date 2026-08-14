@@ -37,7 +37,7 @@ export default function ActivityPage() {
                 <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Activity</h1>
             </div>
 
-            <div className="max-w-3xl mx-auto px-4 md:px-8 py-8">
+            <div className="p-8">
                 <div className="rounded-2xl border border-black/10 bg-white p-6">
                     {loading ? (
                         <div className="flex items-center justify-center py-16">
