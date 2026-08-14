@@ -106,7 +106,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-black/[0.06] border border-black/10 shrink-0 overflow-hidden">
+                        <div className="w-12 h-12 rounded-sm bg-black/[0.06] border border-black/10 shrink-0 overflow-hidden">
                             {profilePic && <img src={profilePic} alt="" className="w-full h-full object-cover" />}
                         </div>
                         <div className="min-w-0">
