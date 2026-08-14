@@ -84,7 +84,7 @@ export function IceBreakersManager() {
         <div className="space-y-6 max-w-2xl mx-auto">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="font-serif-display text-3xl text-white">Ice Breakers</h2>
+                    <h2 className="font-serif-display text-3xl text-neutral-900">Ice Breakers</h2>
                     <p className="text-muted-foreground text-sm">
                         Questions people see when they start a chat with you.
                     </p>
@@ -97,7 +97,7 @@ export function IceBreakersManager() {
 
             <div className="space-y-4">
                 {breakers.map((item, idx) => (
-                    <div key={idx} className="bg-white/5 border border-white/10 p-4 rounded-xl space-y-3 relative group">
+                    <div key={idx} className="bg-black/[0.02] border border-black/10 p-4 rounded-xl space-y-3 relative group">
                         <div className="flex justify-between items-start gap-4">
                             <div className="flex-1 space-y-3">
                                 <div>
@@ -106,7 +106,7 @@ export function IceBreakersManager() {
                                         value={item.question}
                                         onChange={e => handleChange(idx, "question", e.target.value)}
                                         placeholder="e.g., What are your prices?"
-                                        className="bg-black/20 border-white/10 mt-1"
+                                        className="bg-white border-black/10 mt-1"
                                         maxLength={80}
                                     />
                                 </div>
@@ -116,7 +116,7 @@ export function IceBreakersManager() {
                                         value={item.response}
                                         onChange={e => handleChange(idx, "response", e.target.value)}
                                         placeholder="The reply users will receive..."
-                                        className="bg-black/20 border-white/10 mt-1"
+                                        className="bg-white border-black/10 mt-1"
                                         rows={2}
                                     />
                                 </div>
@@ -125,7 +125,7 @@ export function IceBreakersManager() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleRemove(idx)}
-                                className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
+                                className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
                             >
                                 <Trash2 className="w-4 h-4" />
                             </Button>
@@ -134,19 +134,19 @@ export function IceBreakersManager() {
                 ))}
 
                 {breakers.length === 0 && (
-                    <div className="text-center py-10 border border-dashed border-white/10 rounded-xl text-muted-foreground">
+                    <div className="text-center py-10 border border-dashed border-black/15 rounded-xl text-muted-foreground">
                         No ice breakers yet. Add one to get started!
                     </div>
                 )}
 
                 {breakers.length < 4 && (
-                    <Button variant="outline" onClick={handleAdd} className="w-full border-dashed border-white/20 hover:bg-white/5 text-muted-foreground hover:text-white">
+                    <Button variant="outline" onClick={handleAdd} className="w-full border-dashed border-black/20 hover:bg-black/[0.03] text-muted-foreground hover:text-neutral-900">
                         <Plus className="w-4 h-4 mr-2" /> Add Question
                     </Button>
                 )}
             </div>
 
-            <div className="bg-white/[0.04] border border-white/10 p-4 rounded-xl flex gap-3 text-sm text-neutral-300">
+            <div className="bg-black/[0.02] border border-black/10 p-4 rounded-xl flex gap-3 text-sm text-neutral-700">
                 <RefreshCw className="w-5 h-5 shrink-0" />
                 <p>
                     Changes made here are automatically synced to your Instagram Profile. It may take a few minutes for them to appear for all users.

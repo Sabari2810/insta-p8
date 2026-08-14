@@ -265,7 +265,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
   return (
     <div className="space-y-8">
       {/* ── Sexy Stepper Timeline ── */}
-      <div className="relative bg-neutral-900/60 border border-white/5 rounded-2xl p-4 md:px-8">
+      <div className="relative bg-black/[0.03] border border-black/10 rounded-2xl p-4 md:px-8">
         <div className="flex items-center justify-between gap-4 relative">
           {STEPS.map((s, i) => {
             const isActive = i === step
@@ -281,20 +281,20 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                     isCompleted
                       ? "bg-brand text-black shadow-[0_0_15px_rgba(195,251,58,0.3)]"
                       : isActive
-                        ? "bg-white text-black ring-4 ring-white/10"
-                        : "bg-neutral-800 text-neutral-500 border border-white/5"
+                        ? "bg-neutral-900 text-white ring-4 ring-black/10"
+                        : "bg-black/[0.06] text-neutral-500 border border-black/10"
                   }`}>
                     {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : i + 1}
                   </div>
                   <div className="hidden md:block">
-                    <p className={`text-xs font-bold tracking-tight uppercase ${isActive ? "text-white" : "text-neutral-400 group-hover:text-neutral-200"}`}>
+                    <p className={`text-xs font-bold tracking-tight uppercase ${isActive ? "text-neutral-900" : "text-neutral-500 group-hover:text-neutral-700"}`}>
                       {s.label}
                     </p>
                     <p className="text-[10px] text-neutral-500 font-mono-ui">{s.sub}</p>
                   </div>
                 </button>
                 {i < STEPS.length - 1 && (
-                  <div className="flex-1 h-[2px] mx-2 relative bg-neutral-800 rounded-full overflow-hidden">
+                  <div className="flex-1 h-[2px] mx-2 relative bg-black/10 rounded-full overflow-hidden">
                     <div className={`absolute inset-y-0 left-0 transition-all duration-500 bg-brand ${
                       isCompleted ? "w-full" : "w-0"
                     }`} />
@@ -309,7 +309,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
       {/* ── Two Column Workspace ── */}
       <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
         {/* ── LEFT: Config Form ── */}
-        <div className="bg-[#0b0b0a] border border-white/10 rounded-2xl p-6 md:p-8 space-y-6">
+        <div className="bg-white border border-black/10 rounded-2xl p-6 md:p-8 space-y-6">
           {/* ===== STEP 1: TRIGGER ===== */}
           {step === 0 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-2 duration-300">
@@ -334,11 +334,11 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         onClick={() => setStoryTriggerType(key)}
                         className={`p-4 rounded-xl border text-left flex flex-col gap-2 transition-all duration-200 ${
                           storyTriggerType === key
-                            ? "border-brand bg-brand/[0.06] text-brand"
-                            : "border-white/10 text-neutral-400 hover:border-white/20 hover:text-white bg-white/[0.01]"
+                            ? "border-brand bg-brand/[0.08] text-brand-dark"
+                            : "border-black/10 text-neutral-500 hover:border-black/20 hover:text-neutral-900 bg-black/[0.01]"
                         }`}
                       >
-                        <span className={storyTriggerType === key ? "text-brand" : "text-neutral-500"}>{icon}</span>
+                        <span className={storyTriggerType === key ? "text-brand-dark" : "text-neutral-400"}>{icon}</span>
                         <div>
                           <p className="text-xs font-bold uppercase tracking-wider">{label}</p>
                           <p className="text-[10px] text-neutral-500 font-normal mt-0.5">{desc}</p>
@@ -353,8 +353,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 <div className="space-y-4">
                   <FieldLabel>Automate which post or reel?</FieldLabel>
                   {loadingReels ? (
-                    <div className="p-8 flex flex-col items-center justify-center gap-3 border border-white/5 rounded-2xl bg-white/[0.01]">
-                      <Loader2 className="w-6 h-6 animate-spin text-brand" />
+                    <div className="p-8 flex flex-col items-center justify-center gap-3 border border-black/10 rounded-2xl bg-black/[0.015]">
+                      <Loader2 className="w-6 h-6 animate-spin text-brand-dark" />
                       <span className="text-xs text-neutral-500 font-mono-ui">Fetching Instagram feed...</span>
                     </div>
                   ) : (
@@ -368,8 +368,8 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         }}
                         className={`aspect-square rounded-xl border flex flex-col items-center justify-center p-4 text-center transition-all duration-200 ${
                           hasSelectedReelOption && selectedReel === null
-                            ? "border-brand bg-brand/[0.06] text-brand"
-                            : "border-white/10 text-neutral-400 hover:border-white/20 hover:text-white bg-white/[0.01]"
+                            ? "border-brand bg-brand/[0.08] text-brand-dark"
+                            : "border-black/10 text-neutral-500 hover:border-black/20 hover:text-neutral-900 bg-black/[0.01]"
                         }`}
                       >
                         <Globe className="w-8 h-8 mb-2 opacity-80" />
@@ -390,14 +390,14 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                             className={`aspect-square rounded-xl border overflow-hidden relative group text-left transition-all duration-200 ${
                               isSelected
                                 ? "border-brand ring-2 ring-brand/20"
-                                : "border-white/10 hover:border-white/25 bg-[#0e0e0e]"
+                                : "border-black/10 hover:border-black/25 bg-neutral-100"
                             }`}
                           >
                             {reel.media_url ? (
-                              <img src={reel.media_url} alt="" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" />
+                              <img src={reel.media_url} alt="" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                             ) : (
-                              <div className="w-full h-full bg-neutral-900 flex items-center justify-center">
-                                <Film className="w-6 h-6 text-neutral-600" />
+                              <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
+                                <Film className="w-6 h-6 text-neutral-400" />
                               </div>
                             )}
 
@@ -429,12 +429,12 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
               {/* Configure keywords only after selection (for Comment triggers) or always for others */}
               {(triggerSource !== "comment" || hasSelectedReelOption) && (
-                <div className="space-y-4 pt-3 border-t border-white/5 animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="space-y-4 pt-3 border-t border-black/10 animate-in fade-in slide-in-from-top-2 duration-300">
                   {triggerSource === "comment" ? (
                     <div className="space-y-2">
                       <FieldLabel>Keywords to match</FieldLabel>
                       <p className="text-[11px] text-neutral-500">
-                        What keyword triggers this DM? <span className="text-brand font-semibold">Keep empty to reply to every comment.</span>
+                        What keyword triggers this DM? <span className="text-brand-dark font-semibold">Keep empty to reply to every comment.</span>
                       </p>
                       <TagInput
                         value={triggers}
@@ -443,7 +443,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                       />
                     </div>
                   ) : needsKeywords ? (
-                    <div className="space-y-2 bg-neutral-900/40 p-5 rounded-2xl border border-white/5">
+                    <div className="space-y-2 bg-black/[0.02] p-5 rounded-2xl border border-black/10">
                       <FieldLabel>
                         {triggerSource === "story" && storyTriggerType === "reaction"
                           ? "Only react on these emojis"
@@ -501,7 +501,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         type="button"
                         onClick={() => setReplyMode(key)}
                         className={`h-11 rounded-xl border text-xs font-bold uppercase tracking-wider transition-all ${
-                          replyMode === key ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
+                          replyMode === key ? "border-brand bg-brand/10 text-brand-dark" : "border-black/10 text-neutral-500 hover:text-neutral-900"
                         }`}
                       >
                         {label}
@@ -512,7 +512,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
               )}
 
               {triggerSource === "comment" && replyMode !== "dm_only" && (
-                <div className="space-y-2 bg-neutral-900/40 p-5 rounded-2xl border border-white/5">
+                <div className="space-y-2 bg-black/[0.02] p-5 rounded-2xl border border-black/10">
                   <FieldLabel>Public comments rotation</FieldLabel>
                   <p className="text-[11px] text-neutral-500 mb-3">Add multiple phrases. We rotate them dynamically to look human.</p>
                   <TagInput value={publicReplies} onChange={setPublicReplies} placeholder={'e.g. "Sent you a DM!", "Check your inbox!"'} />
@@ -534,7 +534,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                           type="button"
                           onClick={() => setType(key)}
                           className={`p-3 rounded-xl border text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
-                            type === key ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
+                            type === key ? "border-brand bg-brand/10 text-brand-dark" : "border-black/10 text-neutral-500 hover:text-neutral-900"
                           }`}
                         >
                           {icon}
@@ -552,10 +552,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         onChange={(e) => setMessageText(e.target.value)}
                         rows={5}
                         maxLength={1000}
-                        className="w-full bg-white/[0.02] border border-white/10 rounded-2xl px-4 py-3.5 text-sm text-white placeholder:text-neutral-600 resize-none focus:outline-none focus:border-brand/50 transition-colors"
+                        className="w-full bg-black/[0.02] border border-black/10 rounded-2xl px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 resize-none focus:outline-none focus:border-brand transition-colors"
                         placeholder="Type the message to send in DMs..."
                       />
-                      <p className="font-mono-ui text-[10px] text-neutral-600 text-right">{messageText.length}/1000</p>
+                      <p className="font-mono-ui text-[10px] text-neutral-500 text-right">{messageText.length}/1000</p>
                     </div>
                   )}
 
@@ -568,25 +568,25 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                         <TextField value={cardImage} onChange={setCardImage} placeholder="Cover image URL (optional)" />
                       </div>
                       <div className="space-y-2.5">
-                        <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                        <div className="flex items-center justify-between border-b border-black/10 pb-2">
                           <FieldLabel>Interactive buttons ({buttons.length}/3)</FieldLabel>
                           <button type="button" onClick={addButton} disabled={buttons.length >= 3}
-                            className="font-mono-ui text-[11px] text-neutral-400 hover:text-white disabled:opacity-40 flex items-center gap-1 transition-colors">
+                            className="font-mono-ui text-[11px] text-neutral-500 hover:text-neutral-900 disabled:opacity-40 flex items-center gap-1 transition-colors">
                             <Plus className="w-3 h-3" /> Add button
                           </button>
                         </div>
                         {buttons.map((btn) => (
-                          <div key={btn.id} className="flex gap-2 items-center bg-white/[0.02] p-3 rounded-2xl border border-white/5">
+                          <div key={btn.id} className="flex gap-2 items-center bg-black/[0.02] p-3 rounded-2xl border border-black/10">
                             <input
                               value={btn.title}
                               onChange={(e) => updateButton(btn.id, "title", e.target.value)}
-                              className="h-8 text-xs flex-1 bg-transparent border-none px-2 text-white placeholder:text-neutral-500 focus:outline-none"
+                              className="h-8 text-xs flex-1 bg-transparent border-none px-2 text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
                               placeholder="Button label"
                             />
                             <select
                               value={btn.type}
                               onChange={(e) => updateButton(btn.id, "type", e.target.value)}
-                              className="h-8 text-[11px] bg-black border border-white/10 rounded-lg px-2 text-neutral-300 focus:outline-none"
+                              className="h-8 text-[11px] bg-white border border-black/10 rounded-lg px-2 text-neutral-700 focus:outline-none"
                             >
                               <option value="web_url">Open Link</option>
                               <option value="postback">Trigger Flow</option>
@@ -594,10 +594,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                             <input
                               value={btn.type === "web_url" ? btn.url : btn.payload}
                               onChange={(e) => updateButton(btn.id, btn.type === "web_url" ? "url" : "payload", e.target.value)}
-                              className="h-8 text-xs flex-1 bg-transparent border-none px-2 text-white placeholder:text-neutral-500 focus:outline-none font-mono"
+                              className="h-8 text-xs flex-1 bg-transparent border-none px-2 text-neutral-900 placeholder:text-neutral-400 focus:outline-none font-mono"
                               placeholder={btn.type === "web_url" ? "https://link" : "flow_keyword"}
                             />
-                            <button type="button" onClick={() => removeButton(btn.id)} className="text-neutral-500 hover:text-red-400 p-1.5 transition-colors">
+                            <button type="button" onClick={() => removeButton(btn.id)} className="text-neutral-400 hover:text-red-500 p-1.5 transition-colors">
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
@@ -617,7 +617,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                               type="button"
                               onClick={() => setMediaType(m)}
                               className={`h-10 rounded-xl border text-xs font-bold uppercase transition-all ${
-                                mediaType === m ? "border-brand bg-brand/10 text-brand" : "border-white/10 text-neutral-400 hover:text-white"
+                                mediaType === m ? "border-brand bg-brand/10 text-brand-dark" : "border-black/10 text-neutral-500 hover:text-neutral-900"
                               }`}
                             >
                               {m === "image" ? "Photo" : m === "video" ? "Video" : "Audio"}
@@ -632,10 +632,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
                   {type !== "card" && (
                     <div className="space-y-3 pt-2">
-                      <div className="flex items-center justify-between border-b border-white/5 pb-2">
+                      <div className="flex items-center justify-between border-b border-black/10 pb-2">
                         <FieldLabel>Quick Reply chips ({quickReplies.length}/4)</FieldLabel>
                         <button type="button" onClick={addQuickReply} disabled={quickReplies.length >= 4}
-                          className="font-mono-ui text-[11px] text-neutral-400 hover:text-white disabled:opacity-40 flex items-center gap-1 transition-colors">
+                          className="font-mono-ui text-[11px] text-neutral-500 hover:text-neutral-900 disabled:opacity-40 flex items-center gap-1 transition-colors">
                           <Plus className="w-3 h-3" /> Add chip
                         </button>
                       </div>
@@ -647,10 +647,10 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                                 value={q.title}
                                 onChange={(e) => updateQuickReply(q.id, e.target.value)}
                                 maxLength={20}
-                                className="h-10 text-xs flex-1 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-white placeholder:text-neutral-500 focus:outline-none focus:border-brand/50"
+                                className="h-10 text-xs flex-1 bg-black/[0.02] border border-black/10 rounded-xl px-4 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand"
                                 placeholder='e.g. "Send Details!"'
                               />
-                              <button type="button" onClick={() => removeQuickReply(q.id)} className="text-neutral-500 hover:text-red-400 p-1.5 transition-colors">
+                              <button type="button" onClick={() => removeQuickReply(q.id)} className="text-neutral-400 hover:text-red-500 p-1.5 transition-colors">
                                 <Trash2 className="w-4 h-4" />
                               </button>
                             </div>
@@ -687,20 +687,20 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 <ToggleRow icon={<Lock className="w-5 h-5" />} title="Follow gate required" sub="Only followers get the payload. Non-followers get follow prompt first." on={checkFollow} onToggle={() => setCheckFollow(!checkFollow)} />
                 <ToggleRow icon={<Eye className="w-5 h-5" />} title="Mimic active typing status" sub="Displays typing bubble indicators to look completely organic." on={typingIndicator} onToggle={() => setTypingIndicator(!typingIndicator)} />
                 
-                <div className="flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-white/[0.01]">
+                <div className="flex items-center justify-between p-4 rounded-2xl border border-black/10 bg-black/[0.01]">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-neutral-900 flex items-center justify-center border border-white/5">
-                      <Timer className="w-4.5 h-4.5 text-neutral-400" />
+                    <div className="w-9 h-9 rounded-xl bg-black/[0.04] flex items-center justify-center border border-black/10">
+                      <Timer className="w-4.5 h-4.5 text-neutral-500" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Randomized delivery delay</p>
+                      <p className="text-sm font-semibold text-neutral-900">Randomized delivery delay</p>
                       <p className="text-[11px] text-neutral-500 mt-0.5">Waits before sending to simulate real human delays.</p>
                     </div>
                   </div>
                   <select
                     value={delaySeconds}
                     onChange={(e) => setDelaySeconds(e.target.value)}
-                    className="bg-black border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none hover:border-white/20 transition-all cursor-pointer"
+                    className="bg-white border border-black/10 rounded-xl px-3 py-2 text-xs text-neutral-900 focus:outline-none hover:border-black/20 transition-all cursor-pointer"
                   >
                     <option value="random">Random (3–10s)</option>
                     <option value={3}>3s delay</option>
@@ -712,25 +712,25 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
               </div>
 
               {/* Plain-text Summary Panel */}
-              <div className="rounded-2xl border border-brand/15 bg-brand/[0.03] p-5 space-y-2">
+              <div className="rounded-2xl border border-brand/25 bg-brand/[0.06] p-5 space-y-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-brand" />
-                  <span className="text-xs font-mono-ui uppercase tracking-widest text-brand font-bold">Rule Logic Summary</span>
+                  <Sparkles className="w-4 h-4 text-brand-dark" />
+                  <span className="text-xs font-mono-ui uppercase tracking-widest text-brand-dark font-bold">Rule Logic Summary</span>
                 </div>
-                <p className="text-sm text-neutral-300 leading-relaxed">
-                  When <span className="text-white font-semibold underline decoration-brand/40 decoration-2">{summary.who}</span>, we will <span className="text-brand font-semibold">{summary.what}</span>.
+                <p className="text-sm text-neutral-700 leading-relaxed">
+                  When <span className="text-neutral-900 font-semibold underline decoration-brand decoration-2">{summary.who}</span>, we will <span className="text-brand-dark font-semibold">{summary.what}</span>.
                 </p>
               </div>
             </div>
           )}
 
           {/* ── Wizard Foot Navigation ── */}
-          <div className="flex items-center justify-between border-t border-white/5 pt-6">
+          <div className="flex items-center justify-between border-t border-black/10 pt-6">
             {step > 0 ? (
               <button
                 type="button"
                 onClick={() => setStep(step - 1)}
-                className="flex items-center gap-2 h-11 px-5 rounded-full border border-white/10 text-neutral-400 hover:text-white hover:border-white/25 font-mono-ui text-xs font-bold transition-all"
+                className="flex items-center gap-2 h-11 px-5 rounded-full border border-black/10 text-neutral-500 hover:text-neutral-900 hover:border-black/25 font-mono-ui text-xs font-bold transition-all"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Back
@@ -742,7 +742,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
                 type="button"
                 onClick={() => { if (stepValid[step]) setStep(step + 1) }}
                 disabled={!stepValid[step]}
-                className="flex items-center gap-2 h-11 px-6 rounded-full bg-white text-black font-mono-ui text-xs font-bold hover:bg-brand hover:shadow-[0_0_20px_rgba(195,251,58,0.25)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
+                className="flex items-center gap-2 h-11 px-6 rounded-full bg-neutral-900 text-white font-mono-ui text-xs font-bold hover:bg-brand hover:text-black hover:shadow-[0_0_20px_rgba(195,251,58,0.35)] active:scale-[0.98] transition-all disabled:opacity-30 disabled:cursor-not-allowed ml-auto"
               >
                 Continue
                 <ChevronRight className="w-4 h-4" />
@@ -936,13 +936,13 @@ function hasDMContent(type: string, messageText: string, cardTitle: string, medi
 
 function StepHeader({ number, title, description }: { number: number; title: string; description: string }) {
   return (
-    <div className="border-b border-white/5 pb-4">
+    <div className="border-b border-black/10 pb-4">
       <div className="flex items-center gap-2 mb-1.5">
-        <div className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/25 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-brand">
+        <div className="px-2 py-0.5 rounded-md bg-brand/10 border border-brand/30 text-[9px] font-mono-ui font-bold uppercase tracking-wider text-brand-dark">
           Phase {number}
         </div>
       </div>
-      <h3 className="text-xl font-bold text-white tracking-tight">{title}</h3>
+      <h3 className="text-xl font-bold text-neutral-900 tracking-tight">{title}</h3>
       <p className="text-xs text-neutral-500 mt-1 leading-relaxed">{description}</p>
     </div>
   )
@@ -958,7 +958,7 @@ function TextField({ value, onChange, placeholder }: { value: string; onChange: 
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full h-11 bg-white/[0.02] border border-white/10 rounded-xl px-4 text-xs text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand/50 focus:bg-white/[0.04] transition-all"
+      className="w-full h-11 bg-black/[0.02] border border-black/10 rounded-xl px-4 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:border-brand focus:bg-black/[0.04] transition-all"
     />
   )
 }
@@ -976,17 +976,17 @@ function ToggleRow({
     <button
       type="button"
       onClick={onToggle}
-      className={`w-full p-4 rounded-2xl border text-left flex items-center gap-3.5 transition-all duration-200 bg-white/[0.01] ${
-        on ? "border-brand/40 bg-brand/[0.03]" : "border-white/10 hover:border-white/20"
+      className={`w-full p-4 rounded-2xl border text-left flex items-center gap-3.5 transition-all duration-200 bg-black/[0.01] ${
+        on ? "border-brand/50 bg-brand/[0.06]" : "border-black/10 hover:border-black/20"
       }`}
     >
-      <span className={on ? "text-brand" : "text-neutral-500"}>{icon}</span>
+      <span className={on ? "text-brand-dark" : "text-neutral-400"}>{icon}</span>
       <span className="flex-1 min-w-0">
-        <span className="block text-sm font-semibold text-white">{title}</span>
+        <span className="block text-sm font-semibold text-neutral-900">{title}</span>
         <span className="block text-xs text-neutral-500 mt-0.5 leading-relaxed">{sub}</span>
       </span>
-      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-brand" : "bg-neutral-800"}`}>
-        <span className={`absolute top-0.5 w-4.5 h-4.5 rounded-full bg-black shadow-md transition-all ${on ? "left-[20px]" : "left-0.5"}`} />
+      <span className={`w-10 h-5.5 rounded-full relative transition-colors shrink-0 ${on ? "bg-brand" : "bg-neutral-300"}`}>
+        <span className={`absolute top-0.5 w-4.5 h-4.5 rounded-full bg-white shadow-md transition-all ${on ? "left-[20px]" : "left-0.5"}`} />
       </span>
     </button>
   )

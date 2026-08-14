@@ -63,21 +63,21 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
     if (loading) {
         return (
             <div className="flex items-center justify-center h-full">
-                <Loader2 className="w-6 h-6 text-white/20 animate-spin" />
+                <Loader2 className="w-6 h-6 text-neutral-300 animate-spin" />
             </div>
         )
     }
 
     return (
-        <div className="flex flex-col h-full border-r border-white/5 bg-black/20 w-full md:w-[350px]">
-            <div className="p-4 border-b border-white/5 space-y-3">
-                <h2 className="text-lg font-bold text-white">Inbox</h2>
+        <div className="flex flex-col h-full border-r border-black/10 bg-white/40 w-full md:w-[350px]">
+            <div className="p-4 border-b border-black/10 space-y-3">
+                <h2 className="text-lg font-bold text-neutral-900">Inbox</h2>
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <input
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:outline-none focus:border-brand/50 placeholder:text-muted-foreground/50 transition-all"
+                        className="w-full bg-black/[0.03] border border-black/10 rounded-xl pl-10 pr-4 py-2 text-sm text-neutral-900 focus:outline-none focus:border-brand placeholder:text-muted-foreground/60 transition-all"
                         placeholder="Search by username..."
                     />
                 </div>
@@ -87,7 +87,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             onClick={() => setActiveTag(null)}
                             className={cn(
                                 "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
-                                !activeTag ? "bg-brand text-black border-brand" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
+                                !activeTag ? "bg-brand text-black border-brand" : "text-neutral-500 border-black/10 hover:text-neutral-900 hover:border-black/25",
                             )}
                         >
                             All
@@ -98,7 +98,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                                 onClick={() => setActiveTag(tag === activeTag ? null : tag)}
                                 className={cn(
                                     "text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full border transition-colors",
-                                    activeTag === tag ? "bg-brand text-black border-brand" : "text-neutral-500 border-white/10 hover:text-white hover:border-white/30",
+                                    activeTag === tag ? "bg-brand text-black border-brand" : "text-neutral-500 border-black/10 hover:text-neutral-900 hover:border-black/25",
                                 )}
                             >
                                 {tag}
@@ -125,8 +125,8 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                             className={cn(
                                 "p-3 rounded-lg flex items-center gap-3 cursor-pointer transition-colors border border-transparent",
                                 selectedId === conv.id
-                                    ? "bg-brand/[0.06] border-brand/20"
-                                    : "hover:bg-white/5 hover:border-white/5"
+                                    ? "bg-brand/[0.08] border-brand/25"
+                                    : "hover:bg-black/[0.03] hover:border-black/5"
                             )}
                         >
                             <Avatar src={conv.profile_pic_url} size={48} />
@@ -134,7 +134,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                                 <div className="flex items-center justify-between mb-0.5">
                                     <span className={cn(
                                         "font-semibold text-sm truncate",
-                                        selectedId === conv.id ? "text-brand" : "text-white"
+                                        selectedId === conv.id ? "text-brand-dark" : "text-neutral-900"
                                     )}>
                                         {conv.recipient_username}
                                     </span>
@@ -145,7 +145,7 @@ export function ConversationList({ userId, selectedId, refreshKey, onSelect, ini
                                 {conv.tags?.length > 0 ? (
                                     <div className="flex items-center gap-1 flex-wrap">
                                         {conv.tags.map((tag) => (
-                                            <span key={tag} className="text-[9px] uppercase tracking-wider text-neutral-500 bg-white/5 rounded-full px-1.5 py-0.5">
+                                            <span key={tag} className="text-[9px] uppercase tracking-wider text-neutral-500 bg-black/[0.04] rounded-full px-1.5 py-0.5">
                                                 {tag}
                                             </span>
                                         ))}

@@ -5,78 +5,81 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Minimal B/W Theme */
-  --background: oklch(0.05 0 0); /* Pure black */
-  --foreground: oklch(0.98 0 0); /* White */
+  /* Minimal B/W Theme — light */
+  --background: oklch(0.985 0 0); /* Near-white */
+  --foreground: oklch(0.15 0 0); /* Near-black */
   --accent-green: #c3fb3a;
-  
-  --card: oklch(0.08 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  
-  --popover: oklch(0.08 0 0);
-  --popover-foreground: oklch(0.98 0 0);
+  --accent-green-dark: #4d6b0f; /* Same hue, darkened for text on light backgrounds — the raw neon green fails contrast as text on white */
+  --accent-violet: #b98bff;
+  --accent-coral: #ff6b81;
 
-  /* Primary is now White for high contrast */
-  --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0.05 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
 
-  /* Secondary is Dark Gray */
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
 
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  
-  --accent: oklch(0.15 0 0);
-  --accent-foreground: oklch(0.98 0 0);
+  /* Primary is near-black for high contrast on a light page */
+  --primary: oklch(0.15 0 0);
+  --primary-foreground: oklch(0.98 0 0);
 
-  --destructive: oklch(0.5 0.2 27); /* Keeping red for errors but slightly desaturated */
+  /* Secondary is light gray */
+  --secondary: oklch(0.94 0 0);
+  --secondary-foreground: oklch(0.15 0 0);
+
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.15 0 0);
+
+  --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(0.98 0 0);
 
-  --border: oklch(0.15 0 0);
-  --input: oklch(0.15 0 0);
-  --ring: oklch(0.25 0 0);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.7 0 0);
 
   --radius: 0.5rem;
 
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(0.7 0 0);
-  --sidebar-primary: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.12 0 0);
-  --sidebar-accent: oklch(0.12 0 0);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-ring: oklch(0.25 0 0);
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.4 0 0);
+  --sidebar-primary: oklch(0.15 0 0);
+  --sidebar-border: oklch(0.9 0 0);
+  --sidebar-accent: oklch(0.95 0 0);
+  --sidebar-accent-foreground: oklch(0.15 0 0);
+  --sidebar-ring: oklch(0.7 0 0);
 }
 
 .dark {
-  /* Same as root since we are enforcing Dark Mode B/W */
-  --background: oklch(0.05 0 0);
-  --foreground: oklch(0.98 0 0);
-  --card: oklch(0.08 0 0);
-  --card-foreground: oklch(0.98 0 0);
-  --popover: oklch(0.08 0 0);
-  --popover-foreground: oklch(0.98 0 0);
-  --primary: oklch(0.98 0 0);
-  --primary-foreground: oklch(0.05 0 0);
-  --secondary: oklch(0.2 0 0);
-  --secondary-foreground: oklch(0.98 0 0);
-  --muted: oklch(0.15 0 0);
-  --muted-foreground: oklch(0.6 0 0);
-  --accent: oklch(0.15 0 0);
-  --accent-foreground: oklch(0.98 0 0);
-  --destructive: oklch(0.5 0.2 27);
+  /* Same as root — this app doesn't have a separate dark mode toggle */
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.15 0 0);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.94 0 0);
+  --secondary-foreground: oklch(0.15 0 0);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.15 0 0);
+  --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(0.98 0 0);
-  --border: oklch(0.15 0 0);
-  --input: oklch(0.15 0 0);
-  --ring: oklch(0.25 0 0);
-  --sidebar: oklch(0.05 0 0);
-  --sidebar-foreground: oklch(0.7 0 0);
-  --sidebar-primary: oklch(0.98 0 0);
-  --sidebar-primary-foreground: oklch(0.05 0 0);
-  --sidebar-accent: oklch(0.12 0 0);
-  --sidebar-accent-foreground: oklch(0.98 0 0);
-  --sidebar-border: oklch(0.12 0 0);
-  --sidebar-ring: oklch(0.25 0 0);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.7 0 0);
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.4 0 0);
+  --sidebar-primary: oklch(0.15 0 0);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.95 0 0);
+  --sidebar-accent-foreground: oklch(0.15 0 0);
+  --sidebar-border: oklch(0.9 0 0);
+  --sidebar-ring: oklch(0.7 0 0);
 }
 
 @theme inline {
@@ -97,6 +100,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-brand: var(--accent-green);
+  --color-brand-dark: var(--accent-green-dark);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -121,7 +125,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-white/20;
+    @apply bg-background text-foreground antialiased selection:bg-black/10;
   }
   button:not(:disabled),
   [role='button']:not(:disabled) {
@@ -131,26 +135,26 @@
 
 /* Minimal Utilities */
 .glass-panel {
-  @apply bg-black/40 backdrop-blur-md border border-white/10;
+  @apply bg-white/60 backdrop-blur-md border border-black/10;
 }
 
 /* Removed Instagram gradients, replaced with minimal text styles if needed */
 .text-minimal-gradient {
-  @apply text-white;
+  @apply text-foreground;
 }
 
 .hover-glow {
   @apply transition-colors duration-200;
 }
 .hover-glow:hover {
-  @apply bg-white/5;
+  @apply bg-black/5;
 }
 
 .vercel-row-hover {
   @apply transition-colors cursor-pointer;
 }
 .vercel-row-hover:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
 /* Minimal Scrollbar */
@@ -161,10 +165,10 @@
   @apply bg-transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full transition-colors;
+  @apply bg-black/10 rounded-full transition-colors;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-white/20;
+  @apply bg-black/20;
 }
 
 /* Editorial type utilities (shared across app) */

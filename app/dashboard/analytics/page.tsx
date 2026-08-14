@@ -68,7 +68,7 @@ export default function AnalyticsPage() {
     if (isSessionLoading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 text-white/20 animate-spin" />
+                <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
             </div>
         )
     }
@@ -77,16 +77,16 @@ export default function AnalyticsPage() {
         <div className="p-8 space-y-8 animate-in fade-in duration-700">
             <div className="flex items-end justify-between gap-4 flex-wrap">
                 <div>
-                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Deep dive</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Analytics</h1>
+                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Deep dive</p>
+                    <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Analytics</h1>
                 </div>
-                <div className="flex items-center gap-1 rounded-full border border-white/10 p-1">
+                <div className="flex items-center gap-1 rounded-full border border-black/10 p-1">
                     {RANGES.map((r) => (
                         <button
                             key={r}
                             onClick={() => setRange(r)}
                             className={`h-8 px-4 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-colors ${
-                                range === r ? "bg-brand text-black" : "text-neutral-500 hover:text-white"
+                                range === r ? "bg-brand text-black" : "text-neutral-500 hover:text-neutral-900"
                             }`}
                         >
                             {r}d
@@ -97,12 +97,12 @@ export default function AnalyticsPage() {
 
             {loading ? (
                 <div className="flex items-center justify-center py-24">
-                    <Loader2 className="w-6 h-6 text-white/20 animate-spin" />
+                    <Loader2 className="w-6 h-6 text-neutral-300 animate-spin" />
                 </div>
             ) : !hasActivity ? (
-                <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-16 text-center">
-                    <TrendingUp className="w-8 h-8 text-neutral-600 mx-auto mb-4" />
-                    <p className="text-white font-semibold mb-1">No activity in the last {range} days</p>
+                <div className="rounded-2xl border border-black/10 bg-black/[0.015] p-16 text-center">
+                    <TrendingUp className="w-8 h-8 text-neutral-400 mx-auto mb-4" />
+                    <p className="text-neutral-900 font-semibold mb-1">No activity in the last {range} days</p>
                     <p className="text-sm text-neutral-500 max-w-sm mx-auto">
                         Once your automations start replying to comments, DMs, or stories, you'll see trends here.
                     </p>
@@ -110,10 +110,10 @@ export default function AnalyticsPage() {
             ) : (
                 <>
                     {/* Messages sent vs received */}
-                    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                    <section className="rounded-2xl border border-black/10 bg-black/[0.015] p-6">
                         <div className="flex items-center justify-between mb-6">
                             <div>
-                                <h2 className="text-sm font-semibold text-white">Messages sent vs received</h2>
+                                <h2 className="text-sm font-semibold text-neutral-900">Messages sent vs received</h2>
                                 <p className="text-xs text-neutral-500 mt-0.5">{totals.sent} sent · {totals.received} received in the last {range} days</p>
                             </div>
                         </div>
@@ -129,7 +129,7 @@ export default function AnalyticsPage() {
                                         <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <RechartsPrimitive.CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
+                                <RechartsPrimitive.CartesianGrid vertical={false} stroke="rgba(0,0,0,0.08)" />
                                 <RechartsPrimitive.XAxis
                                     dataKey="date"
                                     tickFormatter={formatDateTick}
@@ -148,14 +148,14 @@ export default function AnalyticsPage() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* New conversations */}
-                        <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                        <section className="rounded-2xl border border-black/10 bg-black/[0.015] p-6">
                             <div className="mb-6">
-                                <h2 className="text-sm font-semibold text-white">Audience growth</h2>
+                                <h2 className="text-sm font-semibold text-neutral-900">Audience growth</h2>
                                 <p className="text-xs text-neutral-500 mt-0.5">{totals.newConversations} new conversation{totals.newConversations === 1 ? "" : "s"} started</p>
                             </div>
                             <ChartContainer config={audienceChartConfig} className="aspect-auto h-[220px] w-full">
                                 <RechartsPrimitive.BarChart data={data?.timeSeries}>
-                                    <RechartsPrimitive.CartesianGrid vertical={false} stroke="rgba(255,255,255,0.06)" />
+                                    <RechartsPrimitive.CartesianGrid vertical={false} stroke="rgba(0,0,0,0.08)" />
                                     <RechartsPrimitive.XAxis
                                         dataKey="date"
                                         tickFormatter={formatDateTick}
@@ -172,13 +172,13 @@ export default function AnalyticsPage() {
                         </section>
 
                         {/* Top automations */}
-                        <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                        <section className="rounded-2xl border border-black/10 bg-black/[0.015] p-6">
                             <div className="flex items-center justify-between mb-6">
                                 <div className="flex items-center gap-2">
-                                    <Trophy className="w-4 h-4 text-brand" />
-                                    <h2 className="text-sm font-semibold text-white">Top automations</h2>
+                                    <Trophy className="w-4 h-4 text-brand-dark" />
+                                    <h2 className="text-sm font-semibold text-neutral-900">Top automations</h2>
                                 </div>
-                                <span className="text-[10px] uppercase tracking-wider text-neutral-600">All-time</span>
+                                <span className="text-[10px] uppercase tracking-wider text-neutral-500">All-time</span>
                             </div>
                             {!data?.topAutomations.length ? (
                                 <p className="text-sm text-neutral-500 py-8 text-center">No automations have triggered yet.</p>
@@ -190,8 +190,8 @@ export default function AnalyticsPage() {
                                         return (
                                             <div key={a.id}>
                                                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                                                    <span className="text-sm text-neutral-300 truncate">
-                                                        <span className="text-neutral-600 font-mono-ui text-xs mr-2">#{i + 1}</span>
+                                                    <span className="text-sm text-neutral-700 truncate">
+                                                        <span className="text-neutral-400 font-mono-ui text-xs mr-2">#{i + 1}</span>
                                                         {a.name}
                                                     </span>
                                                     <span className="text-xs font-mono-ui text-neutral-500 shrink-0">
@@ -200,7 +200,7 @@ export default function AnalyticsPage() {
                                                             : `${a.triggerCount}×`}
                                                     </span>
                                                 </div>
-                                                <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
+                                                <div className="h-1.5 rounded-full bg-black/[0.06] overflow-hidden">
                                                     <div className="h-full rounded-full bg-brand" style={{ width: `${pct}%` }} />
                                                 </div>
                                             </div>
@@ -212,17 +212,17 @@ export default function AnalyticsPage() {
                     </div>
 
                     {/* Automations by channel */}
-                    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                        <h2 className="text-sm font-semibold text-white mb-6">Active automations by channel</h2>
+                    <section className="rounded-2xl border border-black/10 bg-black/[0.015] p-6">
+                        <h2 className="text-sm font-semibold text-neutral-900 mb-6">Active automations by channel</h2>
                         <div className="grid grid-cols-3 gap-4">
                             {(Object.keys(SOURCE_META) as Array<keyof typeof SOURCE_META>).map((key) => {
                                 const Icon = SOURCE_META[key].icon
                                 const count = data?.automationsBySource[key] ?? 0
                                 return (
-                                    <div key={key} className="rounded-xl border border-white/10 p-4 text-center">
+                                    <div key={key} className="rounded-xl border border-black/10 p-4 text-center">
                                         <Icon className="w-4 h-4 text-neutral-500 mx-auto mb-2" />
-                                        <p className="text-2xl font-serif-display text-white">{count}</p>
-                                        <p className="text-[11px] uppercase tracking-wider text-neutral-600 mt-1">{SOURCE_META[key].label}</p>
+                                        <p className="text-2xl font-serif-display text-neutral-900">{count}</p>
+                                        <p className="text-[11px] uppercase tracking-wider text-neutral-500 mt-1">{SOURCE_META[key].label}</p>
                                     </div>
                                 )
                             })}

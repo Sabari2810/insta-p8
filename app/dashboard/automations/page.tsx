@@ -53,8 +53,8 @@ export default function AutomationsPage() {
         setShowCreateForm(true)
     }
 
-    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-black"><div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" /></div>
-    if (!userId) return <div className="h-screen flex items-center justify-center bg-black text-neutral-500">Please log in</div>
+    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-white"><div className="w-6 h-6 border-2 border-black/10 border-t-neutral-900 rounded-full animate-spin" /></div>
+    if (!userId) return <div className="h-screen flex items-center justify-center bg-white text-neutral-500">Please log in</div>
 
     const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
     const counts = {
@@ -70,13 +70,13 @@ export default function AutomationsPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-black">
+        <div className="min-h-screen bg-white">
             <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
                 {/* Header */}
                 <div className="flex items-end justify-between gap-4 flex-wrap">
                     <div>
-                        <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Rules engine</p>
-                        <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Automations</h1>
+                        <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Rules engine</p>
+                        <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Automations</h1>
                     </div>
                     <div className="flex items-center gap-2">
                         <button
@@ -86,7 +86,7 @@ export default function AutomationsPage() {
                             }}
                             className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${
                                 showCreateForm
-                                    ? 'border border-white/20 text-white hover:border-white/40'
+                                    ? 'border border-black/15 text-neutral-900 hover:border-black/30'
                                     : 'bg-brand text-black hover:brightness-95'
                             }`}
                         >
@@ -97,22 +97,22 @@ export default function AutomationsPage() {
                 </div>
 
                 {/* Tabs — editorial underline */}
-                <div className="flex items-center gap-6 border-b border-white/10">
+                <div className="flex items-center gap-6 border-b border-black/10">
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
                             onClick={() => setActiveTab(tab.key)}
                             className={`relative flex items-center gap-2 pb-3 -mb-px font-mono-ui text-xs uppercase tracking-widest transition-colors border-b-2 ${
                                 activeTab === tab.key
-                                    ? 'text-white border-brand'
-                                    : 'text-neutral-600 border-transparent hover:text-neutral-300'
+                                    ? 'text-neutral-900 border-brand'
+                                    : 'text-neutral-500 border-transparent hover:text-neutral-700'
                             }`}
                         >
                             {tab.icon}
                             <span>{tab.label}</span>
                             {tab.count > 0 && (
                                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                                    activeTab === tab.key ? 'bg-brand text-black' : 'bg-white/10 text-neutral-400'
+                                    activeTab === tab.key ? 'bg-brand text-black' : 'bg-black/[0.06] text-neutral-500'
                                 }`}>
                                     {tab.count}
                                 </span>
@@ -123,7 +123,7 @@ export default function AutomationsPage() {
 
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (
-                    <div className="rounded-2xl border border-white/10 bg-[#0b0b0a] p-6 md:p-8 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="rounded-2xl border border-black/10 bg-white p-6 md:p-8 animate-in fade-in slide-in-from-top-2 duration-300">
                         <CreateRuleForm
                             userId={userId}
                             triggerSource={editRule ? editRule.trigger_source : activeTab}
@@ -141,7 +141,7 @@ export default function AutomationsPage() {
                 {/* Automation List */}
                 {isLoading ? (
                     <div className="flex items-center justify-center py-16">
-                        <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                        <div className="w-6 h-6 border-2 border-black/10 border-t-neutral-900 rounded-full animate-spin" />
                     </div>
                 ) : (
                     <AutomationList

@@ -30,25 +30,16 @@ export function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#ededed] selection:bg-brand selection:text-black overflow-x-hidden antialiased">
+    <div className="min-h-screen bg-white text-[#171717] selection:bg-brand selection:text-black overflow-x-hidden antialiased">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
-        .font-serif-display { font-family: 'Instrument Serif', Georgia, serif; }
-        .font-mono-ui { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .marquee-track { animation: marquee 30s linear infinite; }
         @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         .fade-up { animation: fade-up .7s cubic-bezier(.2,.7,.2,1) both; }
-        .grain::before {
-          content: ""; position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: .04;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
       `}</style>
 
-      <div className="grain" />
-
       {/* Nav */}
-      <nav className="relative z-50 flex items-center justify-between px-5 md:px-10 h-16 border-b border-white/[0.08]">
+      <nav className="relative z-50 flex items-center justify-between px-5 md:px-10 h-16 border-b border-black/[0.08]">
         <div className="flex items-center gap-2.5">
           <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full" />
           <span className="font-mono-ui text-sm font-bold tracking-tight">Wingman</span>
@@ -57,14 +48,14 @@ export function LandingPage() {
           {process.env.NODE_ENV === "development" && (
             <button
               onClick={handleTestLogin}
-              className="font-mono-ui text-xs font-bold text-brand border border-brand/30 rounded-full px-4 py-1.5 hover:bg-brand/10 transition-colors"
+              className="font-mono-ui text-xs font-bold text-brand-dark border border-brand/50 rounded-full px-4 py-1.5 hover:bg-brand/10 transition-colors"
             >
               Dev Login
             </button>
           )}
           <button
             onClick={handleLogin}
-            className="font-mono-ui text-xs font-bold bg-white text-black rounded-full px-4 py-1.5 hover:bg-brand transition-colors"
+            className="font-mono-ui text-xs font-bold bg-[#171717] text-white rounded-full px-4 py-1.5 hover:bg-brand hover:text-black transition-colors"
           >
             Log in
           </button>
@@ -83,11 +74,11 @@ export function LandingPage() {
           <h1 className="fade-up font-serif-display text-[15vw] md:text-[7.5rem] leading-[0.95] tracking-tight" style={{ animationDelay: "80ms" }}>
             Your DMs,
             <br />
-            <span className="italic text-brand">on autopilot.</span>
+            <span className="italic text-brand-dark">on autopilot.</span>
           </h1>
 
           <div className="fade-up mt-10 flex flex-col md:flex-row md:items-end gap-8 md:gap-16" style={{ animationDelay: "160ms" }}>
-            <p className="text-neutral-400 text-base md:text-lg max-w-md leading-relaxed">
+            <p className="text-neutral-500 text-base md:text-lg max-w-md leading-relaxed">
               Comment-to-DM funnels, keyword triggers, story reactions, and a live inbox —
               automation that converts, running on your own dedicated setup, never shared with anyone else's data.
             </p>
@@ -102,7 +93,7 @@ export function LandingPage() {
               {process.env.NODE_ENV === "development" && (
                 <button
                   onClick={handleTestLogin}
-                  className="group flex items-center gap-2 font-mono-ui text-sm font-bold text-brand border border-brand/25 px-7 py-4 rounded-full hover:bg-brand/10 active:scale-[0.98] transition-all"
+                  className="group flex items-center gap-2 font-mono-ui text-sm font-bold text-brand-dark border border-brand/50 px-7 py-4 rounded-full hover:bg-brand/10 active:scale-[0.98] transition-all"
                 >
                   <Terminal className="w-4 h-4" />
                   Dev Login
@@ -113,13 +104,13 @@ export function LandingPage() {
         </section>
 
         {/* Marquee */}
-        <div className="border-y border-white/[0.08] py-3 overflow-hidden">
-          <div className="marquee-track flex whitespace-nowrap font-mono-ui text-xs uppercase tracking-[0.2em] text-neutral-600 gap-8 w-max">
+        <div className="border-y border-black/[0.08] py-3 overflow-hidden">
+          <div className="marquee-track flex whitespace-nowrap font-mono-ui text-xs uppercase tracking-[0.2em] text-neutral-500 gap-8 w-max">
             {Array.from({ length: 2 }).map((_, copy) => (
               <div key={copy} className="flex gap-8">
                 {["comment → DM", "keyword triggers", "story reactions", "live inbox", "ice breakers", "follow gate", "quick replies", "media attachments", "public + private replies"].map((t) => (
                   <span key={t} className="flex items-center gap-8">
-                    {t} <span className="text-brand">✦</span>
+                    {t} <span className="text-brand-dark">✦</span>
                   </span>
                 ))}
               </div>
@@ -133,7 +124,7 @@ export function LandingPage() {
             <h2 className="font-serif-display text-4xl md:text-5xl">Everything the paid tools do.</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-px bg-white/[0.08] border border-white/[0.08]">
+          <div className="grid md:grid-cols-3 gap-px bg-black/[0.08] border border-black/[0.08]">
             <Feature icon={<MessageCircle className="w-4 h-4" />} title="Comment → DM funnels"
               desc="Keyword or reply-all triggers on any post. Choose DM only, public reply only, or both — with your own rotating public replies." />
             <Feature icon={<Send className="w-4 h-4" />} title="DM keyword automation"
@@ -154,8 +145,8 @@ export function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.08] px-5 md:px-10 py-8 flex items-center justify-center">
-        <span className="font-mono-ui text-[11px] text-neutral-600">
+      <footer className="border-t border-black/[0.08] px-5 md:px-10 py-8 flex items-center justify-center">
+        <span className="font-mono-ui text-[11px] text-neutral-500">
           Wingman - Instagram automation.
         </span>
       </footer>
@@ -165,11 +156,11 @@ export function LandingPage() {
 
 function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
-    <div className="bg-[#0a0a0a] p-7 group hover:bg-[#0f0f0e] transition-colors">
-      <div className="w-9 h-9 rounded-lg border border-white/10 flex items-center justify-center text-neutral-500 group-hover:text-brand group-hover:border-brand/30 transition-colors mb-5">
+    <div className="bg-white p-7 group hover:bg-neutral-50 transition-colors">
+      <div className="w-9 h-9 rounded-lg border border-black/10 flex items-center justify-center text-neutral-500 group-hover:text-brand-dark group-hover:border-brand/50 transition-colors mb-5">
         {icon}
       </div>
-      <h3 className="font-mono-ui text-sm font-bold text-white mb-2">{title}</h3>
+      <h3 className="font-mono-ui text-sm font-bold text-neutral-900 mb-2">{title}</h3>
       <p className="text-[13px] text-neutral-500 leading-relaxed">{desc}</p>
     </div>
   )

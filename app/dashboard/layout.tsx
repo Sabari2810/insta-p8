@@ -15,18 +15,18 @@ export default function DashboardLayout({
 
     if (isLoading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-black text-white">
-                <Loader2 className="h-8 w-8 animate-spin text-white" />
+            <div className="flex h-screen items-center justify-center bg-white text-neutral-900">
+                <Loader2 className="h-8 w-8 animate-spin text-neutral-900" />
             </div>
         )
     }
 
     return (
-        <div className="flex min-h-screen bg-black text-foreground">
+        <div className="flex min-h-screen bg-white text-foreground">
             {/* Desktop Sidebar */}
             <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
                 <Sidebar
-                    className="h-full border-r border-white/10 bg-black/50 backdrop-blur-xl"
+                    className="h-full border-r border-black/10 bg-white/70 backdrop-blur-xl"
                     username={username || "User"}
                     profilePic={profilePic}
                     onLogout={logout}
@@ -36,8 +36,8 @@ export default function DashboardLayout({
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col md:pl-64 transition-all duration-300">
                 {/* Mobile Header (Visible only on small screens) */}
-                <header className="md:hidden h-16 border-b border-white/10 bg-black flex items-center justify-between px-4 sticky top-0 z-40">
-                    <span className="font-serif-display text-xl text-white">Wingman</span>
+                <header className="md:hidden h-16 border-b border-black/10 bg-white flex items-center justify-between px-4 sticky top-0 z-40">
+                    <span className="font-serif-display text-xl text-neutral-900">Wingman</span>
                     <MobileNav username={username || "User"} profilePic={profilePic} onLogout={logout} />
                 </header>
 

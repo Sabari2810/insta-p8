@@ -91,7 +91,7 @@ export default function DashboardPage() {
     if (isSessionLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
-                <Loader2 className="w-8 h-8 text-white/20 animate-spin" />
+                <Loader2 className="w-8 h-8 text-neutral-300 animate-spin" />
             </div>
         )
     }
@@ -101,8 +101,8 @@ export default function DashboardPage() {
             {/* Welcome Section */}
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-600 mb-2">Overview</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Hey, {username}.</h1>
+                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Overview</p>
+                    <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Hey, {username}.</h1>
                     <p className="text-neutral-500 text-sm mt-3">Here's what your automations did while you were away.</p>
                 </div>
             </div>
@@ -113,45 +113,45 @@ export default function DashboardPage() {
                     title="Total Automations"
                     value={stats?.metrics.totalAutomations.toString() || "0"}
                     trend="Active"
-                    icon={<Zap className="w-5 h-5 text-brand" />}
+                    icon={<Zap className="w-5 h-5 text-brand-dark" />}
                 />
                 <StatCard
                     title="Messages Sent"
                     value={stats?.metrics.messagesSent.toString() || "0"}
                     trend="Lifetime"
-                    icon={<MessageCircle className="w-5 h-5 text-brand" />}
+                    icon={<MessageCircle className="w-5 h-5 text-brand-dark" />}
                 />
                 <StatCard
                     title="Active Triggers"
                     value={stats?.metrics.activeTriggers.toString() || "0"}
                     trend="Running"
-                    icon={<Activity className="w-5 h-5 text-brand" />}
+                    icon={<Activity className="w-5 h-5 text-brand-dark" />}
                 />
                 <StatCard
                     title="Audience Reached"
                     value={stats?.metrics.audienceReached.toString() || "0"}
                     trend="Unique Users"
-                    icon={<Users className="w-5 h-5 text-brand" />}
+                    icon={<Users className="w-5 h-5 text-brand-dark" />}
                 />
             </div>
 
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <Card className="p-6 bg-[#0b0b0a] border-white/10">
-                    <h3 className="font-serif-display text-2xl text-white mb-5">Recent activity</h3>
+                <Card className="p-6 bg-white border-black/10">
+                    <h3 className="font-serif-display text-2xl text-neutral-900 mb-5">Recent activity</h3>
                     <div className="space-y-4">
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
                                 <Link
                                     key={msg.id}
                                     href={`/dashboard/inbox?conversation=${msg.conversation_id}`}
-                                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-colors"
+                                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-black/[0.03] transition-colors"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-brand/15 flex items-center justify-center text-brand-dark shrink-0">
                                         <MessageCircle className="w-5 h-5" />
                                     </div>
                                     <div className="min-w-0">
-                                        <p className="text-sm text-white font-medium truncate">
+                                        <p className="text-sm text-neutral-900 font-medium truncate">
                                             {activityLabel(msg)}
                                         </p>
                                         <p className="text-xs text-muted-foreground truncate w-full max-w-[300px]">{activityPreview(msg)}</p>
@@ -169,8 +169,8 @@ export default function DashboardPage() {
                     </div>
                 </Card>
 
-                <Card className="p-6 bg-[#0b0b0a] border-white/10">
-                    <h3 className="font-serif-display text-2xl text-white mb-5">Quick actions</h3>
+                <Card className="p-6 bg-white border-black/10">
+                    <h3 className="font-serif-display text-2xl text-neutral-900 mb-5">Quick actions</h3>
                     <div className="grid grid-cols-2 gap-4">
                         <QuickAction href="/dashboard/automations?new=1" icon={<Zap className="w-6 h-6" />} label="New Rule" />
                         <QuickAction href="/dashboard/inbox" icon={<MessageSquare className="w-6 h-6" />} label="View Inbox" />
@@ -187,23 +187,23 @@ function QuickAction({ href, icon, label }: { href: string, icon: React.ReactNod
     return (
         <Link
             href={href}
-            className="h-24 rounded-xl border border-white/10 flex flex-col items-center justify-center hover:bg-white/5 hover:border-white/20 transition-colors group"
+            className="h-24 rounded-xl border border-black/10 flex flex-col items-center justify-center hover:bg-black/[0.03] hover:border-black/20 transition-colors group"
         >
-            <span className="text-muted-foreground group-hover:text-brand mb-2 transition-colors">{icon}</span>
-            <span className="text-xs font-medium text-muted-foreground group-hover:text-white transition-colors">{label}</span>
+            <span className="text-muted-foreground group-hover:text-brand-dark mb-2 transition-colors">{icon}</span>
+            <span className="text-xs font-medium text-muted-foreground group-hover:text-neutral-900 transition-colors">{label}</span>
         </Link>
     )
 }
 
 function StatCard({ title, value, trend, icon }: { title: string, value: string, trend: string, icon: React.ReactNode }) {
     return (
-        <div className="p-6 rounded-2xl border border-white/10 bg-[#0b0b0a] hover:border-white/20 transition-colors group">
+        <div className="p-6 rounded-2xl border border-black/10 bg-white hover:border-black/20 transition-colors group">
             <div className="flex items-start justify-between">
                 {icon}
-                <span className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-600">{trend}</span>
+                <span className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500">{trend}</span>
             </div>
             <div className="mt-6">
-                <p className="font-serif-display text-5xl text-white leading-none">{value}</p>
+                <p className="font-serif-display text-5xl text-neutral-900 leading-none">{value}</p>
                 <p className="font-mono-ui text-[10px] text-neutral-500 uppercase tracking-[0.2em] mt-3">{title}</p>
             </div>
         </div>
