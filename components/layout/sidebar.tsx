@@ -55,7 +55,7 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
               )}
             >
               {active && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-neutral-900" />}
-              <div className="flex items-center gap-3">
+              <div className="flex gap-3">
                 <Icon className={cn("w-4 h-4 shrink-0", active ? "text-neutral-900" : "")} strokeWidth={active ? 2.2 : 1.8} />
                 <span className={active ? "font-medium" : ""}>{label}</span>
               </div>
@@ -78,7 +78,7 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
           )}
         >
           {pathname === "/dashboard/settings" && <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-neutral-900" />}
-          <div className="flex items-center gap-3">
+          <div className="flex gap-3">
             <Settings className="w-4 h-4 shrink-0" strokeWidth={1.8} />
             <span>Settings</span>
           </div>
