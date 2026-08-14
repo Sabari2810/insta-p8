@@ -57,11 +57,8 @@ function activityPreview(item: DashboardStats["recentActivity"][number]) {
     return item.content
 }
 
-function activityTimestamp(iso: string) {
-    const date = new Date(iso)
-    const isToday = date.toDateString() === new Date().toDateString()
-    const time = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    return isToday ? time : `${date.toLocaleDateString([], { month: "short", day: "numeric" })}, ${time}`
+function activityClock(iso: string) {
+    return new Date(iso).toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" })
 }
 
 export default function DashboardPage() {
@@ -157,27 +154,28 @@ export default function DashboardPage() {
             {/* Recent Activity */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card className="p-6 bg-white border-black/10">
-                    <h3 className="font-serif-display text-2xl text-neutral-900">Recent activity</h3>
-                    <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-1">
+                        <h3 className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold">Recent activity</h3>
+                        <Link href="/inbox" className="text-xs font-medium text-brand hover:underline">View all</Link>
+                    </div>
+                    <div>
                         {stats?.recentActivity && stats.recentActivity.length > 0 ? (
                             stats.recentActivity.map((msg) => (
                                 <Link
                                     key={msg.id}
                                     href={`/inbox?conversation=${msg.conversation_id}`}
-                                    className="flex items-center gap-4 p-3 rounded-lg hover:bg-black/[0.03] transition-colors"
+                                    className="flex items-start gap-4 py-3.5 border-b border-black/5 last:border-b-0 hover:bg-black/[0.02] transition-colors -mx-2 px-2 rounded-md"
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
-                                        <MessageCircle className="w-5 h-5" />
-                                    </div>
-                                    <div className="min-w-0">
-                                        <p className="text-sm text-neutral-900 font-medium truncate">
+                                    <span className="font-mono-ui text-xs text-neutral-400 tabular-nums shrink-0 pt-0.5 w-16">
+                                        {activityClock(msg.created_at)}
+                                    </span>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-neutral-900 truncate">
                                             {activityLabel(msg)}
                                         </p>
-                                        <p className="text-xs text-muted-foreground truncate w-full max-w-[300px]">{activityPreview(msg)}</p>
+                                        <p className="text-xs text-neutral-400 truncate mt-0.5">{activityPreview(msg)}</p>
                                     </div>
-                                    <div className="ml-auto text-[10px] text-muted-foreground whitespace-nowrap">
-                                        {activityTimestamp(msg.created_at)}
-                                    </div>
+                                    <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-900 shrink-0 pt-0.5">Sent</span>
                                 </Link>
                             ))
                         ) : (
