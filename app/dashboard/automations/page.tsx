@@ -75,32 +75,31 @@ export default function AutomationsPage() {
     return (
         <div className="min-h-screen bg-[#f6f5f3]">
             {/* Header */}
-            <div className="flex items-end px-12 py-10 bg-white justify-between gap-4 flex-wrap">
-                <div>
-                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Rules engine</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Automations</h1>
+            <div className="px-12 py-10 bg-white">
+                <div className="flex items-end justify-between gap-4 flex-wrap">
+                    <div>
+                        <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Rules engine</p>
+                        <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Automations</h1>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => {
+                                if (showCreateForm) setEditRule(null)
+                                setShowCreateForm(!showCreateForm)
+                            }}
+                            className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${showCreateForm
+                                ? 'border border-black/15 text-neutral-900 hover:border-black/30'
+                                : 'bg-brand text-white hover:brightness-95'
+                                }`}
+                        >
+                            <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
+                            {showCreateForm ? 'Close' : 'New Rule'}
+                        </button>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => {
-                            if (showCreateForm) setEditRule(null)
-                            setShowCreateForm(!showCreateForm)
-                        }}
-                        className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${showCreateForm
-                            ? 'border border-black/15 text-neutral-900 hover:border-black/30'
-                            : 'bg-brand text-white hover:brightness-95'
-                            }`}
-                    >
-                        <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
-                        {showCreateForm ? 'Close' : 'New Rule'}
-                    </button>
-                </div>
-            </div>
-            <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
-
 
                 {/* Tabs — editorial underline */}
-                <div className="flex items-center gap-6 border-b border-black/10">
+                <div className="flex items-center gap-6 border-b border-black/10 mt-8">
                     {tabs.map((tab) => (
                         <button
                             key={tab.key}
@@ -121,6 +120,8 @@ export default function AutomationsPage() {
                         </button>
                     ))}
                 </div>
+            </div>
+            <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
 
                 {/* Create Form (Collapsible) */}
                 {showCreateForm && (
