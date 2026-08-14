@@ -4,13 +4,14 @@ import type React from "react"
 import { cn } from "@/lib/utils"
 import {
   Workflow, Home, LogOut, Settings, LineChart,
-  Inbox, Sparkles,
+  Inbox, Sparkles, History,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 const NAV = [
   { href: "/dashboard", icon: Home, label: "Dashboard" },
+  { href: "/activity", icon: History, label: "Activity" },
   { href: "/automations", icon: Workflow, label: "Automations" },
   { href: "/inbox", icon: Inbox, label: "Inbox" },
   { href: "/ice-breakers", icon: Sparkles, label: "Ice breakers" },

@@ -106,12 +106,12 @@ export function AutomationList({ automations, onDelete, onEdit, onChanged, userI
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="border-b border-black/10">
-              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-5 py-3">Automation</th>
-              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-5 py-3">Trigger</th>
-              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-5 py-3">Content</th>
-              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-5 py-3">Delay</th>
-              <th className="text-right font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-5 py-3">Sent</th>
-              <th className="text-right font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-5 py-3">Status</th>
+              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-6 py-3">Automation</th>
+              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-6 py-3">Trigger</th>
+              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-6 py-3">Content</th>
+              <th className="text-left font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-6 py-3">Delay</th>
+              <th className="text-right font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-6 py-3">Sent</th>
+              <th className="text-right font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-6 py-3">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -144,17 +144,17 @@ function AutomationRow({ rule, onDelete, onEdit, onToggle, onDuplicate }: {
 
   return (
     <tr className="group border-b border-black/5 last:border-b-0 hover:bg-black/[0.015] transition-colors">
-      <td className="px-5 py-4 align-top">
+      <td className="px-6 py-4 align-top">
         <p className="text-sm font-bold text-neutral-900">{rule.name}</p>
         <p className="text-xs text-neutral-400 mt-0.5">{subtitleLabel(rule)}</p>
       </td>
-      <td className="px-5 py-4 align-top text-xs text-neutral-500 font-mono-ui whitespace-nowrap">{triggerLabel(rule)}</td>
-      <td className="px-5 py-4 align-top text-xs font-medium text-amber-600 whitespace-nowrap">{contentLabel(rule)}</td>
-      <td className="px-5 py-4 align-top text-xs text-neutral-500 whitespace-nowrap">{delayLabel(rule)}</td>
-      <td className="px-5 py-4 align-top text-xs text-neutral-700 text-right tabular-nums whitespace-nowrap">
+      <td className="px-6 py-4 align-top text-xs text-neutral-500 font-mono-ui whitespace-nowrap">{triggerLabel(rule)}</td>
+      <td className="px-6 py-4 align-top text-xs font-medium text-amber-600 whitespace-nowrap">{contentLabel(rule)}</td>
+      <td className="px-6 py-4 align-top text-xs text-neutral-500 whitespace-nowrap">{delayLabel(rule)}</td>
+      <td className="px-6 py-4 align-top text-xs text-neutral-700 text-right tabular-nums whitespace-nowrap">
         {(rule.trigger_count || 0).toLocaleString()}
       </td>
-      <td className="px-5 py-4 align-top">
+      <td className="px-6 py-4 align-top">
         <div className="flex items-center justify-end gap-1.5">
           {confirming ? (
             <div className="flex items-center gap-1 animate-in fade-in">
