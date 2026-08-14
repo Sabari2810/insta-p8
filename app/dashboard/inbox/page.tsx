@@ -45,7 +45,7 @@ export default function InboxPage() {
     }
 
     return (
-        <div className="overflow-hidden border border-black/10 bg-white/70 backdrop-blur-xl shadow-2xl flex relative">
+        <div className="h-full overflow-hidden border border-black/10 bg-white/70 backdrop-blur-xl shadow-2xl flex relative">
             {/* Left Sidebar: Conversation List */}
             <div className={cn(
                 "w-full md:w-[350px] flex-shrink-0 border-r border-black/10 bg-white/40 absolute md:static inset-0 z-10 transition-transform duration-300 md:translate-x-0 h-full",
