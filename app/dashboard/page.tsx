@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, Loader2, MessageSquare, Snowflake, BarChart3 } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, Loader2, MessageSquare, Snowflake, BarChart3, ArrowRight } from "lucide-react"
 
 interface DashboardStats {
     metrics: {
@@ -67,6 +67,9 @@ export default function DashboardPage() {
     const { username, userId, isLoading: isSessionLoading } = useInstagramSession()
     const [stats, setStats] = useState<DashboardStats | null>(null)
     const [loading, setLoading] = useState(true)
+    // Starts null so the server-rendered markup and the first client render match; the
+    // actual clock only appears once mounted, ticking every second after that.
+    const [now, setNow] = useState<Date | null>(null)
 
     useEffect(() => {
         if (!userId) return
@@ -88,6 +91,12 @@ export default function DashboardPage() {
         fetchStats()
     }, [userId])
 
+    useEffect(() => {
+        setNow(new Date())
+        const interval = setInterval(() => setNow(new Date()), 1000)
+        return () => clearInterval(interval)
+    }, [])
+
     if (isSessionLoading || loading) {
         return (
             <div className="flex items-center justify-center min-h-[50vh]">
@@ -99,12 +108,22 @@ export default function DashboardPage() {
     return (
         <div className="p-8 space-y-8 animate-in fade-in duration-700">
             {/* Welcome Section */}
-            <div className="flex items-center justify-between">
+            <div className="rounded-2xl bg-neutral-900 px-8 py-7 flex items-center justify-between gap-6 flex-wrap">
                 <div>
-                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Overview</p>
-                    <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Hey, {username}.</h1>
-                    <p className="text-neutral-500 text-sm mt-3">Here's what your automations did while you were away.</p>
+                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-400 mb-2">Overview</p>
+                    <h1 className="font-serif-display text-4xl md:text-5xl text-white leading-none">Hey, {username}.</h1>
+                    <p className="text-neutral-400 text-sm mt-3">Here's what your automations did while you were away.</p>
                 </div>
+                {now && (
+                    <div className="text-right shrink-0">
+                        <p className="font-mono-ui text-2xl text-white tabular-nums">
+                            {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                        </p>
+                        <p className="text-neutral-400 text-xs mt-1">
+                            {now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" })}
+                        </p>
+                    </div>
+                )}
             </div>
 
             {/* Stats Grid */}
@@ -171,11 +190,11 @@ export default function DashboardPage() {
 
                 <Card className="p-6 bg-white border-black/10">
                     <h3 className="font-serif-display text-2xl text-neutral-900 mb-5">Quick actions</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                        <QuickAction href="/dashboard/automations?new=1" icon={<Zap className="w-6 h-6" />} label="New Rule" />
-                        <QuickAction href="/dashboard/inbox" icon={<MessageSquare className="w-6 h-6" />} label="View Inbox" />
-                        <QuickAction href="/dashboard/ice-breakers" icon={<Snowflake className="w-6 h-6" />} label="Ice Breakers" />
-                        <QuickAction href="/dashboard/analytics" icon={<BarChart3 className="w-6 h-6" />} label="Analytics" />
+                    <div className="space-y-2">
+                        <QuickActionPrimary href="/dashboard/automations?new=1" icon={<Zap className="w-4 h-4" />} label="New automation" sub="Comment, DM, or story trigger" />
+                        <QuickActionRow href="/dashboard/inbox" icon={<MessageSquare className="w-4 h-4" />} label="View inbox" />
+                        <QuickActionRow href="/dashboard/ice-breakers" icon={<Snowflake className="w-4 h-4" />} label="Ice breakers" />
+                        <QuickActionRow href="/dashboard/analytics" icon={<BarChart3 className="w-4 h-4" />} label="Analytics" />
                     </div>
                 </Card>
             </div>
@@ -183,14 +202,31 @@ export default function DashboardPage() {
     )
 }
 
-function QuickAction({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
+function QuickActionPrimary({ href, icon, label, sub }: { href: string, icon: React.ReactNode, label: string, sub: string }) {
     return (
         <Link
             href={href}
-            className="h-24 rounded-xl border border-black/10 flex flex-col items-center justify-center hover:bg-black/[0.03] hover:border-black/20 transition-colors group"
+            className="flex items-center gap-3 rounded-xl bg-neutral-900 hover:bg-neutral-800 px-4 py-3.5 transition-colors group"
         >
-            <span className="text-muted-foreground group-hover:text-neutral-900 mb-2 transition-colors">{icon}</span>
-            <span className="text-xs font-medium text-muted-foreground group-hover:text-neutral-900 transition-colors">{label}</span>
+            <span className="text-white shrink-0">{icon}</span>
+            <span className="flex-1 min-w-0">
+                <span className="block text-sm font-semibold text-white">{label}</span>
+                <span className="block text-xs text-neutral-400 mt-0.5">{sub}</span>
+            </span>
+            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+        </Link>
+    )
+}
+
+function QuickActionRow({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
+    return (
+        <Link
+            href={href}
+            className="flex items-center gap-3 rounded-xl border border-black/10 hover:bg-black/[0.03] hover:border-black/20 px-4 py-3.5 transition-colors group"
+        >
+            <span className="text-muted-foreground group-hover:text-neutral-900 transition-colors shrink-0">{icon}</span>
+            <span className="flex-1 text-sm font-medium text-neutral-900">{label}</span>
+            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-neutral-900 transition-all shrink-0" />
         </Link>
     )
 }
