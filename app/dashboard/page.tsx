@@ -189,7 +189,7 @@ function QuickAction({ href, icon, label }: { href: string, icon: React.ReactNod
             href={href}
             className="h-24 rounded-xl border border-black/10 flex flex-col items-center justify-center hover:bg-black/[0.03] hover:border-black/20 transition-colors group"
         >
-            <span className="text-muted-foreground group-hover:text-brand-dark mb-2 transition-colors">{icon}</span>
+            <span className="text-muted-foreground group-hover:text-neutral-900 mb-2 transition-colors">{icon}</span>
             <span className="text-xs font-medium text-muted-foreground group-hover:text-neutral-900 transition-colors">{label}</span>
         </Link>
     )

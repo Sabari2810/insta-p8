@@ -157,7 +157,7 @@ export function LandingPage() {
 function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
   return (
     <div className="bg-white p-7 group hover:bg-neutral-50 transition-colors">
-      <div className="w-9 h-9 rounded-lg border border-black/10 flex items-center justify-center text-neutral-500 group-hover:text-brand-dark group-hover:border-brand/50 transition-colors mb-5">
+      <div className="w-9 h-9 rounded-lg border border-black/10 flex items-center justify-center text-neutral-500 group-hover:text-neutral-900 group-hover:border-black/30 transition-colors mb-5">
         {icon}
       </div>
       <h3 className="font-mono-ui text-sm font-bold text-neutral-900 mb-2">{title}</h3>
