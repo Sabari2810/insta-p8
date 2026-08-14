@@ -53,8 +53,8 @@ export default function AutomationsPage() {
         setShowCreateForm(true)
     }
 
-    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-white"><div className="w-6 h-6 border-2 border-black/10 border-t-neutral-900 rounded-full animate-spin" /></div>
-    if (!userId) return <div className="h-screen flex items-center justify-center bg-white text-neutral-500">Please log in</div>
+    if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3]"><div className="w-6 h-6 border-2 border-black/10 border-t-neutral-900 rounded-full animate-spin" /></div>
+    if (!userId) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3] text-neutral-500">Please log in</div>
 
     const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
     const counts = {
@@ -70,7 +70,7 @@ export default function AutomationsPage() {
     ]
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[#f6f5f3]">
             <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 space-y-8">
                 {/* Header */}
                 <div className="flex items-end justify-between gap-4 flex-wrap">

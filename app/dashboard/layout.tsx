@@ -15,14 +15,14 @@ export default function DashboardLayout({
 
     if (isLoading) {
         return (
-            <div className="flex h-screen items-center justify-center bg-white text-neutral-900">
+            <div className="flex h-screen items-center justify-center bg-[#f6f5f3] text-neutral-900">
                 <Loader2 className="h-8 w-8 animate-spin text-neutral-900" />
             </div>
         )
     }
 
     return (
-        <div className="flex min-h-screen bg-white text-foreground">
+        <div className="flex min-h-screen bg-[#f6f5f3] text-foreground">
             {/* Desktop Sidebar */}
             <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-50">
                 <Sidebar

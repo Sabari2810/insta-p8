@@ -6,7 +6,7 @@
 
 :root {
   /* Minimal B/W Theme — light */
-  --background: oklch(0.985 0 0); /* Near-white */
+  --background: #f6f5f3; /* Dashboard canvas */
   --foreground: oklch(0.15 0 0); /* Near-black */
   --accent-green: #c3fb3a;
   --accent-green-dark: #4d6b0f; /* Same hue, darkened for text on light backgrounds — the raw neon green fails contrast as text on white */
