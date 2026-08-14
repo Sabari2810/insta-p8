@@ -112,7 +112,6 @@ export default function DashboardPage() {
                 <div>
                     <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-400 mb-2">Overview</p>
                     <h1 className="font-serif-display text-4xl md:text-5xl text-black leading-none">Hey, {username}.</h1>
-                    <p className="text-neutral-400 text-sm mt-3">Here's what your automations did while you were away.</p>
                 </div>
                 {now && (
                     <div className="text-right shrink-0">
