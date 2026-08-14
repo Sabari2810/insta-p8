@@ -83,12 +83,12 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
 
       {/* Account */}
       <div className="px-3 pb-4">
-        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-black/[0.08] group">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-500 p-[1.5px] shrink-0">
-            <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+        <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-sm border border-black/[0.08] group">
+          <div className="w-7 h-7 rounded-sm bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-500 p-[1.5px] shrink-0">
+            <div className="w-full h-full rounded-sm bg-white flex items-center justify-center overflow-hidden">
               {profilePic ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={profilePic} alt={username} className="w-full h-full rounded-full object-cover" />
+                <img src={profilePic} alt={username} className="w-full h-full rounded-sm object-cover" />
               ) : (
                 <span className="text-[10px] font-bold text-neutral-900">{username.charAt(0).toUpperCase()}</span>
               )}
