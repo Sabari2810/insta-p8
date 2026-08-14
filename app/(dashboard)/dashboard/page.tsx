@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, MessageSquare, Snowflake, BarChart3, ArrowRight } from "lucide-react"
+import { Activity, Users, MessageCircle, Zap, ArrowRight } from "lucide-react"
 import { Spinner } from "@/components/ui/spinner"
 
 interface DashboardStats {
@@ -57,8 +57,11 @@ function activityPreview(item: DashboardStats["recentActivity"][number]) {
     return item.content
 }
 
-function activityClock(iso: string) {
-    return new Date(iso).toLocaleTimeString([], { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" })
+function activityTimestamp(iso: string) {
+    const date = new Date(iso)
+    const isToday = date.toDateString() === new Date().toDateString()
+    const time = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    return isToday ? time : `${date.toLocaleDateString([], { month: "short", day: "numeric" })}, ${time}`
 }
 
 export default function DashboardPage() {
@@ -166,16 +169,15 @@ export default function DashboardPage() {
                                     href={`/inbox?conversation=${msg.conversation_id}`}
                                     className="flex items-start gap-4 py-3.5 border-b border-black/5 last:border-b-0 hover:bg-black/[0.02] transition-colors -mx-2 px-2 rounded-md"
                                 >
-                                    <span className="font-mono-ui text-xs text-neutral-400 tabular-nums shrink-0 pt-0.5 w-16">
-                                        {activityClock(msg.created_at)}
-                                    </span>
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-semibold text-neutral-900 truncate">
                                             {activityLabel(msg)}
                                         </p>
                                         <p className="text-xs text-neutral-400 truncate mt-0.5">{activityPreview(msg)}</p>
                                     </div>
-                                    <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-900 shrink-0 pt-0.5">Sent</span>
+                                    <span className="text-xs text-neutral-400 shrink-0 pt-0.5 whitespace-nowrap">
+                                        {activityTimestamp(msg.created_at)}
+                                    </span>
                                 </Link>
                             ))
                         ) : (
@@ -187,12 +189,12 @@ export default function DashboardPage() {
                 </Card>
 
                 <Card className="p-6 bg-white border-black/10">
-                    <h3 className="font-serif-display text-2xl text-neutral-900">Quick actions</h3>
+                    <h3 className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500 font-semibold mb-4">Quick actions</h3>
                     <div className="space-y-2">
-                        <QuickActionPrimary href="/automations?new=1" icon={<Zap className="w-4 h-4" />} label="New automation" sub="Comment, DM, or story trigger" />
-                        <QuickActionRow href="/inbox" icon={<MessageSquare className="w-4 h-4" />} label="View inbox" />
-                        <QuickActionRow href="/ice-breakers" icon={<Snowflake className="w-4 h-4" />} label="Ice breakers" />
-                        <QuickActionRow href="/analytics" icon={<BarChart3 className="w-4 h-4" />} label="Analytics" />
+                        <QuickActionPrimary href="/automations?new=1" label="New automation" sub="Comment, DM, or story trigger" />
+                        <QuickActionRow href="/inbox" label="View inbox" sub="Reply to conversations" />
+                        <QuickActionRow href="/ice-breakers" label="Ice breakers" sub="Set quick-start prompts" />
+                        <QuickActionRow href="/analytics" label="Analytics" sub="Track performance" />
                     </div>
                 </Card>
             </div>
@@ -200,30 +202,31 @@ export default function DashboardPage() {
     )
 }
 
-function QuickActionPrimary({ href, icon, label, sub }: { href: string, icon: React.ReactNode, label: string, sub: string }) {
+function QuickActionPrimary({ href, label, sub }: { href: string, label: string, sub: string }) {
     return (
         <Link
             href={href}
             className="flex items-center gap-3 rounded-xl bg-brand hover:brightness-110 px-4 py-3.5 transition-colors group"
         >
-            <span className="text-white shrink-0">{icon}</span>
             <span className="flex-1 min-w-0">
                 <span className="block text-sm font-semibold text-white">{label}</span>
-                <span className="block text-xs text-neutral-400 mt-0.5">{sub}</span>
+                <span className="block text-xs text-white/70 mt-0.5">{sub}</span>
             </span>
-            <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
+            <ArrowRight className="w-4 h-4 text-white/70 group-hover:translate-x-0.5 transition-transform shrink-0" />
         </Link>
     )
 }
 
-function QuickActionRow({ href, icon, label }: { href: string, icon: React.ReactNode, label: string }) {
+function QuickActionRow({ href, label, sub }: { href: string, label: string, sub: string }) {
     return (
         <Link
             href={href}
             className="flex items-center gap-3 rounded-xl border border-black/10 hover:bg-brand/[0.06] hover:border-brand/30 px-4 py-3.5 transition-colors group"
         >
-            <span className="text-muted-foreground group-hover:text-brand transition-colors shrink-0">{icon}</span>
-            <span className="flex-1 text-sm font-medium text-neutral-900">{label}</span>
+            <span className="flex-1 min-w-0">
+                <span className="block text-sm font-semibold text-neutral-900">{label}</span>
+                <span className="block text-xs text-neutral-400 mt-0.5">{sub}</span>
+            </span>
             <ArrowRight className="w-4 h-4 text-neutral-400 group-hover:translate-x-0.5 group-hover:text-brand transition-all shrink-0" />
         </Link>
     )
