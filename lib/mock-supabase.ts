@@ -29,6 +29,18 @@ const messages: Row[] = [
   { id: "msg-8", user_id: DEMO_USER_ID, conversation_id: "conv-1", content: "Thank you so much!!", created_at: isoDaysAgo(3), is_from_instagram: true, source: "customer", attachment_type: null },
   { id: "msg-9", user_id: DEMO_USER_ID, conversation_id: "conv-2", content: "Following up on our chat", created_at: isoDaysAgo(5), is_from_instagram: false, source: "manual", attachment_type: null },
   { id: "msg-10", user_id: DEMO_USER_ID, conversation_id: "conv-4", content: "[ig_reel]", created_at: isoDaysAgo(8), is_from_instagram: true, source: "customer", attachment_type: "ig_reel" },
+  { id: "msg-11", user_id: DEMO_USER_ID, conversation_id: "conv-3", content: "Here's the discount code!", created_at: isoDaysAgo(0, 9), is_from_instagram: false, source: "automation", attachment_type: null },
+  { id: "msg-12", user_id: DEMO_USER_ID, conversation_id: "conv-4", content: "Glad you liked it! Check the link in bio.", created_at: isoDaysAgo(0, 14), is_from_instagram: false, source: "automation", attachment_type: null },
+  { id: "msg-13", user_id: DEMO_USER_ID, conversation_id: "conv-2", content: "Rate card attached", created_at: isoDaysAgo(0, 20), is_from_instagram: false, source: "manual", attachment_type: null },
+  { id: "msg-14", user_id: DEMO_USER_ID, conversation_id: "conv-1", content: "[image]", created_at: isoDaysAgo(1, 3), is_from_instagram: false, source: "echo", attachment_type: "image" },
+  { id: "msg-15", user_id: DEMO_USER_ID, conversation_id: "conv-3", content: "Thanks for the follow!", created_at: isoDaysAgo(1, 8), is_from_instagram: false, source: "manual", attachment_type: null },
+  { id: "msg-16", user_id: DEMO_USER_ID, conversation_id: "conv-4", content: "Here's your free guide! 🎉", created_at: isoDaysAgo(1, 16), is_from_instagram: false, source: "automation", attachment_type: null },
+  { id: "msg-17", user_id: DEMO_USER_ID, conversation_id: "conv-2", content: "Following up — still interested?", created_at: isoDaysAgo(2, 4), is_from_instagram: false, source: "manual", attachment_type: null },
+  { id: "msg-18", user_id: DEMO_USER_ID, conversation_id: "conv-1", content: "Use code WELCOME10 at checkout!", created_at: isoDaysAgo(3, 2), is_from_instagram: false, source: "automation", attachment_type: null },
+  { id: "msg-19", user_id: DEMO_USER_ID, conversation_id: "conv-3", content: "[ig_reel]", created_at: isoDaysAgo(4), is_from_instagram: false, source: "echo", attachment_type: "ig_reel" },
+  { id: "msg-20", user_id: DEMO_USER_ID, conversation_id: "conv-4", content: "Here's your free guide! 🎉", created_at: isoDaysAgo(6), is_from_instagram: false, source: "automation", attachment_type: null },
+  { id: "msg-21", user_id: DEMO_USER_ID, conversation_id: "conv-2", content: "Thanks for reaching out!", created_at: isoDaysAgo(7), is_from_instagram: false, source: "manual", attachment_type: null },
+  { id: "msg-22", user_id: DEMO_USER_ID, conversation_id: "conv-1", content: "Here's your free guide! 🎉", created_at: isoDaysAgo(10), is_from_instagram: false, source: "automation", attachment_type: null },
 ]
 
 const automations: Row[] = [

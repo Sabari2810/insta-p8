@@ -8,6 +8,11 @@ export async function GET(request: NextRequest) {
         if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         const userId = session.userId
 
+        const requestedLimit = Number(request.nextUrl.searchParams.get("activityLimit"))
+        const activityLimit = Number.isFinite(requestedLimit) && requestedLimit > 0
+            ? Math.min(requestedLimit, 50)
+            : 5
+
         const supabase = await getSupabaseServerClient()
 
         // 1. Total Automations
@@ -36,14 +41,14 @@ export async function GET(request: NextRequest) {
             .eq("user_id", userId)
             .eq("is_from_instagram", false)
 
-        // 5. Recent Activity (last 5 outbound messages, from any source)
+        // 5. Recent Activity (last N outbound messages, from any source)
         const { data: recentMessages } = await supabase
             .from("messages")
             .select("id, content, created_at, conversation_id, attachment_type, source, recipient:conversations(recipient_username)")
             .eq("user_id", userId)
             .eq("is_from_instagram", false)
             .order("created_at", { ascending: false })
-            .limit(5)
+            .limit(activityLimit)
 
         return NextResponse.json({
             metrics: {
