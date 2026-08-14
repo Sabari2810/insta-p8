@@ -23,7 +23,7 @@ export default function AutomationsPage() {
     useEffect(() => {
         if (searchParams.get("new") === "1") {
             setShowCreateForm(true)
-            router.replace("/dashboard/automations")
+            router.replace("/automations")
         }
     }, [searchParams, router])
 

@@ -163,7 +163,7 @@ export default function DashboardPage() {
                             stats.recentActivity.map((msg) => (
                                 <Link
                                     key={msg.id}
-                                    href={`/dashboard/inbox?conversation=${msg.conversation_id}`}
+                                    href={`/inbox?conversation=${msg.conversation_id}`}
                                     className="flex items-center gap-4 p-3 rounded-lg hover:bg-black/[0.03] transition-colors"
                                 >
                                     <div className="w-10 h-10 rounded-full bg-brand/10 flex items-center justify-center text-brand shrink-0">
@@ -191,10 +191,10 @@ export default function DashboardPage() {
                 <Card className="p-6 bg-white border-black/10">
                     <h3 className="font-serif-display text-2xl text-neutral-900">Quick actions</h3>
                     <div className="space-y-2">
-                        <QuickActionPrimary href="/dashboard/automations?new=1" icon={<Zap className="w-4 h-4" />} label="New automation" sub="Comment, DM, or story trigger" />
-                        <QuickActionRow href="/dashboard/inbox" icon={<MessageSquare className="w-4 h-4" />} label="View inbox" />
-                        <QuickActionRow href="/dashboard/ice-breakers" icon={<Snowflake className="w-4 h-4" />} label="Ice breakers" />
-                        <QuickActionRow href="/dashboard/analytics" icon={<BarChart3 className="w-4 h-4" />} label="Analytics" />
+                        <QuickActionPrimary href="/automations?new=1" icon={<Zap className="w-4 h-4" />} label="New automation" sub="Comment, DM, or story trigger" />
+                        <QuickActionRow href="/inbox" icon={<MessageSquare className="w-4 h-4" />} label="View inbox" />
+                        <QuickActionRow href="/ice-breakers" icon={<Snowflake className="w-4 h-4" />} label="Ice breakers" />
+                        <QuickActionRow href="/analytics" icon={<BarChart3 className="w-4 h-4" />} label="Analytics" />
                     </div>
                 </Card>
             </div>
