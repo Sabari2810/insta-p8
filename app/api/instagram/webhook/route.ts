@@ -272,7 +272,7 @@ export async function POST(request: NextRequest) {
 
           const commentAutomations = automations.filter((a: any) => a.trigger_source === "comment")
 
-          // Priority: specific post reply-all → specific post keyword → global keyword
+          // Priority: specific post reply-all → specific post keyword → global keyword → global reply-all
           let match = commentAutomations.find(
             (a: any) => a.specific_media_id === mediaId && a.trigger_type === "reply_all",
           )
@@ -290,6 +290,11 @@ export async function POST(request: NextRequest) {
                 !a.specific_media_id &&
                 a.trigger_type === "keyword" &&
                 keywordMatches(a.trigger_value, commentText),
+            )
+          }
+          if (!match) {
+            match = commentAutomations.find(
+              (a: any) => !a.specific_media_id && a.trigger_type === "reply_all",
             )
           }
           if (!match) continue
