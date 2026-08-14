@@ -110,7 +110,7 @@ export default function DashboardPage() {
             {/* Welcome Section */}
             <div className="rounded-2xl border border-black/10 bg-white px-8 py-7 flex items-center justify-between gap-6 flex-wrap">
                 <div>
-                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-400 mb-2">Overview</p>
+                    <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-400 mb-2">Dashboard</p>
                     <h1 className="font-serif-display text-4xl md:text-5xl text-black leading-none">Hey, {username}.</h1>
                 </div>
                 {now && (
