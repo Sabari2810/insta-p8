@@ -93,7 +93,7 @@ export default function SettingsPage() {
 
     return (
         <>
-            <div className="px-20 py-12 bg-white">
+            <div className="px-12 py-10 bg-white">
                 <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Configuration</p>
                 <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Settings</h1>
             </div>
