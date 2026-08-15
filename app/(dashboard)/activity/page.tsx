@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
-import { Search } from "lucide-react"
+import { FiSearch as Search } from "react-icons/fi"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Spinner } from "@/components/ui/spinner"
 import { PaginationControls } from "@/components/dashboard/PaginationControls"

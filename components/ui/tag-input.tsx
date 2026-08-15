@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, KeyboardEvent } from "react"
-import { X } from "lucide-react"
+import { FiX as X } from "react-icons/fi"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 

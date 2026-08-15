@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { Terminal } from "lucide-react"
+import { FiTerminal as Terminal } from "react-icons/fi"
 
 const ACCENT = "#5b46f2"
 const ACCENT_HOVER = "#4735d2"

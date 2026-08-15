@@ -3,9 +3,9 @@
 import type React from "react"
 import { cn } from "@/lib/utils"
 import {
-  Workflow, Home, LogOut, Settings, LineChart,
-  Inbox, Sparkles, History,
-} from "lucide-react"
+  FiGitBranch as Workflow, FiHome as Home, FiLogOut as LogOut, FiSettings as Settings, FiTrendingUp as LineChart,
+  FiInbox as Inbox, FiStar as Sparkles, FiClock as History,
+} from "react-icons/fi"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 

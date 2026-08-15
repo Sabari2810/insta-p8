@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Send, Zap, ChevronLeft, Plus, X, Paperclip } from "lucide-react"
+import { FiSend as Send, FiZap as Zap, FiChevronLeft as ChevronLeft, FiPlus as Plus, FiX as X, FiPaperclip as Paperclip } from "react-icons/fi"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/inbox/Avatar"

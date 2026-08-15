@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Switch } from "@/components/ui/switch"
-import { Pencil, Copy, Trash2, Zap } from "lucide-react"
+import { FiEdit2 as Pencil, FiCopy as Copy, FiTrash2 as Trash2, FiZap as Zap } from "react-icons/fi"
 import type { Automation } from "@/lib/types"
 import { toast } from "sonner"
 

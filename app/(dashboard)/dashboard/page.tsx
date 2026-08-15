@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
-import { Activity, Users, MessageCircle, Zap, ArrowRight } from "lucide-react"
+import { FiActivity as Activity, FiUsers as Users, FiMessageCircle as MessageCircle, FiZap as Zap, FiArrowRight as ArrowRight } from "react-icons/fi"
 import { Spinner } from "@/components/ui/spinner"
 import { activityLabel, activityPreview, activityTimestamp, type ActivityItem } from "@/lib/activity-format"
 

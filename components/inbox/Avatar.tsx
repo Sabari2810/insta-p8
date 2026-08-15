@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { UserCircle } from "lucide-react"
+import { FiUser as UserCircle } from "react-icons/fi"
 import { cn } from "@/lib/utils"
 
 interface AvatarProps {

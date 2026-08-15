@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react"
 import * as RechartsPrimitive from "recharts"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
-import { MessageCircle, Send, Sparkles, TrendingUp, Trophy } from "lucide-react"
+import { FiMessageCircle as MessageCircle, FiSend as Send, FiStar as Sparkles, FiTrendingUp as TrendingUp, FiAward as Trophy } from "react-icons/fi"
 import { BRAND_COLOR } from "@/lib/theme"
 import { Spinner } from "@/components/ui/spinner"
 

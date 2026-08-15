@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { toast } from "sonner"
-import { User, Webhook, ShieldAlert, Copy, Check,
-    ExternalLink, LogOut, Unplug, RefreshCw,
-} from "lucide-react"
+import { FiUser as User, FiLink as Webhook, FiShield as ShieldAlert, FiCopy as Copy, FiCheck as Check,
+    FiExternalLink as ExternalLink, FiLogOut as LogOut, FiSlash as Unplug, FiRefreshCw as RefreshCw,
+} from "react-icons/fi"
 import { Spinner } from "@/components/ui/spinner"
 
 interface AccountInfo {

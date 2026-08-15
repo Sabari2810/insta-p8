@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { AlertTriangle } from "lucide-react"
+import { FiAlertTriangle as AlertTriangle } from "react-icons/fi"
 import { cn } from "@/lib/utils"
 
 // Only surfaces once a token is close to (or past) expiry — the cron job at

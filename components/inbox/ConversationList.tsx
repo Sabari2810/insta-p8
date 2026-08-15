@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Search } from "lucide-react"
+import { FiSearch as Search } from "react-icons/fi"
 import { cn } from "@/lib/utils"
 import { Avatar } from "@/components/inbox/Avatar"
 import type { Conversation } from "@/types/db"

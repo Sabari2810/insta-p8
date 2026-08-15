@@ -6,7 +6,7 @@ import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { AutomationList } from "@/components/dashboard/AutomationList"
 import { CreateRuleForm } from "@/components/dashboard/CreateRuleForm"
 import { PaginationControls } from "@/components/dashboard/PaginationControls"
-import { MessageCircle, Send, Sparkles, Zap, Plus, Search } from "lucide-react"
+import { FiMessageCircle as MessageCircle, FiSend as Send, FiStar as Sparkles, FiZap as Zap, FiPlus as Plus, FiSearch as Search } from "react-icons/fi"
 import type { Automation } from "@/lib/types"
 import { Spinner } from "@/components/ui/spinner"
 

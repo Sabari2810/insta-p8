@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useMemo } from "react"
 import {
-  Plus, Trash2, Film, Check, MessageCircle, Send, AtSign, Heart,
-  MessageSquare, Image as ImageIcon, Timer, Eye, Megaphone, Lock,
-  Link2, Zap, ChevronDown, ChevronRight, ChevronLeft, X,
-  ArrowLeft, Phone, Video, Info, Sparkles, Smile, Camera, Mic, Image as PicIcon,
-  Globe
-} from "lucide-react"
+  FiPlus as Plus, FiTrash2 as Trash2, FiFilm as Film, FiCheck as Check, FiMessageCircle as MessageCircle, FiSend as Send, FiAtSign as AtSign, FiHeart as Heart,
+  FiMessageSquare as MessageSquare, FiImage as ImageIcon, FiClock as Timer, FiEye as Eye, FiVolume2 as Megaphone, FiLock as Lock,
+  FiLink2 as Link2, FiZap as Zap, FiChevronDown as ChevronDown, FiChevronRight as ChevronRight, FiChevronLeft as ChevronLeft, FiX as X,
+  FiArrowLeft as ArrowLeft, FiPhone as Phone, FiVideo as Video, FiInfo as Info, FiStar as Sparkles, FiSmile as Smile, FiCamera as Camera, FiMic as Mic, FiImage as PicIcon,
+  FiGlobe as Globe
+} from "react-icons/fi"
 import { TagInput } from "@/components/ui/tag-input"
 import type { ProButton, QuickReplyOption, Automation } from "@/lib/types"
 import { toast } from "sonner"
