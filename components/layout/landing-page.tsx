@@ -100,11 +100,11 @@ export function LandingPage() {
           <div style={{ flex: "1 1 460px", minWidth: 0 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 999, padding: "5px 12px", fontSize: 12, color: FAINT }}>
               <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#0b8f6a", display: "block" }} />
-              <span style={{ display: "block" }}>Built for creators &amp; brands</span>
+              <span style={{ display: "block" }}>Instagram reply automation</span>
             </div>
-            <h1 style={{ margin: "22px 0 0", fontSize: "clamp(40px, 5.2vw, 60px)", lineHeight: 1.02 }}>Your DMs,<br />on autopilot.</h1>
+            <h1 style={{ margin: "22px 0 0", fontSize: "clamp(40px, 5.2vw, 60px)", lineHeight: 1.02 }}>Rules that reply for you.</h1>
             <p style={{ margin: "20px 0 0", maxWidth: 520, fontSize: 17, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>
-              Comment-to-DM funnels, keyword triggers, story reactions, and a live inbox — automation that converts, running on your own dedicated setup, never shared with anyone else's data.
+              Choose a reel or post, set the keywords to watch for, and write the reply once. Wingman handles comments, DMs and story interactions on your own dedicated setup — with delays and typing indicators so replies read like you sent them.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
               <button
