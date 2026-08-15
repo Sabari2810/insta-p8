@@ -1,10 +1,37 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import {
-  MessageCircle, Sparkles, ArrowUpRight,
-  Send, AtSign, Inbox, Lock, Terminal, ShieldCheck
-} from "lucide-react"
+import { Terminal } from "lucide-react"
+
+const ACCENT = "#5b46f2"
+const ACCENT_HOVER = "#4735d2"
+const INK = "#191817"
+const MUTED = "#5f5a54"
+const FAINT = "#8b847c"
+const BORDER = "#e6e2dd"
+const BG = "#f6f5f3"
+
+const STEPS = [
+  { n: "1", title: "Connect your account", body: "Sign in with your professional Instagram account. No password sharing, no browser extension." },
+  { n: "2", title: "Pick the trigger", body: "Choose a reel or post and the keywords to watch for, or listen on every new DM and story interaction." },
+  { n: "3", title: "Write the reply", body: "One public reply, one DM with a link button, and a delay so it reads like you typed it." },
+]
+
+const FEATURES = [
+  { title: "Comment → DM funnels", body: "Keyword or reply-all triggers on any post.", points: ["DM only, public reply only, or both", "Your own public reply copy", "First-time commenters only"] },
+  { title: "DM keyword automation", body: "Auto-respond with text, media, or rich cards with buttons.", points: ["Keyword routing", "Link buttons in the reply", "Quick-reply chips guide the funnel"] },
+  { title: "Story triggers", body: "React to mentions, emoji reactions and story replies.", points: ["Filter by emoji or keyword", "Reply inside the DM thread", "Tag contacts for follow-up"] },
+  { title: "Live inbox", body: "Every conversation in one dashboard.", points: ["Jump in manually anytime", "Fire saved quick responses", "Conversation tags"] },
+  { title: "Follow gate", body: "Lock content behind a follow.", points: ["Non-followers get a prompt", "One tap later they unlock it", "Works on any automation"] },
+  { title: "Human-like sending", body: "Replies land natural, not botty.", points: ["Optional typing indicators", "Randomized delays", "Per-account rate limits"] },
+]
+
+const FACTS = [
+  { k: "Dedicated setup", v: "Never a shared multi-tenant tool" },
+  { k: "Encrypted token", v: "Decrypted in memory only when sending" },
+  { k: "Disconnect anytime", v: "Clears the stored token immediately" },
+  { k: "No data selling", v: "Your tags stay with your account" },
+]
 
 export function LandingPage() {
   const router = useRouter()
@@ -29,138 +56,196 @@ export function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#171717] selection:bg-brand selection:text-white overflow-x-hidden antialiased">
+    <div style={{ background: BG, color: INK, fontFamily: "'Instrument Sans', system-ui, sans-serif" }}>
       <style>{`
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .marquee-track { animation: marquee 30s linear infinite; }
-        @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-up { animation: fade-up .7s cubic-bezier(.2,.7,.2,1) both; }
+        .landing h1, .landing h2, .landing h3 { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 600; letter-spacing: -0.03em; }
+        .landing button { font-family: 'Instrument Sans', system-ui, sans-serif; }
       `}</style>
+      <div className="landing">
 
-      {/* Nav */}
-      <nav className="relative z-50 flex items-center justify-between px-5 md:px-10 h-16 border-b border-black/[0.08]">
-        <div className="flex items-center gap-2.5">
-          <img src="/favicon.jpeg" alt="" className="w-7 h-7 rounded-full" />
-          <span className="font-mono-ui text-sm font-bold tracking-tight">Wingman</span>
-        </div>
-        <div className="flex items-center gap-2">
-          {process.env.NODE_ENV === "development" && (
-            <button
-              onClick={handleTestLogin}
-              className="font-mono-ui text-xs font-bold text-brand-dark border border-brand/50 rounded-full px-4 py-1.5 hover:bg-brand/10 transition-colors"
-            >
-              Dev Login
-            </button>
-          )}
-          <button
-            onClick={handleLogin}
-            className="font-mono-ui text-xs font-bold bg-[#171717] text-white rounded-full px-4 py-1.5 hover:bg-brand hover:text-white transition-colors"
-          >
-            Log in
-          </button>
-        </div>
-      </nav>
-
-      {/* Hero */}
-      <main className="relative z-10">
-        <section className="px-5 md:px-10 pt-16 md:pt-28 pb-16 max-w-6xl mx-auto">
-          <div className="fade-up" style={{ animationDelay: "0ms" }}>
-            <p className="font-mono-ui text-[11px] uppercase tracking-[0.25em] text-neutral-500 mb-6">
-              Instagram automation // your own private setup // built for creators & brands
-            </p>
-          </div>
-
-          <h1 className="fade-up font-serif-display text-[15vw] md:text-[7.5rem] leading-[0.95] tracking-tight" style={{ animationDelay: "80ms" }}>
-            Your DMs,
-            <br />
-            <span className="italic text-brand-dark">on autopilot.</span>
-          </h1>
-
-          <div className="fade-up mt-10 flex flex-col md:flex-row md:items-end gap-8 md:gap-16" style={{ animationDelay: "160ms" }}>
-            <p className="text-neutral-500 text-base md:text-lg max-w-md leading-relaxed">
-              Comment-to-DM funnels, keyword triggers, story reactions, and a live inbox —
-              automation that converts, running on your own dedicated setup, never shared with anyone else's data.
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                onClick={handleLogin}
-                className="group flex items-center gap-2 bg-brand text-white font-mono-ui text-sm font-bold px-7 py-4 rounded-full hover:scale-[1.03] active:scale-[0.98] transition-transform"
-              >
-                Connect Instagram
-                <ArrowUpRight className="w-4 h-4 group-hover:rotate-45 transition-transform" />
-              </button>
+        {/* Header */}
+        <header style={{ position: "sticky", top: 0, zIndex: 5, background: "rgba(246,245,243,0.9)", backdropFilter: "blur(8px)", borderBottom: `1px solid ${BORDER}` }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto", padding: "16px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <img src="/favicon.jpeg" alt="" style={{ width: 28, height: 28, borderRadius: "50%", display: "block" }} />
+              <span style={{ display: "block", fontFamily: "'Bricolage Grotesque', system-ui, sans-serif", fontWeight: 600, fontSize: 19, letterSpacing: "-0.02em" }}>Wingman</span>
+            </div>
+            <nav style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+              <a href="#how" className="hidden md:inline transition-colors hover:text-[#191817]" style={{ fontSize: 14, color: FAINT }}>How it works</a>
+              <a href="#features" className="hidden md:inline transition-colors hover:text-[#191817]" style={{ fontSize: 14, color: FAINT }}>Features</a>
+              <a href="#ownership" className="hidden md:inline transition-colors hover:text-[#191817]" style={{ fontSize: 14, color: FAINT }}>Your data</a>
               {process.env.NODE_ENV === "development" && (
                 <button
                   onClick={handleTestLogin}
-                  className="group flex items-center gap-2 font-mono-ui text-sm font-bold text-brand-dark border border-brand/50 px-7 py-4 rounded-full hover:bg-brand/10 active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-1.5 transition-colors hover:bg-[#5b46f2]/10"
+                  style={{ fontSize: 13, fontWeight: 600, color: ACCENT, border: `1px solid ${ACCENT}80`, borderRadius: 10, padding: "7px 12px" }}
                 >
-                  <Terminal className="w-4 h-4" />
+                  <Terminal className="w-3.5 h-3.5" />
                   Dev Login
                 </button>
               )}
+              <button onClick={handleLogin} className="transition-colors hover:text-[#5b46f2]" style={{ fontSize: 14, fontWeight: 600, color: INK }}>Log in</button>
+              <button
+                onClick={handleLogin}
+                className="transition-colors hover:bg-[#4735d2]"
+                style={{ padding: "9px 16px", fontSize: 14, fontWeight: 600, color: "#ffffff", background: ACCENT, borderRadius: 10 }}
+              >
+                Connect Instagram
+              </button>
+            </nav>
+          </div>
+        </header>
+
+        {/* Hero */}
+        <section style={{ maxWidth: 1120, margin: "0 auto", padding: "88px 32px 72px", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
+          <div style={{ flex: "1 1 460px", minWidth: 0 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 999, padding: "5px 12px", fontSize: 12, color: FAINT }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#0b8f6a", display: "block" }} />
+              <span style={{ display: "block" }}>Built for creators &amp; brands</span>
+            </div>
+            <h1 style={{ margin: "22px 0 0", fontSize: "clamp(40px, 5.2vw, 60px)", lineHeight: 1.02 }}>Your DMs,<br />on autopilot.</h1>
+            <p style={{ margin: "20px 0 0", maxWidth: 520, fontSize: 17, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>
+              Comment-to-DM funnels, keyword triggers, story reactions, and a live inbox — automation that converts, running on your own dedicated setup, never shared with anyone else's data.
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
+              <button
+                onClick={handleLogin}
+                className="transition-colors hover:bg-[#4735d2]"
+                style={{ padding: "13px 22px", fontSize: 15, fontWeight: 600, color: "#ffffff", background: ACCENT, borderRadius: 11, boxShadow: "0 1px 2px rgba(24,20,50,0.16)" }}
+              >
+                Connect Instagram
+              </button>
+              <a
+                href="#how"
+                className="transition-colors hover:bg-[#f1efec]"
+                style={{ padding: "13px 22px", fontSize: 15, fontWeight: 600, color: INK, background: "#ffffff", border: "1px solid #e2ded9", borderRadius: 11 }}
+              >
+                See how it works
+              </a>
+            </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 28, marginTop: 36, fontSize: 13, color: FAINT }}>
+              <span style={{ display: "block" }}>Comment → DM</span>
+              <span style={{ display: "block" }}>Keyword triggers</span>
+              <span style={{ display: "block" }}>Live inbox</span>
+              <span style={{ display: "block" }}>Follow gate</span>
+            </div>
+          </div>
+
+          <div style={{ flex: "0 1 300px", display: "flex", justifyContent: "center" }}>
+            <div style={{ width: 270, background: "#0f0f10", borderRadius: 34, padding: 10, boxShadow: "0 20px 44px rgba(24,20,50,0.2)" }}>
+              <div style={{ background: "#141416", borderRadius: 26, overflow: "hidden", display: "flex", flexDirection: "column", height: 432 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 6px", fontSize: 10, color: "#8e8b88" }}>
+                  <span style={{ display: "block" }}>9:41</span>
+                  <span style={{ display: "block" }}>▮▮▮</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px 12px", borderBottom: "1px solid #26262a" }}>
+                  <span style={{ width: 30, height: 30, borderRadius: "50%", background: "#2c2c31", display: "block" }} />
+                  <span style={{ display: "block" }}>
+                    <span style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#f4f3f1" }}>priya.makes</span>
+                    <span style={{ display: "block", fontSize: 10, color: "#6f6c69" }}>Commented on your reel</span>
+                  </span>
+                </div>
+                <div style={{ flex: 1, minHeight: 0, padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ alignSelf: "flex-start", maxWidth: "78%", background: "#26262a", color: "#f4f3f1", borderRadius: "16px 16px 16px 4px", padding: "9px 12px", fontSize: 12 }}>PRESET please 🙏</div>
+                  <div style={{ alignSelf: "flex-end", maxWidth: "78%", background: "#2c2c31", color: "#f4f3f1", borderRadius: 16, padding: "9px 12px", fontSize: 12 }}>↩ Sent! Check your DMs 📩</div>
+                  <div style={{ alignSelf: "flex-end", maxWidth: "78%", background: ACCENT, color: "#ffffff", borderRadius: "16px 16px 4px 16px", padding: "9px 12px", fontSize: 12 }}>Here's the preset pack I promised — tap below to grab it.</div>
+                  <div style={{ alignSelf: "flex-end", width: "78%", textAlign: "center", border: "1px solid #3a3a40", borderRadius: 12, padding: "9px 12px", fontSize: 12, color: "#f4f3f1" }}>Download the presets</div>
+                  <div style={{ alignSelf: "flex-end", fontSize: 10, color: "#6f6c69" }}>sent after 1 min</div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Marquee */}
-        <div className="border-y border-black/[0.08] py-3 overflow-hidden">
-          <div className="marquee-track flex whitespace-nowrap font-mono-ui text-xs uppercase tracking-[0.2em] text-neutral-500 gap-8 w-max">
-            {Array.from({ length: 2 }).map((_, copy) => (
-              <div key={copy} className="flex gap-8">
-                {["comment → DM", "keyword triggers", "story reactions", "live inbox", "ice breakers", "follow gate", "quick replies", "media attachments", "public + private replies"].map((t) => (
-                  <span key={t} className="flex items-center gap-8">
-                    {t} <span className="text-brand-dark">✦</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Feature grid */}
-        <section className="px-5 md:px-10 py-20 max-w-6xl mx-auto">
-          <div className="flex items-baseline justify-between mb-10">
-            <h2 className="font-serif-display text-4xl md:text-5xl">Everything the paid tools do.</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-px bg-black/[0.08] border border-black/[0.08]">
-            <Feature icon={<MessageCircle className="w-4 h-4" />} title="Comment → DM funnels"
-              desc="Keyword or reply-all triggers on any post. Choose DM only, public reply only, or both — with your own rotating public replies." />
-            <Feature icon={<Send className="w-4 h-4" />} title="DM keyword automation"
-              desc="Auto-respond to DMs with text, media, or rich cards with buttons. Quick-reply chips guide people through your funnel." />
-            <Feature icon={<AtSign className="w-4 h-4" />} title="Story triggers"
-              desc="React to story mentions, emoji reactions, and story replies. Filter by emoji or keyword." />
-            <Feature icon={<Inbox className="w-4 h-4" />} title="Live inbox"
-              desc="Every conversation in one dashboard. Jump in manually anytime, fire quick responses from your saved automations." />
-            <Feature icon={<Lock className="w-4 h-4" />} title="Follow gate"
-              desc="Lock content behind a follow. Non-followers get a follow prompt; one tap later they unlock the goods." />
-            <Feature icon={<Sparkles className="w-4 h-4" />} title="Human-like sending"
-              desc="Optional typing indicators and randomized delays so replies land natural, not botty." />
-            <Feature icon={<ShieldCheck className="w-4 h-4" />} title="Dedicated & private"
-              desc="Your own private setup, encrypted end to end — never a shared tool where your data sits next to someone else's." />
+        {/* How it works */}
+        <section id="how" style={{ borderTop: `1px solid ${BORDER}`, background: "#ffffff" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px" }}>
+            <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>How it works</h6>
+            <h2 style={{ margin: "0 0 40px", fontSize: 36, maxWidth: 520 }}>Three steps, then it runs without you.</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 24 }}>
+              {STEPS.map((s) => (
+                <div key={s.n} style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 24 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: 8, background: INK, color: "#ffffff", fontSize: 12, fontWeight: 600 }}>{s.n}</div>
+                  <h3 style={{ margin: "16px 0 6px", fontSize: 19 }}>{s.title}</h3>
+                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>{s.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-      </main>
+        {/* Features */}
+        <section id="features" style={{ borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px" }}>
+            <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>Features</h6>
+            <h2 style={{ margin: "0 0 40px", fontSize: 36, maxWidth: 600 }}>Everything the paid tools do.</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 24 }}>
+              {FEATURES.map((t) => (
+                <div key={t.title} style={{ background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 14, padding: 24 }}>
+                  <h3 style={{ margin: "0 0 6px", fontSize: 19 }}>{t.title}</h3>
+                  <p style={{ margin: "0 0 16px", fontSize: 14, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>{t.body}</p>
+                  {t.points.map((p) => (
+                    <div key={p} style={{ display: "flex", gap: 9, padding: "6px 0", fontSize: 13, color: INK }}>
+                      <span style={{ display: "block", color: ACCENT }}>—</span>
+                      <span style={{ display: "block" }}>{p}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      {/* Footer */}
-      <footer className="border-t border-black/[0.08] px-5 md:px-10 py-8 flex items-center justify-center">
-        <span className="font-mono-ui text-[11px] text-neutral-500">
-          Wingman - Instagram automation.
-        </span>
-      </footer>
-    </div>
-  )
-}
+        {/* Ownership */}
+        <section id="ownership" style={{ borderTop: `1px solid ${BORDER}`, background: "#ffffff" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px", gap: 56, alignItems: "center" }}>
+            <div>
+              <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>Your data</h6>
+              <h2 style={{ margin: "0 0 16px", fontSize: 36 }}>Dedicated and private.</h2>
+              <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: MUTED, maxWidth: 460, textWrap: "pretty" as any }}>
+                Your own private setup, never a shared tool where your data sits next to someone else's. Your Instagram access token is encrypted before it is stored and only decrypted in memory when a reply needs to be sent. Disconnect from Settings at any time and the stored token is cleared immediately.
+              </p>
+            </div>
+            <div className="grid grid-cols-2" style={{ gap: 16 }}>
+              {FACTS.map((f) => (
+                <div key={f.k} style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 18 }}>
+                  <div style={{ fontFamily: "'Bricolage Grotesque', system-ui, sans-serif", fontSize: 15, fontWeight: 600 }}>{f.k}</div>
+                  <div style={{ fontSize: 13, color: FAINT, marginTop: 4, lineHeight: 1.5 }}>{f.v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-function Feature({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
-  return (
-    <div className="bg-white p-7 group hover:bg-neutral-50 transition-colors">
-      <div className="w-9 h-9 rounded-lg border border-black/10 flex items-center justify-center text-neutral-500 group-hover:text-neutral-900 group-hover:border-black/30 transition-colors mb-5">
-        {icon}
+        {/* Final CTA */}
+        <section style={{ borderTop: `1px solid ${BORDER}` }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 18 }}>
+            <h2 style={{ margin: 0, fontSize: 40, maxWidth: 600 }}>Set up your first automation today.</h2>
+            <p style={{ margin: 0, maxWidth: 440, fontSize: 16, color: MUTED }}>Connect your professional Instagram account and write your first reply in a couple of minutes.</p>
+            <button
+              onClick={handleLogin}
+              className="transition-colors hover:bg-[#4735d2]"
+              style={{ marginTop: 6, padding: "14px 26px", fontSize: 15, fontWeight: 600, color: "#ffffff", background: ACCENT, borderRadius: 11 }}
+            >
+              Connect Instagram
+            </button>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer style={{ borderTop: `1px solid ${BORDER}`, background: "#ffffff" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto", padding: "26px 32px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16, fontSize: 13, color: FAINT }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <img src="/favicon.jpeg" alt="" style={{ width: 20, height: 20, borderRadius: "50%", display: "block" }} />
+              <span style={{ display: "block" }}>Wingman — Instagram automation</span>
+            </span>
+            <div style={{ display: "flex", gap: 22 }}>
+              <a href="/privacy" className="transition-colors hover:text-[#191817]" style={{ color: FAINT }}>Privacy</a>
+              <button onClick={handleLogin} className="transition-colors hover:text-[#191817]" style={{ color: FAINT }}>Log in</button>
+            </div>
+          </div>
+        </footer>
       </div>
-      <h3 className="font-mono-ui text-sm font-bold text-neutral-900 mb-2">{title}</h3>
-      <p className="text-[13px] text-neutral-500 leading-relaxed">{desc}</p>
     </div>
   )
 }
