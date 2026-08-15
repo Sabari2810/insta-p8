@@ -99,7 +99,7 @@ export default function AutomationsPage() {
     return (
         <div className="min-h-screen bg-[#f6f5f3]">
             {/* Header */}
-            <div className="px-12 py-10 bg-white">
+            <div className="px-12 pt-10 bg-white">
                 <div className="flex items-end justify-between gap-4 flex-wrap">
                     <div>
                         <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Rules engine</p>
