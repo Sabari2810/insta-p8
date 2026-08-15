@@ -5,7 +5,7 @@ import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { FiPlus as Plus, FiTrash2 as Trash2, FiSave as Save, FiRefreshCw as RefreshCw } from "react-icons/fi"
+import { FiPlus as Plus, FiSave as Save, FiRefreshCw as RefreshCw } from "react-icons/fi"
 import { toast } from "sonner"
 import type { IceBreaker } from "@/types/db"
 import { Spinner } from "../ui/spinner"
@@ -106,40 +106,35 @@ export function IceBreakersManager() {
                     Questions people see when they start a chat with you.
                 </p>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
                 {breakers.map((item, idx) => (
-                    <div key={idx} className="bg-black/[0.02] border border-black/10 p-4 rounded-xl space-y-3 relative group">
-                        <div className="flex justify-between items-start gap-4">
-                            <div className="flex-1 space-y-3">
-                                <div>
-                                    <label className="text-xs text-muted-foreground font-semibold uppercase">Question</label>
-                                    <Input
-                                        value={item.question}
-                                        onChange={e => handleChange(idx, "question", e.target.value)}
-                                        placeholder="e.g., What are your prices?"
-                                        className="bg-white border-black/10 mt-1"
-                                        maxLength={80}
-                                    />
-                                </div>
-                                <div>
-                                    <label className="text-xs text-muted-foreground font-semibold uppercase">Auto-Response</label>
-                                    <Textarea
-                                        value={item.response}
-                                        onChange={e => handleChange(idx, "response", e.target.value)}
-                                        placeholder="The reply users will receive..."
-                                        className="bg-white border-black/10 mt-1"
-                                        rows={2}
-                                    />
-                                </div>
-                            </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
+                    <div key={idx} className="bg-white border border-black/10 rounded-2xl p-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <label className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500">Question</label>
+                            <button
+                                type="button"
                                 onClick={() => handleRemove(idx)}
-                                className="text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                                className="text-xs text-neutral-400 hover:text-red-500 transition-colors"
                             >
-                                <Trash2 className="w-4 h-4" />
-                            </Button>
+                                Delete
+                            </button>
+                        </div>
+                        <Input
+                            value={item.question}
+                            onChange={e => handleChange(idx, "question", e.target.value)}
+                            placeholder="e.g., What are your prices?"
+                            className="bg-white border-black/10"
+                            maxLength={80}
+                        />
+                        <div className="space-y-2">
+                            <label className="font-mono-ui text-[10px] uppercase tracking-widest text-neutral-500">Auto-response</label>
+                            <Textarea
+                                value={item.response}
+                                onChange={e => handleChange(idx, "response", e.target.value)}
+                                placeholder="The reply users will receive..."
+                                className="bg-white border-black/10 resize-y"
+                                rows={3}
+                            />
                         </div>
                     </div>
                 ))}
@@ -151,16 +146,16 @@ export function IceBreakersManager() {
                 )}
 
                 {breakers.length < 4 && (
-                    <Button variant="outline" onClick={handleAdd} className="w-full border-dashed border-black/20 hover:bg-black/[0.03] text-muted-foreground hover:text-neutral-900">
-                        <Plus className="w-4 h-4 mr-2" /> Add Question
+                    <Button variant="outline" onClick={handleAdd} className="w-full border-dashed border-black/20 bg-black/[0.02] hover:bg-black/[0.04] text-neutral-900 font-semibold">
+                        <Plus className="w-4 h-4 mr-2" /> Add question
                     </Button>
                 )}
             </div>
 
-            <div className="bg-black/[0.02] border border-black/10 p-4 rounded-xl flex gap-3 text-sm text-neutral-700">
-                <RefreshCw className="w-5 h-5 shrink-0" />
+            <div className="bg-white border border-black/10 rounded-2xl p-4 flex items-center gap-3 text-sm text-neutral-500">
+                <RefreshCw className="w-4 h-4 shrink-0" />
                 <p>
-                    Changes made here are automatically synced to your Instagram Profile. It may take a few minutes for them to appear for all users.
+                    Changes made here are automatically synced to your Instagram profile. It may take a few minutes for them to appear for all users.
                 </p>
             </div>
             </div>
