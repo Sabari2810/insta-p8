@@ -1,4 +1,4 @@
-import { defineConfig, devices } from "@playwright/test"
+import { defineConfig } from "@playwright/test"
 
 // This suite is a recording aid, not a CI gate: one visible, real browser window
 // walks through the product so you can screen-record it. Run `npm run dev` first,
@@ -18,10 +18,8 @@ export default defineConfig({
       args: ["--start-maximized"],
     },
   },
-  projects: [
-    // devices["Desktop Chrome"] carries its own fixed 1280x720 viewport, which
-    // would silently override the `viewport: null` above — re-null it here so
-    // the page actually fills the maximized window instead of a small fixed area.
-    { name: "chromium", use: { ...devices["Desktop Chrome"], viewport: null } },
-  ],
+  // No devices["Desktop Chrome"] preset here — it carries its own fixed
+  // viewport + deviceScaleFactor, both of which conflict with the plain
+  // `viewport: null` above. Plain chromium picks up everything from `use`.
+  projects: [{ name: "chromium" }],
 })
