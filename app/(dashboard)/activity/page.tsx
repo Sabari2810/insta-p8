@@ -1,26 +1,45 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Spinner } from "@/components/ui/spinner"
+import { PaginationControls } from "@/components/dashboard/PaginationControls"
 import { activityLabel, activityPreview, activityTimestamp, type ActivityItem } from "@/lib/activity-format"
-
-const ACTIVITY_LIMIT = 20
 
 export default function ActivityPage() {
     const { userId, isLoading: isSessionLoading } = useInstagramSession()
     const [activity, setActivity] = useState<ActivityItem[]>([])
+    const [total, setTotal] = useState(0)
+    const [page, setPage] = useState(1)
+    const [pageSize, setPageSize] = useState(20)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
+    const fetchActivity = useCallback(async () => {
         if (!userId) return
-        fetch(`/api/dashboard/stats?userId=${userId}&activityLimit=${ACTIVITY_LIMIT}`)
-            .then((res) => res.json())
-            .then((data) => { if (data && !data.error) setActivity(data.recentActivity || []) })
-            .catch((err) => console.error("Failed to load activity", err))
-            .finally(() => setLoading(false))
-    }, [userId])
+        setLoading(true)
+        try {
+            const res = await fetch(`/api/dashboard/activity?userId=${userId}&page=${page}&pageSize=${pageSize}`)
+            const data = await res.json()
+            if (data && !data.error) {
+                setActivity(data.data || [])
+                setTotal(data.total || 0)
+            }
+        } catch (err) {
+            console.error("Failed to load activity", err)
+        } finally {
+            setLoading(false)
+        }
+    }, [userId, page, pageSize])
+
+    useEffect(() => {
+        fetchActivity()
+    }, [fetchActivity])
+
+    const handlePageSizeChange = (size: number) => {
+        setPageSize(size)
+        setPage(1)
+    }
 
     if (isSessionLoading) {
         return (
@@ -68,6 +87,14 @@ export default function ActivityPage() {
                             No activity yet.
                         </div>
                     )}
+
+                    <PaginationControls
+                        page={page}
+                        pageSize={pageSize}
+                        total={total}
+                        onPageChange={setPage}
+                        onPageSizeChange={handlePageSizeChange}
+                    />
                 </div>
             </div>
         </div>

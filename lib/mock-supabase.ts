@@ -73,16 +73,33 @@ const users: Row[] = [
 
 const mockTables: Record<string, Row[]> = { users, automations, conversations, messages, ice_breakers: iceBreakers }
 
-type Filter = { op: "eq" | "gte" | "lte"; col: string; val: any }
+type Filter = { op: "eq" | "gte" | "lte" | "ilike"; col: string; val: any }
+type OrCondition = { col: string; op: string; val: string }
+
+function matchesCondition(row: Row, col: string, op: string, val: string): boolean {
+  if (op === "ilike") {
+    const needle = val.replace(/^%|%$/g, "").toLowerCase()
+    return String(row[col] ?? "").toLowerCase().includes(needle)
+  }
+  if (op === "in") {
+    const list = val.replace(/^\(|\)$/g, "").split(",").filter(Boolean)
+    return list.includes(String(row[col]))
+  }
+  if (op === "eq") return String(row[col]) === val
+  return false
+}
 
 class MockQueryBuilder implements PromiseLike<{ data: any; error: null; count: number | null }> {
   private mode: "select" | "insert" | "update" | "upsert" | "delete" = "select"
   private payload: any
   private onConflict = "id"
   private filters: Filter[] = []
+  private orConditions: OrCondition[] = []
   private orderCol?: string
   private orderAsc = true
   private limitN?: number
+  private rangeFrom?: number
+  private rangeTo?: number
   private singleRow = false
   private countMode = false
   private headOnly = false
@@ -108,6 +125,18 @@ class MockQueryBuilder implements PromiseLike<{ data: any; error: null; count: n
     this.filters.push({ op: "lte", col, val })
     return this
   }
+  ilike(col: string, val: string) {
+    this.filters.push({ op: "ilike", col, val })
+    return this
+  }
+  /** Mirrors Supabase's `.or("col.op.val,col2.op2.val2")` string syntax. ANDs with other filters. */
+  or(conditions: string) {
+    this.orConditions = conditions.split(",").map((cond) => {
+      const [col, op, ...rest] = cond.split(".")
+      return { col, op, val: rest.join(".") }
+    })
+    return this
+  }
   order(col: string, opts?: { ascending?: boolean }) {
     this.orderCol = col
     this.orderAsc = opts?.ascending !== false
@@ -115,6 +144,11 @@ class MockQueryBuilder implements PromiseLike<{ data: any; error: null; count: n
   }
   limit(n: number) {
     this.limitN = n
+    return this
+  }
+  range(from: number, to: number) {
+    this.rangeFrom = from
+    this.rangeTo = to
     return this
   }
   single() {
@@ -143,13 +177,19 @@ class MockQueryBuilder implements PromiseLike<{ data: any; error: null; count: n
   }
 
   private matches(row: Row) {
-    return this.filters.every(({ op, col, val }) => {
+    const filtersOk = this.filters.every(({ op, col, val }) => {
       const rv = row[col]
       if (op === "eq") return rv === val
       if (op === "gte") return rv >= val
       if (op === "lte") return rv <= val
+      if (op === "ilike") return matchesCondition(row, col, "ilike", val)
       return true
     })
+    if (!filtersOk) return false
+    if (this.orConditions.length > 0) {
+      return this.orConditions.some(({ col, op, val }) => matchesCondition(row, col, op, val))
+    }
+    return true
   }
 
   private attachJoins(rows: Row[]) {
@@ -218,15 +258,20 @@ class MockQueryBuilder implements PromiseLike<{ data: any; error: null; count: n
         return 0
       })
     }
-    if (this.countMode) {
-      return { data: this.headOnly ? null : rows, error: null, count: rows.length }
+    const totalCount = rows.length
+    if (this.countMode && this.headOnly) {
+      return { data: null, error: null, count: totalCount }
     }
-    if (this.limitN != null) rows = rows.slice(0, this.limitN)
+    if (this.rangeFrom != null && this.rangeTo != null) {
+      rows = rows.slice(this.rangeFrom, this.rangeTo + 1)
+    } else if (this.limitN != null) {
+      rows = rows.slice(0, this.limitN)
+    }
     rows = this.attachJoins(rows)
     if (this.singleRow) {
-      return { data: rows[0] ?? null, error: null, count: null }
+      return { data: rows[0] ?? null, error: null, count: this.countMode ? totalCount : null }
     }
-    return { data: rows, error: null, count: rows.length }
+    return { data: rows, error: null, count: this.countMode ? totalCount : rows.length }
   }
 
   then<TResult1 = any, TResult2 = never>(
