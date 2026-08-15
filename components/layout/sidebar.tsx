@@ -14,7 +14,7 @@ const NAV = [
   { href: "/activity", icon: History, label: "Activity" },
   { href: "/automations", icon: Workflow, label: "Automations" },
   { href: "/inbox", icon: Inbox, label: "Inbox" },
-  { href: "/ice-breakers", icon: Sparkles, label: "Ice breakers" },
+  { href: "/ice-breakers", icon: Sparkles, label: "Warm-ups" },
   { href: "/analytics", icon: LineChart, label: "Analytics" },
 ]
 

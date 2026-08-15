@@ -32,7 +32,7 @@ export function IceBreakersManager() {
 
     const handleAdd = () => {
         if (breakers.length >= 4) {
-            toast.error("Maximum 4 Ice Breakers allowed by Instagram")
+            toast.error("Maximum 4 Warm-ups allowed by Instagram")
             return
         }
         setBreakers([...breakers, { question: "", response: "" }])
@@ -66,7 +66,7 @@ export function IceBreakersManager() {
             })
             const data = await res.json()
             if (data.success) {
-                toast.success("Ice Breakers saved & synced usually!")
+                toast.success("Warm-ups saved & synced successfully!")
             } else {
                 toast.error("Failed to save")
             }
@@ -88,7 +88,7 @@ export function IceBreakersManager() {
                 <div className="flex items-end justify-between gap-4 flex-wrap">
                     <div>
                         <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Conversation starters</p>
-                        <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Ice Breakers</h1>
+                        <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Warm-ups</h1>
                     </div>
                     <button
                         onClick={handleSave}
@@ -141,7 +141,7 @@ export function IceBreakersManager() {
 
                 {breakers.length === 0 && (
                     <div className="text-center py-10 border border-dashed border-black/15 rounded-xl text-muted-foreground">
-                        No ice breakers yet. Add one to get started!
+                        No warm-ups yet. Add one to get started!
                     </div>
                 )}
 

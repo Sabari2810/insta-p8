@@ -147,7 +147,7 @@ export default function DashboardPage() {
                     <div className="space-y-2">
                         <QuickActionPrimary href="/automations?new=1" label="New automation" sub="Comment, DM, or story trigger" />
                         <QuickActionRow href="/inbox" label="View inbox" sub="Reply to conversations" />
-                        <QuickActionRow href="/ice-breakers" label="Ice breakers" sub="Set quick-start prompts" />
+                        <QuickActionRow href="/ice-breakers" label="Warm-ups" sub="Set quick-start prompts" />
                         <QuickActionRow href="/analytics" label="Analytics" sub="Track performance" />
                     </div>
                 </Card>
