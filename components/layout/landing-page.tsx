@@ -33,6 +33,9 @@ const FACTS = [
   { k: "No data selling", v: "Your tags stay with your account" },
 ]
 
+const LISTENING_KEYWORDS = ["price", "link", "preset", "info", "@mention", "🔥 reaction", "story reply", "dm", "guide", "book"]
+const LISTENING_MARQUEE = [...LISTENING_KEYWORDS, ...LISTENING_KEYWORDS]
+
 export function LandingPage() {
   const router = useRouter()
 
@@ -60,6 +63,8 @@ export function LandingPage() {
       <style>{`
         .landing h1, .landing h2, .landing h3 { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 600; letter-spacing: -0.03em; }
         .landing button { font-family: 'Instrument Sans', system-ui, sans-serif; }
+        @keyframes wm-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes wm-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
       `}</style>
       <div className="landing">
 
@@ -98,9 +103,24 @@ export function LandingPage() {
         {/* Hero */}
         <section style={{ maxWidth: 1120, margin: "0 auto", padding: "88px 32px 72px", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
           <div style={{ flex: "1 1 460px", minWidth: 0 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 999, padding: "5px 12px", fontSize: 12, color: FAINT }}>
-              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#0b8f6a", display: "block" }} />
-              <span style={{ display: "block" }}>Instagram reply automation</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 7, flex: "none", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#0b8f6a", display: "block", animation: "wm-pulse 1.8s ease-in-out infinite" }} />
+                <span style={{ display: "block" }}>Listening</span>
+              </span>
+              <span
+                style={{
+                  display: "block", flex: 1, minWidth: 0, overflow: "hidden",
+                  maskImage: "linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 48px), transparent)",
+                  WebkitMaskImage: "linear-gradient(90deg, transparent, #000 24px, #000 calc(100% - 48px), transparent)",
+                }}
+              >
+                <span style={{ display: "flex", gap: 8, width: "max-content", animation: "wm-marquee 26s linear infinite" }}>
+                  {LISTENING_MARQUEE.map((kw, i) => (
+                    <span key={i} style={{ display: "block", flex: "none", background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 999, padding: "4px 11px", fontSize: 12, color: MUTED }}>{kw}</span>
+                  ))}
+                </span>
+              </span>
             </div>
             <h1 style={{ margin: "22px 0 0", fontSize: "clamp(40px, 5.2vw, 60px)", lineHeight: 1.02 }}>Rules that reply for you.</h1>
             <p style={{ margin: "20px 0 0", maxWidth: 520, fontSize: 17, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>
