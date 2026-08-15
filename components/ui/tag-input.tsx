@@ -16,7 +16,7 @@ export function TagInput({ value, onChange, placeholder, className }: TagInputPr
     const [inputValue, setInputValue] = useState("")
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter" || e.key === ",") {
+        if (e.key === "Enter") {
             e.preventDefault()
             addTag()
         } else if (e.key === "Backspace" && !inputValue && value.length > 0) {
