@@ -12,6 +12,8 @@ interface AutomationListProps {
   onEdit: (rule: Automation) => void
   onChanged: () => void
   userId: string
+  emptyTitle?: string
+  emptyHint?: string
 }
 
 function triggerLabel(rule: Automation) {
@@ -57,7 +59,10 @@ function delayLabel(rule: Automation) {
   return "Instant"
 }
 
-export function AutomationList({ automations, onDelete, onEdit, onChanged, userId }: AutomationListProps) {
+export function AutomationList({
+  automations, onDelete, onEdit, onChanged, userId,
+  emptyTitle = "No automations yet", emptyHint = "Create your first automation above — it just takes 30 seconds.",
+}: AutomationListProps) {
   const handleToggle = async (rule: Automation, active: boolean) => {
     const res = await fetch("/api/automations", {
       method: "PATCH",
@@ -92,9 +97,9 @@ export function AutomationList({ automations, onDelete, onEdit, onChanged, userI
         <div className="w-16 h-16 mx-auto mb-4 bg-black/[0.04] rounded-2xl flex items-center justify-center border border-black/10">
           <Zap className="w-7 h-7 text-neutral-400" />
         </div>
-        <h3 className="text-base font-bold text-neutral-900 mb-1">No automations yet</h3>
+        <h3 className="text-base font-bold text-neutral-900 mb-1">{emptyTitle}</h3>
         <p className="text-sm text-neutral-500 max-w-sm mx-auto">
-          Create your first automation above — it just takes 30 seconds.
+          {emptyHint}
         </p>
       </div>
     )

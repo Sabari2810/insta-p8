@@ -6,9 +6,20 @@ import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { AutomationList } from "@/components/dashboard/AutomationList"
 import { CreateRuleForm } from "@/components/dashboard/CreateRuleForm"
 import { PaginationControls } from "@/components/dashboard/PaginationControls"
-import { MessageCircle, Send, Sparkles, Zap, Plus } from "lucide-react"
+import { MessageCircle, Send, Sparkles, Zap, Plus, Search } from "lucide-react"
 import type { Automation } from "@/lib/types"
 import { Spinner } from "@/components/ui/spinner"
+
+function matchesSearch(rule: Automation, query: string) {
+    if (!query) return true
+    const q = query.toLowerCase()
+    const content = (rule.response_content as any)?.message || ""
+    return (
+        rule.name.toLowerCase().includes(q) ||
+        rule.trigger_value.toLowerCase().includes(q) ||
+        content.toLowerCase().includes(q)
+    )
+}
 
 export default function AutomationsPage() {
     const { userId, isLoading: isSessionLoading } = useInstagramSession()
@@ -19,6 +30,7 @@ export default function AutomationsPage() {
     const [activeTab, setActiveTab] = useState<'comment' | 'dm' | 'story'>('comment')
     const [showCreateForm, setShowCreateForm] = useState(false)
     const [editRule, setEditRule] = useState<Automation | null>(null)
+    const [search, setSearch] = useState("")
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(20)
 
@@ -57,10 +69,10 @@ export default function AutomationsPage() {
         setShowCreateForm(true)
     }
 
-    // Changing tabs invalidates whatever page we were on.
+    // Changing the tab or search query invalidates whatever page we were on.
     useEffect(() => {
         setPage(1)
-    }, [activeTab])
+    }, [activeTab, search])
 
     if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3]">
         <Spinner />
@@ -68,9 +80,10 @@ export default function AutomationsPage() {
     if (!userId) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3] text-neutral-500">Please log in</div>
 
     const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
-    const pageCount = Math.max(1, Math.ceil(filteredAutomations.length / pageSize))
+    const searchedAutomations = filteredAutomations.filter((a) => matchesSearch(a, search))
+    const pageCount = Math.max(1, Math.ceil(searchedAutomations.length / pageSize))
     const currentPage = Math.min(page, pageCount)
-    const paginatedAutomations = filteredAutomations.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    const paginatedAutomations = searchedAutomations.slice((currentPage - 1) * pageSize, currentPage * pageSize)
     const counts = {
         comment: automations.filter(a => a.trigger_source === 'comment').length,
         dm: automations.filter(a => a.trigger_source === 'dm').length,
@@ -158,19 +171,31 @@ export default function AutomationsPage() {
                     </div>
                 ) : (
                     <div className="space-y-4">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <input
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full bg-white border border-black/10 rounded-xl pl-10 pr-4 py-2 text-sm text-neutral-900 focus:outline-none focus:border-brand placeholder:text-muted-foreground/60 transition-all"
+                                placeholder="Search by name or trigger keyword..."
+                            />
+                        </div>
+
                         <AutomationList
                             automations={paginatedAutomations}
                             onDelete={handleDeleteRule}
                             onEdit={handleEditRule}
                             onChanged={fetchAutomations}
                             userId={userId}
+                            emptyTitle={search ? "No matches" : undefined}
+                            emptyHint={search ? `No automations match "${search}".` : undefined}
                         />
 
-                        {filteredAutomations.length > 0 && (
+                        {searchedAutomations.length > 0 && (
                             <PaginationControls
                                 page={currentPage}
                                 pageSize={pageSize}
-                                total={filteredAutomations.length}
+                                total={searchedAutomations.length}
                                 onPageChange={setPage}
                                 onPageSizeChange={(size) => { setPageSize(size); setPage(1) }}
                             />
