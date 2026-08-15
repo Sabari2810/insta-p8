@@ -19,6 +19,9 @@ export default defineConfig({
     },
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // devices["Desktop Chrome"] carries its own fixed 1280x720 viewport, which
+    // would silently override the `viewport: null` above — re-null it here so
+    // the page actually fills the maximized window instead of a small fixed area.
+    { name: "chromium", use: { ...devices["Desktop Chrome"], viewport: null } },
   ],
 })
