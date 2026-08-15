@@ -78,23 +78,33 @@ export function IceBreakersManager() {
     }
 
     if (isLoading || fetching && !breakers.length) {
-        return <div className="p-10 flex justify-center"><Spinner /></div>
+        return <div className="h-screen flex items-center justify-center bg-[#f6f5f3]"><Spinner /></div>
     }
 
     return (
-        <div className="space-y-6 max-w-2xl mx-auto">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="font-serif-display text-3xl text-neutral-900">Ice Breakers</h2>
-                    <p className="text-muted-foreground text-sm">
-                        Questions people see when they start a chat with you.
-                    </p>
+        <div className="min-h-screen bg-[#f6f5f3]">
+            {/* Header */}
+            <div className="px-12 py-10 bg-white">
+                <div className="flex items-end justify-between gap-4 flex-wrap">
+                    <div>
+                        <p className="font-mono-ui text-[10px] uppercase tracking-[0.3em] text-neutral-500 mb-2">Conversation starters</p>
+                        <h1 className="font-serif-display text-4xl md:text-5xl text-neutral-900 leading-none">Ice Breakers</h1>
+                    </div>
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="flex items-center gap-2 h-9 px-5 rounded-full bg-brand text-white font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all hover:brightness-95 active:scale-95 disabled:opacity-50"
+                    >
+                        {saving ? <Spinner /> : <Save className="w-4 h-4" />}
+                        Save & Sync
+                    </button>
                 </div>
-                <Button onClick={handleSave} disabled={saving} className="bg-brand hover:brightness-95 text-white font-bold">
-                    {saving ? <Spinner /> : <Save className="w-4 h-4 mr-2" />}
-                    Save & Sync
-                </Button>
             </div>
+
+            <div className="p-8 space-y-6">
+                <p className="text-sm text-muted-foreground">
+                    Questions people see when they start a chat with you.
+                </p>
 
             <div className="space-y-4">
                 {breakers.map((item, idx) => (
@@ -152,6 +162,7 @@ export function IceBreakersManager() {
                 <p>
                     Changes made here are automatically synced to your Instagram Profile. It may take a few minutes for them to appear for all users.
                 </p>
+            </div>
             </div>
         </div>
     )
