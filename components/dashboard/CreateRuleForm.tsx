@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import {
   FiPlus as Plus, FiTrash2 as Trash2, FiFilm as Film, FiCheck as Check, FiMessageCircle as MessageCircle, FiSend as Send, FiAtSign as AtSign, FiHeart as Heart,
   FiMessageSquare as MessageSquare, FiImage as ImageIcon, FiClock as Timer, FiEye as Eye, FiVolume2 as Megaphone, FiLock as Lock,
@@ -36,6 +36,14 @@ const STEPS = [
 export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: CreateRuleFormProps) {
   const isEditing = !!editRule
   const [step, setStep] = useState(0)
+  const topRef = useRef<HTMLDivElement>(null)
+
+  // Each step's fields render at the top of the form, but the page can be
+  // scrolled well past that from filling in the previous step — bring the
+  // wizard back into view instead of leaving the user staring at nothing.
+  useEffect(() => {
+    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }, [step])
 
   /* ---------- WHEN ---------- */
   const [triggers, setTriggers] = useState<string[]>([])
@@ -265,6 +273,7 @@ export function CreateRuleForm({ userId, triggerSource, onSuccess, editRule }: C
 
   return (
     <div className="space-y-8">
+      <div ref={topRef} />
       {/* ── Sexy Stepper Timeline ── */}
       <div className="relative bg-black/[0.03] border border-black/10 rounded-2xl p-4 md:px-8">
         <div className="flex items-center justify-between gap-4 relative">
