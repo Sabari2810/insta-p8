@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { FiTerminal as Terminal } from "react-icons/fi"
 
@@ -35,6 +36,42 @@ const FACTS = [
 
 const LISTENING_KEYWORDS = ["price", "link", "preset", "info", "@mention", "🔥 reaction", "story reply", "dm", "guide", "book"]
 const LISTENING_MARQUEE = [...LISTENING_KEYWORDS, ...LISTENING_KEYWORDS]
+
+/** Fades + slides an element up once it scrolls into view, then leaves it be. */
+function Reveal({ children, delay = 0, style }: { children: React.ReactNode; delay?: number; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        ...style,
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(28px)",
+        transition: `opacity 700ms cubic-bezier(.2,.7,.2,1) ${delay}ms, transform 700ms cubic-bezier(.2,.7,.2,1) ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export function LandingPage() {
   const router = useRouter()
@@ -102,7 +139,7 @@ export function LandingPage() {
 
         {/* Hero */}
         <section style={{ maxWidth: 1120, margin: "0 auto", padding: "88px 32px 72px", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
-          <div style={{ flex: "1 1 460px", minWidth: 0 }}>
+          <Reveal style={{ flex: "1 1 460px", minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
               <span style={{ display: "flex", alignItems: "center", gap: 7, flex: "none", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>
                 <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#0b8f6a", display: "block", animation: "wm-pulse 1.8s ease-in-out infinite" }} />
@@ -148,9 +185,9 @@ export function LandingPage() {
               <span style={{ display: "block" }}>Live inbox</span>
               <span style={{ display: "block" }}>Follow gate</span>
             </div>
-          </div>
+          </Reveal>
 
-          <div style={{ flex: "0 1 300px", display: "flex", justifyContent: "center" }}>
+          <Reveal delay={150} style={{ flex: "0 1 300px", display: "flex", justifyContent: "center" }}>
             <div style={{ width: 270, background: "#0f0f10", borderRadius: 34, padding: 10, boxShadow: "0 20px 44px rgba(24,20,50,0.2)" }}>
               <div style={{ background: "#141416", borderRadius: 26, overflow: "hidden", display: "flex", flexDirection: "column", height: 432 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 6px", fontSize: 10, color: "#8e8b88" }}>
@@ -173,21 +210,25 @@ export function LandingPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Reveal>
         </section>
 
         {/* How it works */}
         <section id="how" style={{ borderTop: `1px solid ${BORDER}`, background: "#ffffff" }}>
           <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px" }}>
-            <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>How it works</h6>
-            <h2 style={{ margin: "0 0 40px", fontSize: 36, maxWidth: 520 }}>Three steps, then it runs without you.</h2>
+            <Reveal>
+              <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>How it works</h6>
+              <h2 style={{ margin: "0 0 40px", fontSize: 36, maxWidth: 520 }}>Three steps, then it runs without you.</h2>
+            </Reveal>
             <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 24 }}>
-              {STEPS.map((s) => (
-                <div key={s.n} style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 24 }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: 8, background: INK, color: "#ffffff", fontSize: 12, fontWeight: 600 }}>{s.n}</div>
-                  <h3 style={{ margin: "16px 0 6px", fontSize: 19 }}>{s.title}</h3>
-                  <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>{s.body}</p>
-                </div>
+              {STEPS.map((s, i) => (
+                <Reveal key={s.n} delay={i * 100}>
+                  <div style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 24, height: "100%" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 26, height: 26, borderRadius: 8, background: INK, color: "#ffffff", fontSize: 12, fontWeight: 600 }}>{s.n}</div>
+                    <h3 style={{ margin: "16px 0 6px", fontSize: 19 }}>{s.title}</h3>
+                    <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>{s.body}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -196,20 +237,24 @@ export function LandingPage() {
         {/* Features */}
         <section id="features" style={{ borderTop: `1px solid ${BORDER}` }}>
           <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px" }}>
-            <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>Features</h6>
-            <h2 style={{ margin: "0 0 40px", fontSize: 36, maxWidth: 600 }}>Everything the paid tools do.</h2>
+            <Reveal>
+              <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>Features</h6>
+              <h2 style={{ margin: "0 0 40px", fontSize: 36, maxWidth: 600 }}>Everything the paid tools do.</h2>
+            </Reveal>
             <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: 24 }}>
-              {FEATURES.map((t) => (
-                <div key={t.title} style={{ background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 14, padding: 24 }}>
-                  <h3 style={{ margin: "0 0 6px", fontSize: 19 }}>{t.title}</h3>
-                  <p style={{ margin: "0 0 16px", fontSize: 14, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>{t.body}</p>
-                  {t.points.map((p) => (
-                    <div key={p} style={{ display: "flex", gap: 9, padding: "6px 0", fontSize: 13, color: INK }}>
-                      <span style={{ display: "block", color: ACCENT }}>—</span>
-                      <span style={{ display: "block" }}>{p}</span>
-                    </div>
-                  ))}
-                </div>
+              {FEATURES.map((t, i) => (
+                <Reveal key={t.title} delay={(i % 3) * 100}>
+                  <div style={{ background: "#ffffff", border: `1px solid ${BORDER}`, borderRadius: 14, padding: 24, height: "100%" }}>
+                    <h3 style={{ margin: "0 0 6px", fontSize: 19 }}>{t.title}</h3>
+                    <p style={{ margin: "0 0 16px", fontSize: 14, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>{t.body}</p>
+                    {t.points.map((p) => (
+                      <div key={p} style={{ display: "flex", gap: 9, padding: "6px 0", fontSize: 13, color: INK }}>
+                        <span style={{ display: "block", color: ACCENT }}>—</span>
+                        <span style={{ display: "block" }}>{p}</span>
+                      </div>
+                    ))}
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -218,19 +263,21 @@ export function LandingPage() {
         {/* Ownership */}
         <section id="ownership" style={{ borderTop: `1px solid ${BORDER}`, background: "#ffffff" }}>
           <div className="grid grid-cols-1 md:grid-cols-2" style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px", gap: 56, alignItems: "center" }}>
-            <div>
+            <Reveal>
               <h6 style={{ margin: "0 0 10px", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>Your data</h6>
               <h2 style={{ margin: "0 0 16px", fontSize: 36 }}>Dedicated and private.</h2>
               <p style={{ margin: 0, fontSize: 16, lineHeight: 1.65, color: MUTED, maxWidth: 460, textWrap: "pretty" as any }}>
                 Your own private setup, never a shared tool where your data sits next to someone else's. Your Instagram access token is encrypted before it is stored and only decrypted in memory when a reply needs to be sent. Disconnect from Settings at any time and the stored token is cleared immediately.
               </p>
-            </div>
+            </Reveal>
             <div className="grid grid-cols-2" style={{ gap: 16 }}>
-              {FACTS.map((f) => (
-                <div key={f.k} style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 18 }}>
-                  <div style={{ fontFamily: "'Bricolage Grotesque', system-ui, sans-serif", fontSize: 15, fontWeight: 600 }}>{f.k}</div>
-                  <div style={{ fontSize: 13, color: FAINT, marginTop: 4, lineHeight: 1.5 }}>{f.v}</div>
-                </div>
+              {FACTS.map((f, i) => (
+                <Reveal key={f.k} delay={i * 90}>
+                  <div style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 18, height: "100%" }}>
+                    <div style={{ fontFamily: "'Bricolage Grotesque', system-ui, sans-serif", fontSize: 15, fontWeight: 600 }}>{f.k}</div>
+                    <div style={{ fontSize: 13, color: FAINT, marginTop: 4, lineHeight: 1.5 }}>{f.v}</div>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -238,7 +285,7 @@ export function LandingPage() {
 
         {/* Final CTA */}
         <section style={{ borderTop: `1px solid ${BORDER}` }}>
-          <div style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 18 }}>
+          <Reveal style={{ maxWidth: 1120, margin: "0 auto", padding: "72px 32px", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 18 }}>
             <h2 style={{ margin: 0, fontSize: 40, maxWidth: 600 }}>Set up your first automation today.</h2>
             <p style={{ margin: 0, maxWidth: 440, fontSize: 16, color: MUTED }}>Connect your professional Instagram account and write your first reply in a couple of minutes.</p>
             <button
@@ -248,7 +295,7 @@ export function LandingPage() {
             >
               Connect Instagram
             </button>
-          </div>
+          </Reveal>
         </section>
 
         {/* Footer */}
