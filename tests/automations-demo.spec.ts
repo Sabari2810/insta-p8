@@ -1,4 +1,5 @@
-import { test, expect, type Page } from "@playwright/test"
+import { test, expect, type Locator, type Page } from "@playwright/test"
+import { clickWithCursor, installCursor } from "./utils/cursor"
 
 /**
  * Single scripted walkthrough for screen-recording a demo video.
@@ -9,123 +10,129 @@ import { test, expect, type Page } from "@playwright/test"
  * empty (it's in-memory and persists across runs on the same server process —
  * re-running this test without restarting will pile up duplicate rules).
  *
- * Speed knob: DEMO_PACE=1.5 npm run demo slows every pause down by 1.5x if you
- * want more breathing room for narration; DEMO_PACE=0.5 speeds it up.
+ * Speed knob: DEMO_PACE=2 npm run demo slows every pause down further if you
+ * want more breathing room for narration; DEMO_PACE=0.7 speeds it back up.
+ * Default is already paced for recording, not test-speed.
  */
 
-const PACE = process.env.DEMO_PACE ? Number(process.env.DEMO_PACE) : 1
+const PACE = process.env.DEMO_PACE ? Number(process.env.DEMO_PACE) : 1.5
 const beat = (page: Page, ms: number) => page.waitForTimeout(ms * PACE)
+const click = (page: Page, locator: Locator) => clickWithCursor(page, locator)
 
 test("Wingman demo — comment, DM, and story automations", async ({ page }) => {
-  test.setTimeout(5 * 60 * 1000)
+  test.setTimeout(10 * 60 * 1000)
+  await installCursor(page)
 
   // ---------- Scene 0: landing + dev login ----------
   await page.goto("/")
-  await beat(page, 1500)
-  await page.getByRole("button", { name: "Dev Login" }).click()
-  await page.waitForURL("**/dashboard")
   await beat(page, 1800)
+  await click(page, page.getByRole("button", { name: "Dev Login" }))
+  await page.waitForURL("**/dashboard")
+  await beat(page, 2200)
 
   // ---------- Scene 1: Automations page ----------
   await page.goto("/automations")
   await expect(page.getByRole("heading", { name: "Automations" })).toBeVisible()
-  await beat(page, 2000)
+  await beat(page, 2500)
 
   // ================= Scene 2-4: COMMENT AUTOMATION =================
-  await page.getByRole("button", { name: "New Rule" }).click()
-  await beat(page, 800)
+  await click(page, page.getByRole("button", { name: "New Rule" }))
+  await beat(page, 1000)
 
-  await page.getByRole("button", { name: "All Posts & Reels" }).click()
-  await beat(page, 700)
+  await click(page, page.getByRole("button", { name: "All Posts & Reels" }))
+  await beat(page, 900)
 
   const commentKeyword = page.getByPlaceholder("type keyword, press Enter (e.g. guide)")
-  await commentKeyword.click()
-  await commentKeyword.pressSequentially("sale", { delay: 70 })
+  await click(page, commentKeyword)
+  await commentKeyword.pressSequentially("sale", { delay: 110 })
+  await beat(page, 400)
   await commentKeyword.press("Enter")
-  await beat(page, 1200)
+  await beat(page, 1500)
 
-  await page.getByRole("button", { name: "Continue" }).click()
-  await beat(page, 900)
+  await click(page, page.getByRole("button", { name: "Continue" }))
+  await beat(page, 1100)
 
   const commentMessage = page.getByPlaceholder("Type the message to send in DMs...")
-  await commentMessage.click()
+  await click(page, commentMessage)
   await commentMessage.pressSequentially(
     "Here's 20% off — sale ends Friday! Use code SALE20 at checkout.",
-    { delay: 18 },
+    { delay: 32 },
   )
-  await beat(page, 1400)
+  await beat(page, 1800)
 
-  await page.getByRole("button", { name: "Continue" }).click()
-  await beat(page, 1000)
+  await click(page, page.getByRole("button", { name: "Continue" }))
+  await beat(page, 1300)
 
-  await page.getByRole("button", { name: "Go Live" }).click()
-  await beat(page, 2200)
+  await click(page, page.getByRole("button", { name: "Go Live" }))
+  await beat(page, 2800)
 
   // ================= Scene 5-6: DM AUTOMATION =================
-  await page.getByRole("button", { name: /^DMs\b/ }).click()
-  await beat(page, 1000)
+  await click(page, page.getByRole("button", { name: /^DMs\b/ }))
+  await beat(page, 1300)
 
-  await page.getByRole("button", { name: "New Rule" }).click()
-  await beat(page, 800)
+  await click(page, page.getByRole("button", { name: "New Rule" }))
+  await beat(page, 1000)
 
   const dmKeyword = page.getByPlaceholder("type keyword, press Enter (e.g. price)")
-  await dmKeyword.click()
-  await dmKeyword.pressSequentially("bundle", { delay: 70 })
+  await click(page, dmKeyword)
+  await dmKeyword.pressSequentially("bundle", { delay: 110 })
+  await beat(page, 400)
   await dmKeyword.press("Enter")
-  await beat(page, 1200)
+  await beat(page, 1500)
 
-  await page.getByRole("button", { name: "Continue" }).click()
-  await beat(page, 900)
+  await click(page, page.getByRole("button", { name: "Continue" }))
+  await beat(page, 1100)
 
   const dmMessage = page.getByPlaceholder("Type the message to send in DMs...")
-  await dmMessage.click()
+  await click(page, dmMessage)
   await dmMessage.pressSequentially(
     "Here's our bundle deal — 3 products, one price. Want the link?",
-    { delay: 18 },
+    { delay: 32 },
   )
-  await beat(page, 1400)
+  await beat(page, 1800)
 
-  await page.getByRole("button", { name: "Continue" }).click()
-  await beat(page, 1000)
+  await click(page, page.getByRole("button", { name: "Continue" }))
+  await beat(page, 1300)
 
-  await page.getByRole("button", { name: "Go Live" }).click()
-  await beat(page, 2200)
+  await click(page, page.getByRole("button", { name: "Go Live" }))
+  await beat(page, 2800)
 
   // ================= Scene 7-8: STORY AUTOMATION =================
-  await page.getByRole("button", { name: /^Stories\b/ }).click()
+  await click(page, page.getByRole("button", { name: /^Stories\b/ }))
+  await beat(page, 1300)
+
+  await click(page, page.getByRole("button", { name: "New Rule" }))
   await beat(page, 1000)
 
-  await page.getByRole("button", { name: "New Rule" }).click()
-  await beat(page, 800)
-
-  await page.getByRole("button", { name: "Reacts" }).click()
-  await beat(page, 800)
+  await click(page, page.getByRole("button", { name: "Reacts" }))
+  await beat(page, 1000)
 
   const storyEmoji = page.getByPlaceholder("e.g. ❤️, 🔥, 👍")
-  await storyEmoji.click()
-  await storyEmoji.pressSequentially("⭐", { delay: 70 })
+  await click(page, storyEmoji)
+  await storyEmoji.pressSequentially("⭐", { delay: 110 })
+  await beat(page, 400)
   await storyEmoji.press("Enter")
-  await beat(page, 1200)
+  await beat(page, 1500)
 
-  await page.getByRole("button", { name: "Continue" }).click()
-  await beat(page, 900)
+  await click(page, page.getByRole("button", { name: "Continue" }))
+  await beat(page, 1100)
 
   const storyMessage = page.getByPlaceholder("Type the message to send in DMs...")
-  await storyMessage.click()
+  await click(page, storyMessage)
   await storyMessage.pressSequentially(
     "Thanks for the reaction! Here's something for you 👇",
-    { delay: 18 },
+    { delay: 32 },
   )
-  await beat(page, 1400)
+  await beat(page, 1800)
 
-  await page.getByRole("button", { name: "Continue" }).click()
-  await beat(page, 1000)
+  await click(page, page.getByRole("button", { name: "Continue" }))
+  await beat(page, 1300)
 
-  await page.getByRole("button", { name: "Go Live" }).click()
-  await beat(page, 2200)
+  await click(page, page.getByRole("button", { name: "Go Live" }))
+  await beat(page, 2800)
 
   // ---------- Scene 9: the finished list ----------
-  await page.getByRole("button", { name: /^Comments\b/ }).click()
+  await click(page, page.getByRole("button", { name: /^Comments\b/ }))
   await expect(page.getByText('Reply to "sale"')).toBeVisible()
-  await beat(page, 2500)
+  await beat(page, 3200)
 })
