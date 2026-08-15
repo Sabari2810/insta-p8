@@ -80,7 +80,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-archivo), "Archivo Fallback", sans-serif;
+  --font-sans: var(--font-instrument), system-ui, sans-serif;
   --font-serif: "Crimson Pro", serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -170,7 +170,9 @@
 
 /* Editorial type utilities (shared across app) */
 .font-serif-display {
-  font-family: var(--font-sans);
+  font-family: var(--font-bricolage), system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 .font-mono-ui {
   font-family: 'JetBrains Mono', ui-monospace, monospace;

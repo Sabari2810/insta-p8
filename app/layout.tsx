@@ -1,12 +1,13 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Archivo } from "next/font/google"
+import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Toaster } from "@/components/ui/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
 
-const archivo = Archivo({ subsets: ["latin"], variable: "--font-archivo" })
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-bricolage" })
+const instrumentSans = Instrument_Sans({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-instrument" })
 
 export const metadata: Metadata = {
   title: "Wingman - Instagram Automation",
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${archivo.variable} font-sans antialiased`} suppressHydrationWarning>
+      <body className={`${bricolage.variable} ${instrumentSans.variable} font-sans antialiased`} suppressHydrationWarning>
         <ThemeProvider>
           {children}
         </ThemeProvider>
