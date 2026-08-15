@@ -2,7 +2,16 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
+import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google"
 import { FiTerminal as Terminal } from "react-icons/fi"
+
+// Self-hosted at build time via next/font — the raw `@import url(...)` this
+// page used before never actually loaded (Tailwind v4's CSS pipeline dropped
+// it silently: zero network requests, and the rule was missing from the
+// compiled stylesheet entirely), so every heading was quietly falling back
+// to the browser default sans-serif instead of Bricolage Grotesque.
+const bricolage = Bricolage_Grotesque({ subsets: ["latin"], weight: ["400", "500", "600", "700"] })
+const instrumentSans = Instrument_Sans({ subsets: ["latin"], weight: ["400", "500", "600"] })
 
 const ACCENT = "#5b46f2"
 const ACCENT_HOVER = "#4735d2"
@@ -96,10 +105,10 @@ export function LandingPage() {
   }
 
   return (
-    <div style={{ background: BG, color: INK, fontFamily: "'Instrument Sans', system-ui, sans-serif" }}>
+    <div style={{ background: BG, color: INK, fontFamily: instrumentSans.style.fontFamily }}>
       <style>{`
-        .landing h1, .landing h2, .landing h3 { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 600; letter-spacing: -0.03em; }
-        .landing button { font-family: 'Instrument Sans', system-ui, sans-serif; }
+        .landing h1, .landing h2, .landing h3 { font-family: ${bricolage.style.fontFamily}; font-weight: 600; letter-spacing: -0.03em; }
+        .landing button { font-family: ${instrumentSans.style.fontFamily}; }
         @keyframes wm-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes wm-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.8); } }
       `}</style>
@@ -110,7 +119,7 @@ export function LandingPage() {
           <div style={{ maxWidth: 1120, margin: "0 auto", padding: "16px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <img src="/favicon.jpeg" alt="" style={{ width: 28, height: 28, borderRadius: "50%", display: "block" }} />
-              <span style={{ display: "block", fontFamily: "'Bricolage Grotesque', system-ui, sans-serif", fontWeight: 600, fontSize: 19, letterSpacing: "-0.02em" }}>Wingman</span>
+              <span style={{ display: "block", fontFamily: bricolage.style.fontFamily, fontWeight: 600, fontSize: 19, letterSpacing: "-0.02em" }}>Wingman</span>
             </div>
             <nav style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
               <a href="#how" className="hidden md:inline transition-colors hover:text-[#191817]" style={{ fontSize: 14, color: FAINT }}>How it works</a>
@@ -274,7 +283,7 @@ export function LandingPage() {
               {FACTS.map((f, i) => (
                 <Reveal key={f.k} delay={i * 90}>
                   <div style={{ border: `1px solid ${BORDER}`, borderRadius: 14, padding: 18, height: "100%" }}>
-                    <div style={{ fontFamily: "'Bricolage Grotesque', system-ui, sans-serif", fontSize: 15, fontWeight: 600 }}>{f.k}</div>
+                    <div style={{ fontFamily: bricolage.style.fontFamily, fontSize: 15, fontWeight: 600 }}>{f.k}</div>
                     <div style={{ fontSize: 13, color: FAINT, marginTop: 4, lineHeight: 1.5 }}>{f.v}</div>
                   </div>
                 </Reveal>
