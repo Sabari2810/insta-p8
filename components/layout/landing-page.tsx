@@ -84,7 +84,6 @@ export function LandingPage() {
                   Dev Login
                 </button>
               )}
-              <button onClick={handleLogin} className="transition-colors hover:text-[#5b46f2]" style={{ fontSize: 14, fontWeight: 600, color: INK }}>Log in</button>
               <button
                 onClick={handleLogin}
                 className="transition-colors hover:bg-[#4735d2]"
