@@ -260,7 +260,6 @@ export function LandingPage() {
             </span>
             <div style={{ display: "flex", gap: 22 }}>
               <a href="/privacy" className="transition-colors hover:text-[#191817]" style={{ color: FAINT }}>Privacy</a>
-              <button onClick={handleLogin} className="transition-colors hover:text-[#191817]" style={{ color: FAINT }}>Log in</button>
             </div>
           </div>
         </footer>
