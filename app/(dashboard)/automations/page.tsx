@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { AutomationList } from "@/components/dashboard/AutomationList"
 import { CreateRuleForm } from "@/components/dashboard/CreateRuleForm"
+import { PaginationControls } from "@/components/dashboard/PaginationControls"
 import { MessageCircle, Send, Sparkles, Zap, Plus } from "lucide-react"
 import type { Automation } from "@/lib/types"
 import { Spinner } from "@/components/ui/spinner"
@@ -18,6 +19,8 @@ export default function AutomationsPage() {
     const [activeTab, setActiveTab] = useState<'comment' | 'dm' | 'story'>('comment')
     const [showCreateForm, setShowCreateForm] = useState(false)
     const [editRule, setEditRule] = useState<Automation | null>(null)
+    const [page, setPage] = useState(1)
+    const [pageSize, setPageSize] = useState(20)
 
     // Deep link from the dashboard's "New Rule" quick action
     useEffect(() => {
@@ -54,12 +57,20 @@ export default function AutomationsPage() {
         setShowCreateForm(true)
     }
 
+    // Changing tabs invalidates whatever page we were on.
+    useEffect(() => {
+        setPage(1)
+    }, [activeTab])
+
     if (isSessionLoading) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3]">
         <Spinner />
     </div>
     if (!userId) return <div className="h-screen flex items-center justify-center bg-[#f6f5f3] text-neutral-500">Please log in</div>
 
     const filteredAutomations = automations.filter(a => a.trigger_source === activeTab)
+    const pageCount = Math.max(1, Math.ceil(filteredAutomations.length / pageSize))
+    const currentPage = Math.min(page, pageCount)
+    const paginatedAutomations = filteredAutomations.slice((currentPage - 1) * pageSize, currentPage * pageSize)
     const counts = {
         comment: automations.filter(a => a.trigger_source === 'comment').length,
         dm: automations.filter(a => a.trigger_source === 'dm').length,
@@ -146,13 +157,25 @@ export default function AutomationsPage() {
                         <Spinner />
                     </div>
                 ) : (
-                    <AutomationList
-                        automations={filteredAutomations}
-                        onDelete={handleDeleteRule}
-                        onEdit={handleEditRule}
-                        onChanged={fetchAutomations}
-                        userId={userId}
-                    />
+                    <div className="space-y-4">
+                        <AutomationList
+                            automations={paginatedAutomations}
+                            onDelete={handleDeleteRule}
+                            onEdit={handleEditRule}
+                            onChanged={fetchAutomations}
+                            userId={userId}
+                        />
+
+                        {filteredAutomations.length > 0 && (
+                            <PaginationControls
+                                page={currentPage}
+                                pageSize={pageSize}
+                                total={filteredAutomations.length}
+                                onPageChange={setPage}
+                                onPageSizeChange={(size) => { setPageSize(size); setPage(1) }}
+                            />
+                        )}
+                    </div>
                 )}
             </div>
         </div>
