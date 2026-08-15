@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
+import { Search } from "lucide-react"
 import { useInstagramSession } from "@/hooks/use-instagram-session"
 import { Spinner } from "@/components/ui/spinner"
 import { PaginationControls } from "@/components/dashboard/PaginationControls"
@@ -14,12 +15,26 @@ export default function ActivityPage() {
     const [page, setPage] = useState(1)
     const [pageSize, setPageSize] = useState(20)
     const [loading, setLoading] = useState(true)
+    const [searchInput, setSearchInput] = useState("")
+    const [search, setSearch] = useState("")
+
+    // Debounce the search box so we're not firing a request on every keystroke.
+    useEffect(() => {
+        const t = setTimeout(() => setSearch(searchInput.trim()), 300)
+        return () => clearTimeout(t)
+    }, [searchInput])
+
+    useEffect(() => {
+        setPage(1)
+    }, [search])
 
     const fetchActivity = useCallback(async () => {
         if (!userId) return
         setLoading(true)
         try {
-            const res = await fetch(`/api/dashboard/activity?userId=${userId}&page=${page}&pageSize=${pageSize}`)
+            const params = new URLSearchParams({ userId, page: String(page), pageSize: String(pageSize) })
+            if (search) params.set("search", search)
+            const res = await fetch(`/api/dashboard/activity?${params.toString()}`)
             const data = await res.json()
             if (data && !data.error) {
                 setActivity(data.data || [])
@@ -30,7 +45,7 @@ export default function ActivityPage() {
         } finally {
             setLoading(false)
         }
-    }, [userId, page, pageSize])
+    }, [userId, page, pageSize, search])
 
     useEffect(() => {
         fetchActivity()
@@ -58,6 +73,16 @@ export default function ActivityPage() {
 
             <div className="p-8">
                 <div className="rounded-2xl border border-black/10 bg-white p-6">
+                    <div className="relative mb-4">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <input
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            className="w-full bg-black/[0.03] border border-black/10 rounded-xl pl-10 pr-4 py-2 text-sm text-neutral-900 focus:outline-none focus:border-brand placeholder:text-muted-foreground/60 transition-all"
+                            placeholder="Search by message or username..."
+                        />
+                    </div>
+
                     {loading ? (
                         <div className="flex items-center justify-center py-16">
                             <Spinner />
@@ -84,7 +109,7 @@ export default function ActivityPage() {
                         </div>
                     ) : (
                         <div className="py-16 text-center text-muted-foreground text-sm">
-                            No activity yet.
+                            {search ? "No activity matches your search." : "No activity yet."}
                         </div>
                     )}
 
