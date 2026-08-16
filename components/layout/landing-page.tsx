@@ -206,7 +206,7 @@ export function LandingPage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px 12px", borderBottom: "1px solid #26262a" }}>
                   <span style={{ width: 30, height: 30, borderRadius: "50%", background: "#2c2c31", display: "block" }} />
                   <span style={{ display: "block" }}>
-                    <span style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#f4f3f1" }}>priya.makes</span>
+                    <span style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#f4f3f1" }}>test_user</span>
                     <span style={{ display: "block", fontSize: 10, color: "#6f6c69" }}>Commented on your reel</span>
                   </span>
                 </div>
@@ -216,6 +216,7 @@ export function LandingPage() {
                   <div style={{ alignSelf: "flex-end", width: "78%", textAlign: "center", border: "1px solid #3a3a40", borderRadius: 12, padding: "9px 12px", fontSize: 12, color: "#f4f3f1" }}>Download the guide</div>
                   <div style={{ alignSelf: "flex-end", fontSize: 10, color: "#6f6c69" }}>sent after 1 min</div>
                   <div style={{ alignSelf: "flex-start", maxWidth: "78%", background: "#26262a", color: "#f4f3f1", borderRadius: "16px 16px 16px 4px", padding: "9px 12px", fontSize: 12 }}>Thank you! ❤️</div>
+                  <div style={{ alignSelf: "flex-end", maxWidth: "78%", background: ACCENT, color: "#ffffff", borderRadius: "16px 16px 4px 16px", padding: "9px 12px", fontSize: 14 }}>🙌</div>
                 </div>
               </div>
             </div>
