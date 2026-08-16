@@ -147,7 +147,7 @@ export function LandingPage() {
         </header>
 
         {/* Hero */}
-        <section style={{ maxWidth: 1120, margin: "0 auto", padding: "88px 32px 72px", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
+        <section style={{ maxWidth: 1120, margin: "0 auto", padding: "40px 32px 72px", display: "flex", flexWrap: "wrap", gap: 56, alignItems: "center" }}>
           <Reveal style={{ flex: "1 1 460px", minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
               <span style={{ display: "flex", alignItems: "center", gap: 7, flex: "none", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: FAINT }}>
@@ -198,7 +198,7 @@ export function LandingPage() {
 
           <Reveal delay={150} style={{ flex: "0 1 300px", display: "flex", justifyContent: "center" }}>
             <div style={{ width: 270, background: "#0f0f10", borderRadius: 34, padding: 10, boxShadow: "0 20px 44px rgba(24,20,50,0.2)" }}>
-              <div style={{ background: "#141416", borderRadius: 26, overflow: "hidden", display: "flex", flexDirection: "column", height: 600 }}>
+              <div style={{ background: "#141416", borderRadius: 26, overflow: "hidden", display: "flex", flexDirection: "column", height: 532 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 6px", fontSize: 10, color: "#8e8b88" }}>
                   <span style={{ display: "block" }}>9:41</span>
                   <span style={{ display: "block" }}>▮▮▮</span>
@@ -224,7 +224,6 @@ export function LandingPage() {
                   <div style={{ alignSelf: "flex-end", maxWidth: "78%", background: ACCENT, color: "#ffffff", borderRadius: "16px 16px 4px 16px", padding: "9px 12px", fontSize: 12 }}>Thanks for reaching out! Here's the link, you can download it directly from here.</div>
                   <div style={{ alignSelf: "flex-end", width: "78%", textAlign: "center", border: "1px solid #3a3a40", borderRadius: 12, padding: "9px 12px", fontSize: 12, color: "#f4f3f1" }}>Download the guide</div>
                   <div style={{ alignSelf: "flex-end", fontSize: 10, color: "#6f6c69" }}>sent after 1 min</div>
-                  <div style={{ alignSelf: "flex-start", maxWidth: "78%", background: "#26262a", color: "#f4f3f1", borderRadius: "16px 16px 16px 4px", padding: "9px 12px", fontSize: 12 }}>Thank you! ❤️</div>
                 </div>
               </div>
             </div>
