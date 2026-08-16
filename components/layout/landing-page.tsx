@@ -43,7 +43,7 @@ const FACTS = [
   { k: "No data selling", v: "Your tags stay with your account" },
 ]
 
-const LISTENING_KEYWORDS = ["price", "link", "preset", "info", "@mention", "🔥 reaction", "story reply", "dm", "guide", "book"]
+const LISTENING_KEYWORDS = ["price", "link", "preset", "info", "@mention", "🔥 reaction", "story reply", "DM", "guide", "book"]
 const LISTENING_MARQUEE = [...LISTENING_KEYWORDS, ...LISTENING_KEYWORDS]
 
 /** Fades + slides an element up once it scrolls into view, then leaves it be. */
@@ -168,9 +168,9 @@ export function LandingPage() {
                 </span>
               </span>
             </div>
-            <h1 style={{ margin: "22px 0 0", fontSize: "clamp(40px, 5.2vw, 60px)", lineHeight: 1.02 }}>Rules that reply for you.</h1>
+            <h1 style={{ margin: "22px 0 0", fontSize: "clamp(40px, 5.2vw, 60px)", lineHeight: 1.02 }}>You set the rules. <br/> We’ll do the talking.</h1>
             <p style={{ margin: "20px 0 0", maxWidth: 520, fontSize: 17, lineHeight: 1.6, color: MUTED, textWrap: "pretty" as any }}>
-              Choose a reel or post, set the keywords to watch for, and write the reply once. Wingman handles comments, DMs and story interactions on your own dedicated setup — with delays and typing indicators so replies read like you sent them.
+              Tell Wingman what to look out for and how you'd like to reply. From comments to DMs and story queries. <br/> your responses are ready when your customers are..
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 30 }}>
               <button
