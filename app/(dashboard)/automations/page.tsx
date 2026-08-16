@@ -111,13 +111,13 @@ export default function AutomationsPage() {
                                 if (showCreateForm) setEditRule(null)
                                 setShowCreateForm(!showCreateForm)
                             }}
-                            className={`flex items-center gap-2 h-9 px-5 rounded-full font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${showCreateForm
+                            className={`flex items-center gap-2 h-9 px-2 rounded-sm font-mono-ui text-[11px] font-bold uppercase tracking-widest transition-all active:scale-95 ${showCreateForm
                                 ? 'border border-black/15 text-neutral-900 hover:border-black/30'
                                 : 'bg-brand text-white hover:brightness-95'
                                 }`}
                         >
-                            <Plus className={`w-4 h-4 transition-transform duration-200 ${showCreateForm ? 'rotate-45' : ''}`} />
-                            {showCreateForm ? 'Close' : 'New Rule'}
+                            <Plus className={`w-4 h-4 transition-transform duration-400 ${showCreateForm ? 'rotate-45' : ''}`} />
+                            {showCreateForm ? 'Close' : 'New Automation'}
                         </button>
                     </div>
                 </div>
