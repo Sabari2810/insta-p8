@@ -1,9 +1,29 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 
-export function useInstagramSession() {
+interface InstagramSessionState {
+    userId: string | null
+    username: string | null
+    profilePic: string | null
+    isLoading: boolean
+    logout: () => Promise<void>
+}
+
+const InstagramSessionContext = createContext<InstagramSessionState | null>(null)
+
+/**
+ * Resolves the session exactly once per dashboard visit, at the layout level. Every page under
+ * (dashboard) used to call the old useInstagramSession() hook independently, each re-running the
+ * full OAuth-code-exchange-or-localStorage-restore dance from scratch on its own mount — on top
+ * of being wasteful, this meant navigating straight into a page (or a fresh page load) could hit
+ * that page's own copy of the race between the session cookie landing and its first authenticated
+ * fetch firing, which the next page navigation just happened not to hit. Resolving it once here,
+ * in a provider that persists across route changes within the layout, removes that race instead
+ * of relying on it resolving itself by the second try.
+ */
+export function InstagramSessionProvider({ children }: { children: ReactNode }) {
     const [username, setUsername] = useState<string | null>(null)
     const [userId, setUserId] = useState<string | null>(null)
     const [profilePic, setProfilePic] = useState<string | null>(null)
@@ -86,5 +106,17 @@ export function useInstagramSession() {
         router.push("/")
     }
 
-    return { userId, username, profilePic, isLoading, logout }
+    return (
+        <InstagramSessionContext.Provider value={{ userId, username, profilePic, isLoading, logout }}>
+            {children}
+        </InstagramSessionContext.Provider>
+    )
+}
+
+export function useInstagramSession(): InstagramSessionState {
+    const ctx = useContext(InstagramSessionContext)
+    if (!ctx) {
+        throw new Error("useInstagramSession must be used within an InstagramSessionProvider")
+    }
+    return ctx
 }

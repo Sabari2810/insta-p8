@@ -3,7 +3,7 @@
 import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { ConnectionBanner } from "@/components/dashboard/ConnectionBanner"
-import { useInstagramSession } from "@/hooks/use-instagram-session"
+import { InstagramSessionProvider, useInstagramSession } from "@/hooks/use-instagram-session"
 import { Spinner } from "@/components/ui/spinner"
 
 export default function DashboardLayout({
@@ -11,6 +11,14 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
+    return (
+        <InstagramSessionProvider>
+            <DashboardShell>{children}</DashboardShell>
+        </InstagramSessionProvider>
+    )
+}
+
+function DashboardShell({ children }: { children: React.ReactNode }) {
     const { username, profilePic, logout, isLoading } = useInstagramSession()
 
     if (isLoading) {
