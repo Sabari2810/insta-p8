@@ -315,6 +315,7 @@ export function LandingPage() {
               <span style={{ display: "block" }}>Wingman — Instagram automation</span>
             </span>
             <div style={{ display: "flex", gap: 22 }}>
+              <a href="/docs" className="transition-colors hover:text-[#191817]" style={{ color: FAINT }}>Docs</a>
               <a href="/privacy" className="transition-colors hover:text-[#191817]" style={{ color: FAINT }}>Privacy</a>
             </div>
           </div>

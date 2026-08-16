@@ -4,7 +4,7 @@ import type React from "react"
 import { cn } from "@/lib/utils"
 import {
   FiGitBranch as Workflow, FiHome as Home, FiLogOut as LogOut, FiSettings as Settings, FiTrendingUp as LineChart,
-  FiInbox as Inbox, FiStar as Sparkles, FiClock as History,
+  FiInbox as Inbox, FiStar as Sparkles, FiClock as History, FiHelpCircle as HelpCircle,
 } from "react-icons/fi"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -82,6 +82,17 @@ export function Sidebar({ className, username = "creator", profilePic, onLogout,
           <div className="flex gap-3">
             <Settings className={cn("w-4 h-4 shrink-0", pathname === "/settings" && "text-brand")} strokeWidth={1.8} />
             <span>Settings</span>
+          </div>
+        </Link>
+
+        <Link
+          href="/docs"
+          onClick={onNavigate}
+          className="flex items-center gap-3 px-3 py-2 rounded-md text-[13px] text-neutral-500 hover:text-neutral-800 hover:bg-black/[0.03] transition-colors"
+        >
+          <div className="flex gap-3">
+            <HelpCircle className="w-4 h-4 shrink-0" strokeWidth={1.8} />
+            <span>Docs</span>
           </div>
         </Link>
       </nav>
