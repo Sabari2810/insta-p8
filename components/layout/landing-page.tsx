@@ -198,19 +198,26 @@ export function LandingPage() {
 
           <Reveal delay={150} style={{ flex: "0 1 300px", display: "flex", justifyContent: "center" }}>
             <div style={{ width: 270, background: "#0f0f10", borderRadius: 34, padding: 10, boxShadow: "0 20px 44px rgba(24,20,50,0.2)" }}>
-              <div style={{ background: "#141416", borderRadius: 26, overflow: "hidden", display: "flex", flexDirection: "column", height: 432 }}>
+              <div style={{ background: "#141416", borderRadius: 26, overflow: "hidden", display: "flex", flexDirection: "column", height: 600 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px 6px", fontSize: 10, color: "#8e8b88" }}>
                   <span style={{ display: "block" }}>9:41</span>
                   <span style={{ display: "block" }}>▮▮▮</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px 12px", borderBottom: "1px solid #26262a" }}>
                   <span style={{ width: 30, height: 30, borderRadius: "50%", background: "#2c2c31", display: "block" }} />
-                  <span style={{ display: "block" }}>
-                    <span style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#f4f3f1" }}>test_user</span>
-                    <span style={{ display: "block", fontSize: 10, color: "#6f6c69" }}>Commented on your reel</span>
-                  </span>
+                  <span style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#f4f3f1" }}>test_user</span>
                 </div>
-                <div style={{ flex: 1, minHeight: 0, padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ flex: 1, minHeight: 0, padding: 14, display: "flex", flexDirection: "column", gap: 10, overflow: "hidden" }}>
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 0 16px" }}>
+                    <span style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, #8a3ab9, #e95950, #fccc63)", display: "block", marginBottom: 10 }} />
+                    <span style={{ fontSize: 14, fontWeight: 600, color: "#f4f3f1" }}>test_user</span>
+                    <span style={{ fontSize: 11, color: "#5b8def", marginTop: 6 }}>Learn about business chats</span>
+                    <span style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#f4f3f1", background: "#26262a", borderRadius: 8, padding: "7px 14px" }}>View profile</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#f4f3f1", background: "#26262a", borderRadius: 8, padding: "7px 14px" }}>View community</span>
+                    </span>
+                  </div>
+                  <div style={{ textAlign: "center", fontSize: 10, color: "#6f6c69", marginBottom: -2 }}>TODAY AT 9:41 AM</div>
                   <div style={{ textAlign: "center", fontSize: 10, lineHeight: 1.5, color: "#6f6c69", padding: "0 10px", marginBottom: 4 }}>
                     You messaged <span style={{ color: "#f4f3f1" }}>test_user</span> about a comment they made on your post. <span style={{ color: "#8e8b88" }}>See post</span>
                   </div>
