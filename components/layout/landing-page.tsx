@@ -204,7 +204,7 @@ export function LandingPage() {
                   <span style={{ display: "block" }}>▮▮▮</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 14px 12px", borderBottom: "1px solid #26262a" }}>
-                  <span style={{ width: 30, height: 30, borderRadius: "50%", background: "#2c2c31", display: "block" }} />
+                  <span style={{ width: 30, height: 30, borderRadius: "50%", background: "linear-gradient(135deg, #8a3ab9, #e95950, #fccc63)", display: "block" }} />
                   <span style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#f4f3f1" }}>test_user</span>
                 </div>
                 <div style={{ flex: 1, minHeight: 0, padding: 14, display: "flex", flexDirection: "column", gap: 10, overflow: "hidden" }}>
