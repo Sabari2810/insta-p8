@@ -76,6 +76,25 @@ const mockTables: Record<string, Row[]> = { users, automations, conversations, m
 type Filter = { op: "eq" | "gte" | "lte" | "ilike"; col: string; val: any }
 type OrCondition = { col: string; op: string; val: string }
 
+/** Splits on commas that aren't inside parens, so `.or()`'s `col.in.(a,b,c)` stays one condition. */
+function splitTopLevel(s: string): string[] {
+  const parts: string[] = []
+  let depth = 0
+  let current = ""
+  for (const ch of s) {
+    if (ch === "(") depth++
+    if (ch === ")") depth--
+    if (ch === "," && depth === 0) {
+      parts.push(current)
+      current = ""
+    } else {
+      current += ch
+    }
+  }
+  parts.push(current)
+  return parts
+}
+
 function matchesCondition(row: Row, col: string, op: string, val: string): boolean {
   if (op === "ilike") {
     const needle = val.replace(/^%|%$/g, "").toLowerCase()
@@ -131,7 +150,7 @@ class MockQueryBuilder implements PromiseLike<{ data: any; error: null; count: n
   }
   /** Mirrors Supabase's `.or("col.op.val,col2.op2.val2")` string syntax. ANDs with other filters. */
   or(conditions: string) {
-    this.orConditions = conditions.split(",").map((cond) => {
+    this.orConditions = splitTopLevel(conditions).map((cond) => {
       const [col, op, ...rest] = cond.split(".")
       return { col, op, val: rest.join(".") }
     })

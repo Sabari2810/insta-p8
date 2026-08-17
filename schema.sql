@@ -1,5 +1,9 @@
--- Supabase Database Schema Dump for Wingman
--- This script contains all 11 tables, constraints, indexes, and storage bucket settings.
+-- Database schema for Wingman — 11 tables, constraints, and indexes.
+-- Plain Postgres, runs on any host (Supabase, Neon, Railway, self-hosted, etc.) on Postgres 13+.
+-- (gen_random_uuid() below is core Postgres since v13 — the uuid-ossp extension enabled just
+-- above is not actually used by anything in this file, kept only for backwards compatibility
+-- with older dumps that referenced uuid_generate_v4().)
+-- On Supabase specifically, also run schema-supabase-storage.sql for the reels storage bucket.
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -210,31 +214,10 @@ CREATE INDEX IF NOT EXISTS idx_scheduler_next_run ON public.scheduler_config(nex
 CREATE INDEX IF NOT EXISTS idx_reels_posts_user_status ON public.reels_posts(user_id, status);
 
 -- ==========================================
--- Storage Bucket: reels
+-- Storage Bucket: reels (Supabase only)
 -- ==========================================
--- Create bucket if it doesn't exist (Requires storage schema)
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('reels', 'reels', true)
-ON CONFLICT (id) DO UPDATE SET public = true;
-
--- NOTE: RLS is enabled by default on storage.objects in Supabase.
--- Running ALTER TABLE storage.objects causes permission errors (must be owner of table objects)
--- on newer Supabase instances. Therefore, we do not run it here.
--- ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
-
--- Drop storage policies if they exist to prevent duplicates
-DROP POLICY IF EXISTS "Public Uploads" ON storage.objects;
-DROP POLICY IF EXISTS "Public Viewing" ON storage.objects;
-DROP POLICY IF EXISTS "Public Deletion" ON storage.objects;
-
--- The app never uploads/deletes storage objects from the browser — only the server, using the
--- service-role key, which bypasses RLS/policies entirely. So the anon key (public by design,
--- shipped in the client bundle) gets no write access at all. Read stays public since served
--- reel media needs a plain fetchable URL (e.g. for Instagram's publish API).
-CREATE POLICY "Public Viewing"
-ON storage.objects FOR SELECT
-TO public
-USING (bucket_id = 'reels');
+-- Moved to schema-supabase-storage.sql — everything below this point is plain Postgres and runs
+-- on any host. Run schema-supabase-storage.sql too only if you're on Supabase and want it.
 
 -- =========================================================================
 -- Row Level Security (RLS) for public schema tables

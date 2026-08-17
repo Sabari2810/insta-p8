@@ -2,16 +2,24 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { isDemoMode } from "@/lib/demo-mode"
 import { createMockSupabaseClient } from "@/lib/mock-supabase"
+import { createPostgresClient } from "@/lib/postgres-client"
 
 /**
- * Create a Supabase server client
- * Use this in API routes and server actions
+ * Create a database client for API routes and server actions. Three backends, checked in order:
+ *  1. Demo mode — in-memory mock, no database needed.
+ *  2. Supabase — used automatically when NEXT_PUBLIC_SUPABASE_URL is set, unchanged from before.
+ *  3. Plain Postgres — used when only DATABASE_URL is set, so the app runs against any Postgres
+ *     host (Neon, Railway, self-hosted, etc.) without depending on Supabase specifically.
+ * All three expose the identical .from(table).select().eq()... chainable interface, so no API
+ * route needs to know or care which backend is active.
  */
 export async function getSupabaseServerClient(): Promise<any> {
-  // No Supabase credentials configured locally — fall back to an in-memory mock so the app
-  // (and "Dev Login" on the landing page) works for UI preview without a real backend.
   if (isDemoMode) {
     return createMockSupabaseClient() as any
+  }
+
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.DATABASE_URL) {
+    return createPostgresClient() as any
   }
 
   const cookieStore = await cookies()
