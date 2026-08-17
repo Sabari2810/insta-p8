@@ -44,10 +44,15 @@ Don't request `instagram_business_content_publish` — nothing in the current co
 
 ## Other required fields
 
-- **Privacy Policy URL**: `https://<domain>/privacy`
-- **Data Deletion Instructions URL**: `https://<domain>/privacy#data-deletion` (added this
-  session — self-service disconnect clears the token immediately, full data deletion by email
-  request within 30 days).
+- **Privacy Policy URL**: `https://insta-automation-ecru.vercel.app/privacy` — confirmed live.
+- **Data Deletion Instructions URL**: `https://insta-automation-ecru.vercel.app/privacy#data-deletion`
+  — confirmed live (self-service disconnect clears the token immediately, full data deletion by
+  email request within 30 days). No custom domain needed for either — Meta only requires HTTPS +
+  public reachability, not domain ownership. If/when this moves to a new deployment, update both
+  URLs (and the OAuth redirect URI + webhook callback) in the Meta dashboard — that's a config
+  change, not a new App Review submission, since approval is tied to the App ID/permissions, not
+  a pinned URL. Add the new redirect URI/webhook alongside the old one and cut over, rather than
+  swapping in one step, so login doesn't break mid-migration.
 - **App icon**, **category**, **business verification**: not code-related, need your own assets/
   business details in the Meta dashboard. Business verification in particular can itself take
   1-2 weeks and may be requested before Advanced Access is granted for `manage_messages` — worth
