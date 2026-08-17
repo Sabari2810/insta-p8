@@ -37,6 +37,17 @@ export default function PrivacyPage() {
           immediately.
         </p>
 
+        <h2 id="data-deletion" className="text-xl font-semibold mt-6">Data Deletion</h2>
+        <p>
+          Disconnecting your account from Settings immediately clears your stored Instagram
+          access token, stopping all further access to your account. To have your remaining
+          data — conversation history, automations, and account records — permanently deleted
+          from our systems, email{" "}
+          <a className="underline" href="mailto:imsabarimanikandan@gmail.com">imsabarimanikandan@gmail.com</a>{" "}
+          from the email address associated with your request, or the Instagram account itself.
+          We will delete your data within 30 days and confirm by email once it&apos;s done.
+        </p>
+
         <h2 className="text-xl font-semibold mt-6">Contact</h2>
         <p>
           For any questions, please reach out via the app dashboard or email at imsabarimanikandan@gmail.com.
